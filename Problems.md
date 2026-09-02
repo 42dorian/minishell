@@ -19,19 +19,29 @@ delete maini.c
 
 Problems, tests and TO-DOs
 
+- [x] echo with -n option
+- [ ] cd 
+- [x] pwd
+- [ ] export
+- [ ] unset 
+- [x] env
+- [ ] exit
 - [ ] 2: Syntax error should set the exitcode to 2
 - [x] 127: Command not found (or no such file or directory) 
 - [x] 126: Permission denied (or is a directory) 
 - [x] 130: Killed by sigint 
 - [x] 131: killed by sigquit
-- [ ] need to handle expansions in heredoc
+- [ ] need to handle expansions in heredoc only if there are 0 quotes
 - [ ] properly handle $EMPTY_VAR
-- [ ] test heredoc with quotes and everything
+- [ ] use ft_putstr_fd for env instead of printf
+- [x] test heredoc with quotes and everything
 - [ ] finish built-ins
 - [ ] handle $?
 - [ ] valgrind/funcheck
 - [ ] run testers
 - [ ] cleanup the directoryies and check for leftover files
+- [ ] when clicking CTRL+C in "interactive" mode, the exit code updates
+- [ ] don't use printf to print errors or in general, we need to use ft_putstr_fd so we put errors in fd=2 for errors and fd=1 for normal standard output
 
 ---
 
@@ -41,3 +51,4 @@ things to do after everything is fixed
 - [ ] norminette
 - [ ] unused function check
 - [ ] unused headers check
+- [ ] delete this file "Problems.md"

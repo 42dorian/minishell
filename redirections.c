@@ -6,13 +6,13 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 10:32:32 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/08/29 10:50:36 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/08/29 16:18:22 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	fill_heredoc(int write_fd, char *eof);
+static void	fill_heredoc(int write_fd, char *eof, t_envs *env);
 
 int	handle_in(t_cmds *curr, t_token *tokens, int *i)
 {
@@ -60,11 +60,31 @@ int	handle_pipe(t_cmds **head, t_cmds **curr)
 	return (1);
 }
 
-static void	fill_heredoc(int write_fd, char *eof)
+char *expanded_line(char *line, t_envs *env)
+{
+	t_token token;
+	t_token array[1];
+	int len;
+	char *expanded;
+
+	token.value = line;
+	token.type = token_word;
+
+	array[0].type = 0;
+	len = get_full_len_of_expandable(token, env, &token);
+	expanded = get_full_expandable_word(token, env, len, 0);
+	return (expanded);
+}
+
+static void	fill_heredoc(int write_fd, char *eof, t_envs *env)
 {
 	char	*line;
+	char 	*line_expanded;
+	t_token *tokens;
 
+	tokens = NULL;
 	line = NULL;
+	line_expanded = NULL;
 	while (1)
 	{
 		line = readline("> ");
@@ -74,13 +94,15 @@ static void	fill_heredoc(int write_fd, char *eof)
 			free(line);
 			break ;
 		}
-		ft_putstr_fd(line, write_fd);
-		ft_putchar_fd('\n', write_fd);
+		line_expanded = expanded_line(line, env);
 		free(line);
+		ft_putstr_fd(line_expanded, write_fd);
+		ft_putchar_fd('\n', write_fd);
+		free(line_expanded);
 	}
 }
 
-int	handle_heredoc(t_cmds *curr, t_token *token, int *i)
+int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env)
 {
 	int	fd[2];
 	pid_t pid;
@@ -93,8 +115,8 @@ int	handle_heredoc(t_cmds *curr, t_token *token, int *i)
 	pid = fork();
 	if (pid == 0)
 	{
-		init_execution_signals();
-		fill_heredoc(fd[1], token[*i + 1].value);
+		init_heredoc_signals();
+		fill_heredoc(fd[1], token[*i + 1].value, env);
 		exit(0);
 	}
 	close(fd[1]);

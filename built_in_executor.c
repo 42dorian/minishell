@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 11:15:38 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/08/28 12:53:30 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/02 19:40:36 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,17 @@ int	is_built_in(char *cmd)
 	return (0);
 }
 
-int	run_built_in(t_cmds *cmd, char **envp)
+int	run_built_in(t_cmds *cmd, t_envs *env_list)
 {
 	int	cmd_len;
 
-	(void)envp;
 	cmd_len = ft_strlen(cmd->cmd[0]);
 	if (cmd_len == 3 && ft_strncmp(cmd->cmd[0], "pwd", 3) == 0)
 		return (pwd());
 	if (cmd_len == 4 && ft_strncmp(cmd->cmd[0], "echo", 4) == 0)
 		return (echo(cmd));
+	if (cmd_len == 3 && ft_strncmp(cmd->cmd[0], "env", 3) == 0)
+		return (env(env_list));
 	return (0);
 }
 

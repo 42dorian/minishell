@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 12:53:31 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/08/28 18:28:32 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/08/28 19:43:25 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@
 // {
 //     int i;
 
-// //     i = 0;
-// //     if (!s)
-// //         return (i);
-// //     while (s[i])
-// //         i++;
-// //     return (i);
+//     i = 0;
+//     if (!s)
+//         return (i);
+//     while (s[i])
+//         i++;
+//     return (i);
 // }
 
 int     dollar_in_word(const char *word)

@@ -6,71 +6,73 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 09:57:52 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/08/29 11:14:33 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/02 19:39:43 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	fork_pipe(t_cmds *cmds, int *fd, int *stored_input, char **envp);
+// static int	fork_pipe(t_cmds *cmds, int *fd, int *stored_input, char **envp);
+static int	fork_pipe(t_cmds *cmds, int *fd, int *stored_input, t_shell *shell);
 
-int	execute_cmds(t_cmds *cmds, char **envp)
+int	execute_cmds(t_shell *shell)
 {
 	t_cmds	*tmp;
 	int		fd[2];
-	int		status;
 	int		stored_input;
 
-	if (!cmds)
+	if (!shell->cmds)
 		return (0);
-	status = 0;
+	shell->envp = create_envp(shell->env_list);
+	if (!shell->envp)
+		return (0);
 	stored_input = -1;
 	ft_bzero(fd, 2);
-	tmp = cmds;
-	if (!cmds->next)
+	tmp = shell->cmds;
+	if (!shell->cmds->next)
 	{
-		execute_single_cmd(cmds, envp, &status);
-		clean_parent(cmds,fd, &stored_input);
-		return (status);
+		execute_single_cmd(shell);
+		clean_parent(shell->cmds, fd, &stored_input);
+		return (shell->status);
 	}
 	pause_interactive_signals();
-	while (cmds)
+	while (shell->cmds)
 	{
-		if (!fork_pipe(cmds, fd, &stored_input, envp))
+		if (!fork_pipe(shell->cmds, fd, &stored_input, shell))
 			return (0);
-		clean_parent(cmds, fd, &stored_input);
-		cmds = cmds->next;
+		clean_parent(shell->cmds, fd, &stored_input);
+		shell->cmds = shell->cmds->next;
 	}
-	wait_pids(tmp, &status);
+	wait_pids(tmp, &shell->status);
 	init_interactive_signals();
-	return (status);
+	return (free_split(shell->envp), shell->status);
 }
 
-int	execute_single_cmd(t_cmds *cmds, char **envp, int *status)
+int	execute_single_cmd(t_shell *shell)
 {
 	int	saved_stdin;
 	int	saved_stdout;
 
-	if (!cmds->cmd)
+	if (!shell->cmds->cmd)
 		return (1);
-	if (cmds->fd_in == -1 || cmds->fd_out == -1)
+	if (shell->cmds->fd_in == -1 || shell->cmds->fd_out == -1)
 		return (1);
-	if (is_built_in(cmds->cmd[0]))
+	if (is_built_in(shell->cmds->cmd[0]))
 	{
 		saved_stdin = dup(STDIN_FILENO);
 		saved_stdout = dup(STDOUT_FILENO);
 		if (saved_stdin == -1 || saved_stdout == -1)
-			return (print_error(strerror(errno), cmds->cmd[0], 2), 1);
-		if (change_io(cmds))
+			return (print_error(strerror(errno), shell->cmds->cmd[0], 2), 1);
+		if (change_io(shell->cmds))
 		{
 			restore_io(saved_stdin, saved_stdout);
 			return (1);
 		}
-		*status = run_built_in(cmds, envp);
+		shell->status = run_built_in(shell->cmds, shell->env_list);
 		restore_io(saved_stdin, saved_stdout);
 		return (1);
 	}
-	if (!run_cmd(cmds, envp, status))
+	if (!run_cmd(shell->cmds, shell->envp, &shell->status))
 		return (0);
 	return (1);
 }
@@ -128,7 +130,7 @@ void wait_single_pid(pid_t pid, int *status, int last_pid)
 	}
 }
 
-void	run_child(t_cmds *cmds, int *fd, int stored_input, char **envp)
+void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 {
 	char	*path;
 	int exit_status;
@@ -141,16 +143,16 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, char **envp)
 	child_redirections(cmds, fd, stored_input);
 	close_inherited_fds(cmds);
 	if (is_built_in(cmds->cmd[0]))
-		exit(run_built_in(cmds, envp));
-	path = handling_path(cmds->cmd[0], envp[find_path(envp)], &exit_status);
+		exit(run_built_in(cmds, shell->env_list));
+	path = handling_path(cmds->cmd[0], shell->envp[find_path(shell->envp)], &exit_status);
 	if (!path)
 		exit(exit_status);
-	execve(path, cmds->cmd, envp);
+	execve(path, cmds->cmd, shell->envp);
 	print_error(strerror(errno), cmds->cmd[0], 2);
 	exit(1);
 }
 
-static int	fork_pipe(t_cmds *cmds, int *fd, int *stored_input, char **envp)
+static int	fork_pipe(t_cmds *cmds, int *fd, int *stored_input, t_shell *shell)
 {
 	if (cmds->next)
 	{
@@ -161,7 +163,7 @@ static int	fork_pipe(t_cmds *cmds, int *fd, int *stored_input, char **envp)
 	if (cmds->pid == 0)
 	{
 		init_execution_signals();
-		run_child(cmds, fd, *stored_input, envp);
+		run_child(cmds, fd, *stored_input, shell);
 	}
 	return (1);
 }

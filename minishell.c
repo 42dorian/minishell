@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/08/29 10:57:23 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/02 19:38:04 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -299,38 +299,34 @@ void    do_nothing_ptr(char **ptr)
 //     return (0);
 // }
 
-int main(int ac, char **av, char **envp)
+int main(int ac, char **av, const char **envp)
 {
 	char *line;
-	int status;
+	t_shell shell;
 	t_token *tokens;
-	t_envs *global_envs;
-	t_cmds *cmds;
 	(void)ac;
 	(void)av;
 
-	cmds = NULL;
-	global_envs = NULL;
-	status = 0;
-	add_envp_to_list(&global_envs, envp);
+	ft_bzero(&shell, sizeof(t_shell));
+	add_envp_to_list(&shell.env_list, envp);
 	init_interactive_signals();
 	while ((line = readline("minishell$ ")))
 	{
 		if (!ft_strncmp(line, "exitcode", 8))
 		{
-			printf("%d\n", status);
+			printf("%d\n", shell.status);
 			continue;
 		}
-		tokens = minishell(line, global_envs);
+		tokens = minishell(line, shell.env_list);
 		if (!tokens)
 			continue;
-		cmds = build_cmds(tokens);
-		if (!cmds)
+		shell.cmds = build_cmds(tokens, shell.env_list);
+		if (!shell.cmds)
 		{
-			status = 1;
+			shell.status = 1;
 			continue;
 		}
-		status = execute_cmds(cmds, envp);
+		shell.status = execute_cmds(&shell);
 		if (line[0] != '\0' || !line)
 			add_history(line);
 	}

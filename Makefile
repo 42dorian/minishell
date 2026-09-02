@@ -27,8 +27,9 @@ SOURCE =	split.c \
 			built_in_executor_helper.c \
 			signals.c \
 			pwd.c \
-			echo.c
-
+			echo.c \
+			envp.c \
+			env.c \
 
 
 # CFLAGS = -Wall -Wextra -Werror -g

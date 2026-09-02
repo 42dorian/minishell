@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 13:18:12 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/08/28 16:13:07 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/08/28 19:52:30 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_envs	*ft_lstnew(void *value)
 	list->next = NULL;
 	return (list);
 }
-void	ft_lstadd_front(t_list **lst, t_list *new_list)
+void	ft_lstadd_front(t_envs **lst, t_envs *new_list)
 {
 	if (!lst || !new_list)
 		return ;

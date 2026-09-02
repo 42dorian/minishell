@@ -6,13 +6,13 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 13:08:42 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/08/28 16:12:36 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/08/28 19:53:08 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstadd_back(t_list **lst, t_list *new_list)
+void	ft_lstadd_back(t_envs **lst, t_envs *new_list)
 {
 	t_envs	*tmp;
 
@@ -65,7 +65,7 @@ t_envs	*ft_lstmap(t_envs *lst, void *(*f)(void *), void (*del)(void *))
 {
     t_envs *new_list;
     t_envs *new_node;
-    
+
     new_list = NULL;
     if(!lst || !f || !del)
         return (NULL);

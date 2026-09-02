@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 15:55:37 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/07/28 11:03:47 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/02 16:14:50 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ t_cmds	*add_cmd(t_cmds *head, t_cmds *new_list)
 	return (head);
 }
 
-int	add_arg_to_cmd(t_cmds *node, char *arg)
+int	add_arg_to_cmd(t_cmds *node, const char *arg)
 {
 	char	**tmp;
 	int		count;

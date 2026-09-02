@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/28 21:45:50 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/08/28 22:49:52 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/08/29 11:42:46 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,18 @@ void init_execution_signals(void)
 	sa.sa_flags = 0;
 	sa.sa_handler = SIG_DFL;
 	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
+}
+
+void init_heredoc_signals(void)
+{
+	struct sigaction sa;
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sa.sa_handler = SIG_DFL;
+	sigaction(SIGINT, &sa, NULL);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
 }

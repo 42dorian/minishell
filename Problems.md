@@ -22,8 +22,8 @@ Problems, tests and TO-DOs
 - [x] echo with -n option
 - [ ] cd 
 - [x] pwd
-- [ ] export
-- [ ] unset 
+- [x] export
+- [x] unset 
 - [x] env
 - [ ] exit
 - [ ] 2: Syntax error should set the exitcode to 2
@@ -42,6 +42,7 @@ Problems, tests and TO-DOs
 - [ ] cleanup the directoryies and check for leftover files
 - [ ] when clicking CTRL+C in "interactive" mode, the exit code updates
 - [ ] don't use printf to print errors or in general, we need to use ft_putstr_fd so we put errors in fd=2 for errors and fd=1 for normal standard output
+- [ ] using ARG=1 shouldnt add to the ENV
 
 ---
 

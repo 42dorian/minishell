@@ -25,7 +25,7 @@ t_cmds	*build_cmds(t_token *tokens, t_envs *env)
 	head = curr;
 	while (tokens[i].value != NULL)
 	{
-		if (tokens[i].type == token_word)
+		if (tokens[i].type == token_word || tokens[i].type == token_env_assign)
 		{
 			if (!add_arg_to_cmd(curr, tokens[i].value))
 				return (free_cmd(head), NULL);

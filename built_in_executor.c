@@ -43,6 +43,10 @@ int	run_built_in(t_cmds *cmd, t_envs *env_list)
 		return (echo(cmd));
 	if (cmd_len == 3 && ft_strncmp(cmd->cmd[0], "env", 3) == 0)
 		return (env(env_list));
+	if (cmd_len == 6 && ft_strncmp(cmd->cmd[0], "export", 6) == 0)
+			return (export_bi(cmd, env_list));
+	if (cmd_len == 5 && ft_strncmp(cmd->cmd[0], "unset", 5) == 0)
+		return (unset(cmd, env_list));
 	return (0);
 }
 

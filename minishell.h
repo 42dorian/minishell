@@ -229,5 +229,7 @@ void pause_interactive_signals(void);
 void init_heredoc_signals(void);
 char **create_envp(t_envs *env_list);
 int env(t_envs *env_list);
+int export_bi(t_cmds *cmd, t_envs *env_list);
+int unset(t_cmds *cmd, t_envs *env_list);
 
 #endif

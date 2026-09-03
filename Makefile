@@ -30,10 +30,13 @@ SOURCE =	split.c \
 			echo.c \
 			envp.c \
 			env.c \
+			export.c \
+			unset.c
+
 
 
 # CFLAGS = -Wall -Wextra -Werror -g
-CFLAGS = -I/opt/homebrew/opt/readline/include
+CFLAGS = -I/opt/homebrew/opt/readline/include -g
 READLINE_FLAG = -L/opt/homebrew/opt/readline/lib -lreadline
 
 

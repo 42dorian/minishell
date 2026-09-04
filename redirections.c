@@ -80,16 +80,25 @@ static void	fill_heredoc(int write_fd, char *eof, t_envs *env)
 {
 	char	*line;
 	char 	*line_expanded;
+	int line_count;
 	t_token *tokens;
 
 	tokens = NULL;
 	line = NULL;
 	line_expanded = NULL;
+	line_count = 0;
 	while (1)
 	{
+		line_count++;
 		line = readline("> ");
-		if (!line || (ft_strlen(line) == ft_strlen(eof) && ft_strncmp(line, eof,
-					ft_strlen(eof)) == 0))
+		if (!line)
+		{
+			ft_putstr_fd("minishell: warning: ", STDOUT_FILENO);
+			ft_putstr_fd("here-document delimited by end-of-file (wanted '", STDOUT_FILENO);
+			ft_putstr_fd(eof, STDOUT_FILENO);
+			ft_putstr_fd("')\n", STDOUT_FILENO);
+		}
+		if ((ft_strlen(line) == ft_strlen(eof) && ft_strncmp(line, eof,ft_strlen(eof)) == 0))
 		{
 			free(line);
 			break ;

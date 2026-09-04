@@ -68,7 +68,7 @@ int	execute_single_cmd(t_shell *shell)
 			restore_io(saved_stdin, saved_stdout);
 			return (1);
 		}
-		shell->status = run_built_in(shell->cmds, shell->env_list);
+		shell->status = run_built_in(shell->cmds, shell->env_list, shell);
 		restore_io(saved_stdin, saved_stdout);
 		return (1);
 	}
@@ -143,7 +143,7 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 	child_redirections(cmds, fd, stored_input);
 	close_inherited_fds(cmds);
 	if (is_built_in(cmds->cmd[0]))
-		exit(run_built_in(cmds, shell->env_list));
+		exit(run_built_in(cmds, shell->env_list, shell));
 	path = handling_path(cmds->cmd[0], shell->envp[find_path(shell->envp)], &exit_status);
 	if (!path)
 		exit(exit_status);

@@ -203,7 +203,8 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell);
 
 void clean_parent(t_cmds *cmds, int *fd, int *stored_input);
 void wait_pids(t_cmds *cmds, int *status);
-int	run_built_in(t_cmds *cmd, t_envs *env_list);
+// int	run_built_in(t_cmds *cmd, t_envs *env_list);
+int	run_built_in(t_cmds *cmd, t_envs *env_list, t_shell *shell);
 int echo(t_cmds *cmd);
 // void wait_single_pid(pid_t pid, int *status);
 void wait_single_pid(pid_t pid, int *status, int last_pid);
@@ -231,5 +232,6 @@ char **create_envp(t_envs *env_list);
 int env(t_envs *env_list);
 int export_bi(t_cmds *cmd, t_envs *env_list);
 int unset(t_cmds *cmd, t_envs *env_list);
+int exit_bi(t_cmds *cmd, t_shell *shell);
 
 #endif

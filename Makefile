@@ -31,7 +31,8 @@ SOURCE =	split.c \
 			envp.c \
 			env.c \
 			export.c \
-			unset.c
+			unset.c \
+			exit.c
 
 
 

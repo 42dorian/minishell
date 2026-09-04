@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int remove_env(char *cmd, t_envs *tmp, t_envs *env_list);
+static int remove_env(char *cmd, t_envs *tmp, t_envs *env_list);
 
 int unset(t_cmds *cmd, t_envs *env_list)
 {

@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-void sh_new_line(void);
-void handle_sigint(int sig);
-void handle_sigquit(int sig);
+static void sh_new_line(void);
+static void handle_sigint(int sig);
+static void handle_sigquit(int sig);
 
 void handle_sigint(int sig)
 {

@@ -330,5 +330,6 @@ int main(int ac, char **av, const char **envp)
 		if (line[0] != '\0' || !line)
 			add_history(line);
 	}
-    return (0);
+	ft_putstr_fd("exit\n", STDOUT_FILENO);
+    return (shell.status);
 }

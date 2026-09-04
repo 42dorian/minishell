@@ -32,7 +32,7 @@ int	is_built_in(char *cmd)
 	return (0);
 }
 
-int	run_built_in(t_cmds *cmd, t_envs *env_list)
+int	run_built_in(t_cmds *cmd, t_envs *env_list, t_shell *shell)
 {
 	int	cmd_len;
 
@@ -47,6 +47,10 @@ int	run_built_in(t_cmds *cmd, t_envs *env_list)
 			return (export_bi(cmd, env_list));
 	if (cmd_len == 5 && ft_strncmp(cmd->cmd[0], "unset", 5) == 0)
 		return (unset(cmd, env_list));
+	if (cmd_len == 4 && ft_strncmp(cmd->cmd[0], "exit", 4) == 0)
+		return (exit_bi(cmd, shell));
+	// if (cmd_len == 2 && ft_strncmp(cmd->cmd[0], "cd", 2) == 0)
+	// 	return (chddir(cmd));
 	return (0);
 }
 

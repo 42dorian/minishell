@@ -14,7 +14,7 @@
 
 static void	print_status(int status, char *cmd);
 static char	*format_path(char *cmd_name, char *path);
-void assign_exit_status(int status, int *exit_status);
+static void assign_exit_status(int status, int *exit_status);
 
 char	*handling_path(char *cmd_name, char *path, int *exit_status)
 {

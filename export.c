@@ -1,9 +1,9 @@
 #include "minishell.h"
 
-char *add_key(char *key);
-char *add_value(char *value);
-int key_exists(char *key, t_envs **env_list);
-int add_new_list(t_envs *new, char **key_value, char *cmd, t_envs *env_list);
+static char *add_key(char *key);
+static char *add_value(char *value);
+static int key_exists(char *key, t_envs **env_list);
+static int add_new_list(t_envs *new, char **key_value, char *cmd, t_envs *env_list);
 
 
 int export_bi(t_cmds *cmd, t_envs *env_list)

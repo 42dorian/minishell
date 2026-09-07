@@ -55,6 +55,17 @@ typedef struct s_shell
 	int status;
 }t_shell;
 
+typedef struct s_cd
+{
+	char	*target_path;
+	char	*old_pwd;
+	char	*pwd;
+	char	*value_old_path;
+	char	*value_new_path;
+	char	old_path[PATH_MAX];
+	char	new_path[PATH_MAX];
+}			t_cd;
+
 typedef enum e_token_type
 {
 	token_word,
@@ -216,6 +227,6 @@ int export_bi(t_cmds *cmd, t_envs **env_list);
 int unset(t_cmds *cmd, t_envs **env_list);
 int exit_bi(t_cmds *cmd, t_shell *shell);
 int valid_identifier(char *key);
-int change_dir(t_cmds *cmds, t_envs **env_list);
+int cd_bi(t_cmds *cmd, t_envs **env_list);
 int		update_or_add(t_envs **env_list, char *value, char *key);
 #endif

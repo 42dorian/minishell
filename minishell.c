@@ -245,7 +245,7 @@ t_envs     *copy_from_envp_to_own_env_list(const char **envp, int i)
 void        clean_up_tokens_and_split_line(t_token *tokens, char **split_line)
 {
     int i;
-    
+
     i = 0;
     while (tokens[i].type != -1)
         free((void*)tokens[i++].value);
@@ -254,7 +254,7 @@ void        clean_up_tokens_and_split_line(t_token *tokens, char **split_line)
         free(split_line[i++]);
     free(split_line);
     free(tokens);
-}     
+}
 
 t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
 {
@@ -287,7 +287,7 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
     return (tokens);
 }
 
-int main(int ac, char **av, char **envp)
+int main(int ac, char **av, const char **envp)
 {
 	char *line;
 	t_shell shell;
@@ -308,7 +308,7 @@ int main(int ac, char **av, char **envp)
 			printf("%d\n", shell.status);
 			continue;
 		}
-		tokens = minishell(line, shell.env_list);
+		tokens = minishell(line, shell.env_list, &shell.status);
 		if (!tokens)
 			continue;
 		shell.cmds = build_cmds(tokens, shell.env_list);

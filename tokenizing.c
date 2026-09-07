@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 17:13:55 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/06 19:08:01 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/06 22:58:00 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ int     clean_up_token_list(t_token *tokens, int len)
     free(tokens);
     return (0);
 }
-
 int    create_token_struct(t_token *tokens, char **line)
 {
     int i;

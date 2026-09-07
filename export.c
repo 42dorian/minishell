@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/05 17:45:55 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/05 21:24:09 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/07 23:28:02 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	export_bi(t_cmds *cmd, t_envs **env_list)
 	return (exit_code);
 }
 
-int	add_new_list(char *cmd, t_envs **env_list)
+static int	add_new_list(char *cmd, t_envs **env_list)
 {
 	char	*equal_pos;
 	char	*key;
@@ -54,19 +54,21 @@ int	add_new_list(char *cmd, t_envs **env_list)
 	{
 		key = ft_strdup(cmd);
 		if (!key)
-			return (0);
+			return (1);
 		value = NULL;
 	}
 	else
 	{
 		key = ft_substr(cmd, 0, equal_pos - cmd);
+		if (!key)
+			return (1);
 		value = ft_strdup(equal_pos + 1);
+		if (!value)
+			return (free(key), 1);
 	}
 	if (valid_identifier(key))
 		return (free(value), free(key), 2);
-	if (update_or_add(env_list, value, key))
-		return (1);
-	return (0);
+	return (update_or_add(env_list, value, key));
 }
 
 int	update_or_add(t_envs **env_list, char *value, char *key)
@@ -96,7 +98,7 @@ int	update_or_add(t_envs **env_list, char *value, char *key)
 	return (0);
 }
 
-t_envs	*key_exists(char *key, t_envs *env_list)
+static t_envs	*key_exists(char *key, t_envs *env_list)
 {
 	while (env_list)
 	{
@@ -107,7 +109,7 @@ t_envs	*key_exists(char *key, t_envs *env_list)
 	return (NULL);
 }
 
-int	print_envs(t_envs *env_list)
+static int	print_envs(t_envs *env_list)
 {
 	t_envs	*tmp;
 

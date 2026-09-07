@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/05 17:36:01 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/05 18:20:08 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/07 23:37:28 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@ static long long	ft_atoll(char *nptr);
 static int			check_long(int is_negative, long long v, int d);
 static int			valid_long(char *str);
 
+//free evth here before exit
 int	exit_bi(t_cmds *cmd, t_shell *shell)
 {
 	long long	exit_code;
 
 	exit_code = 0;
-	ft_putstr_fd("exit\n", STDOUT_FILENO);
+	ft_putstr_fd("exit\n", STDERR_FILENO);
 	if (!cmd->cmd[1])
 		exit(shell->status);
 	if (valid_long(cmd->cmd[1]))
@@ -40,7 +41,7 @@ int	exit_bi(t_cmds *cmd, t_shell *shell)
 	exit((unsigned char)exit_code);
 }
 
-long long	ft_atoll(char *nptr)
+static long long	ft_atoll(char *nptr)
 {
 	int			i;
 	int			sign;
@@ -68,7 +69,7 @@ long long	ft_atoll(char *nptr)
 	return (value * sign);
 }
 
-int	valid_long(char *str)
+static int	valid_long(char *str)
 {
 	int					is_negative;
 	int					i;
@@ -97,7 +98,7 @@ int	valid_long(char *str)
 	return (0);
 }
 
-int	check_long(int is_negative, long long v, int d)
+static int	check_long(int is_negative, long long v, int d)
 {
 	if (!is_negative)
 	{

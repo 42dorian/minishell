@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 09:57:52 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/02 19:39:43 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/07 23:01:30 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	execute_single_cmd(t_shell *shell)
 		saved_stdin = dup(STDIN_FILENO);
 		saved_stdout = dup(STDOUT_FILENO);
 		if (saved_stdin == -1 || saved_stdout == -1)
-			return (print_error(strerror(errno), shell->cmds->cmd[0], 2), 1);
+			return (print_error(strerror(errno), shell->cmds->cmd[0], NULL, 2), 1);
 		if (change_io(shell->cmds))
 		{
 			restore_io(saved_stdin, saved_stdout);
@@ -88,7 +88,7 @@ int	run_cmd(t_cmds *cmd, char **envp, int *status)
 		return (0);
 	cmd->pid = fork();
 	if (cmd->pid == -1)
-		return (print_error(strerror(errno), cmd->cmd[0], 2), 0);
+		return (print_error(strerror(errno), cmd->cmd[0], NULL, 2), 0);
 	if (cmd->pid == 0)
 	{
 		init_execution_signals();
@@ -103,7 +103,7 @@ int	run_cmd(t_cmds *cmd, char **envp, int *status)
 			close(cmd->fd_out);
 		}
 		execve(path, cmd->cmd, envp);
-		print_error(strerror(errno), cmd->cmd[0], 2);
+		print_error(strerror(errno), cmd->cmd[0], NULL, 2);
 		exit(1);
 	}
 	pause_interactive_signals();
@@ -151,7 +151,7 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 	if (!path)
 		exit(exit_status);
 	execve(path, cmds->cmd, shell->envp);
-	print_error(strerror(errno), cmds->cmd[0], 2);
+	print_error(strerror(errno), cmds->cmd[0], NULL, 2);
 	exit(1);
 }
 

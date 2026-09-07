@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/05 17:45:45 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/05 20:06:39 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/07 23:30:05 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,7 @@ int	unset(t_cmds *cmd, t_envs **env_list)
 	while (cmd->cmd[i])
 	{
 		if (valid_identifier(cmd->cmd[i]))
-		{
-			// ft_putstr_fd("minishell: unset: '", STDERR_FILENO);
-			// ft_putstr_fd(cmd->cmd[i], STDERR_FILENO);
-			// ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
 			exit_code = 0;
-		}
 		else
 			remove_env(cmd->cmd[i], env_list);
 		i++;
@@ -39,7 +34,7 @@ int	unset(t_cmds *cmd, t_envs **env_list)
 	return (exit_code);
 }
 
-int	remove_env(char *cmd, t_envs **env_list)
+static int	remove_env(char *cmd, t_envs **env_list)
 {
 	t_envs	*tmp;
 	t_envs	*prev;

@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 10:32:32 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/08/29 16:18:22 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/07 23:03:08 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	handle_in(t_cmds *curr, t_token *tokens, int *i)
 		close(curr->fd_in);
 	curr->fd_in = open(tokens[*i + 1].value, O_RDONLY);
 	if (curr->fd_in == -1)
-		print_error(strerror(errno), tokens[*i + 1].value,  2);
+		print_error(strerror(errno), tokens[*i + 1].value, NULL, 2);
 	return (1);
 }
 
@@ -33,14 +33,14 @@ int	handle_out(t_cmds *curr, t_token *token, int *i)
 		curr->fd_out = open(token[*i + 1].value, O_WRONLY | O_CREAT | O_TRUNC,
 				0644);
 		if (curr->fd_out == -1)
-			print_error(strerror(errno), token[*i + 1].value,  2);
+			print_error(strerror(errno), token[*i + 1].value, NULL, 2);
 	}
 	if (token[*i].type == token_append)
 	{
 		curr->fd_out = open(token[*i + 1].value, O_WRONLY | O_CREAT | O_APPEND,
 				0644);
 		if (curr->fd_out == -1)
-			print_error(strerror(errno), token[*i + 1].value,  2);
+			print_error(strerror(errno), token[*i + 1].value, NULL, 2);
 	}
 	return (1);
 }
@@ -119,7 +119,7 @@ int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env)
 
 	status = 0;
 	if (pipe(fd) == -1)
-		return (print_error(strerror(errno), "test", STDERR_FILENO), 0);
+		return (print_error(strerror(errno), "maybe *token[*i]", NULL, STDERR_FILENO), 0);
 	pause_interactive_signals();
 	pid = fork();
 	if (pid == 0)

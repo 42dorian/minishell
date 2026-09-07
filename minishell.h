@@ -164,7 +164,7 @@ char					*handling_path(char *cmd_name, char *path, int *exit_status);
 
 int						check_access(char *cmd);
 int						check_cmd(char *cmd);
-void					print_error(char *msg, char *cmd, int fd);
+void	print_error(char *msg, char *cmd, char *arg, int fd);
 int						is_dir(char *cmd, struct stat *path_stat);
 int						pwd(void);
 void free_cmd(t_cmds *cmds);

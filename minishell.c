@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/07 13:27:41 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/07 15:22:55 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,7 +277,7 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
     printf("GEC2\n");
     split_clean_up(split_line, word_counter(read_line));
     printf("GEC4\n");
-    if (!handle_expansions(env_list, tokens, *status))
+    if (!handle_expansions(env_list, tokens, status))
         return (NULL);
     printf("GEC5\n");
     if (!remove_quotes(tokens))

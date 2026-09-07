@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 12:53:31 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/07 13:25:53 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/07 15:35:48 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char    *convert_pid_to_string()
     return (pid_string);
 }
 
-int    handle_expansions(t_envs *env_list, t_token *tokens, int exit_code)
+int    handle_expansions(t_envs *env_list, t_token *tokens, int *exit_code)
 {
     int i;
     int len;
@@ -84,7 +84,7 @@ int    handle_expansions(t_envs *env_list, t_token *tokens, int exit_code)
             len = get_full_len_of_expandable(tokens[i], env_list, tokens, exit_code);
             if (len == -1)
                 return (clean_up_token_and_env_list(tokens, &env_list));
-            tokens[i].value = get_full_expandable_word(tokens[i], env_list, len, tokens[0].type);
+            tokens[i].value = get_full_expandable_word(tokens[i], env_list, len, exit_code);
         }
         i++;
     }
@@ -154,20 +154,21 @@ char    *get_from_my_env_list(const char *expandable, t_envs env_list)
     return (NULL);
 }
 
-int     how_many_digits(int number)
+int     how_many_digits(int *number)
 {
     int digits;
+    int local_num;
 
+    digits = 0;
+    local_num = *number;
     if (number == 0)
         return (1);
     if (number < 0)
-        digits = 1;
-    else
-        digits = 0;
-    while (number > 0)
+        digits++;
+    while (local_num > 0)
     {
         digits++;
-        number /= 10;
+        local_num /= 10;
     }
     return (digits);
 }
@@ -187,7 +188,7 @@ int     get_len_of_real_env(const char *test_env, t_envs *env_list)
     return (len);
 }
 
-int     get_len_of_current_expandable(const char *expandable, t_envs *env_list, int exit_code)
+int     get_len_of_current_expandable(const char *expandable, t_envs *env_list, int *exit_code)
 {
     char    *test_env;
     char    *real_env;
@@ -231,7 +232,7 @@ int     is_end(const char letter)
     return (0);
 }
 
-int     get_full_len_of_expandable(t_token curr_token, t_envs *env_list, t_token *tokens, int exit_code)
+int     get_full_len_of_expandable(t_token curr_token, t_envs *env_list, t_token *tokens, int *exit_code)
 {
     int     i;
     int     total_len;
@@ -273,32 +274,35 @@ void    cat_to_fully_expanded(char *fully_expanded, const char new_letter)
     fully_expanded[index] = new_letter;
 }
 
-char    *ft_itoa(int number)
-{
-    char    *converted;
-    int     num_dup;
-    int     i;
+// char    *ft_itoa(int *number)
+// {
+//     char    *converted;
+//     int     num_dup;
+//     int     num_dup_2;
+//     int     i;
 
-    i = 0;
-    converted = malloc(sizeof(char) * (how_many_digits(number) + 1));
-    if (!converted)
-        return (NULL);
-    if (number < 0)
-    {
-        converted[i++] = '-';
-        number = -number;
-    }
-    num_dup = number;
-    while (i < how_many_digits(number))
-    {
-        converted[i++] = num_dup % 10 + '0';
-        num_dup /= 10;
-    }
-    converted[i] = 0;
-    return (converted);
-}
+//     i = 0;
+//     num_dup_2 = number;
+//     converted = malloc(sizeof(char) * (how_many_digits(number) + 1));
+//     if (!converted)
+//         return (NULL);
+//     if (number < 0)
+//     {
+//         converted[i++] = '-';
+//         num_dup_2 = -num_dup_2;
+//     }
+//     num_dup = num_dup_2;
+//     while (i < how_many_digits(number))
+//     {
+//         converted[i++] = num_dup % 10 + '0';
+//         num_dup /= 10;
+//     }
+//     converted[i] = 0;
+//     return (converted);
+// }
 
-void    make_expansion(char *fully_expnaded, const char *mock_expand, t_envs *env_list, int exit_code)
+
+void    make_expansion(char *fully_expnaded, const char *mock_expand, t_envs *env_list, int *exit_code)
 {
     int     expand_index;
     char    *test_env;
@@ -312,7 +316,7 @@ void    make_expansion(char *fully_expnaded, const char *mock_expand, t_envs *en
     if (string_compare(mock_expand, "$"))
         test_env = convert_pid_to_string();
     else if (string_compare(mock_expand, "?"))
-        test_env = ft_itoa(exit_code);
+        test_env = ft_itoa(*exit_code);
     if (test_env)
     {
         while (test_env[env_index])
@@ -324,7 +328,7 @@ void    make_expansion(char *fully_expnaded, const char *mock_expand, t_envs *en
     }
 }
 
-char    *get_full_expandable_word(t_token curr_token, t_envs *env_list, int len, int exit_code)
+char    *get_full_expandable_word(t_token curr_token, t_envs *env_list, int len, int *exit_code)
 {
     char    *fully_expanded;
     char    *mock_expand;

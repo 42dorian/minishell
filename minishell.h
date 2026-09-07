@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 13:20:37 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/06 19:12:50 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/07 13:28:49 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ void					split_clean_up(char **split_line, int i);
 int						env_assign_check(char *string);
 void					get_real_quote_type(const char *word, int *quote_type,
 							int *i);
+char    				*normal_copy(const char *get_copied);
 t_envs					*env_list_addition(t_token *tokens, t_envs *env_list);
 int						dollar_sign_exception(const char *read_line, int *i,
 							int *words);
@@ -123,11 +124,9 @@ int						is_dollar_sign(const char letter);
 int						is_pipe(const char letter);
 int     				is_single_quote(const char letter);
 int						is_double_quote(const char letter);
-void					syntax_check(t_token *tokens);
+void					syntax_check(t_token *tokens, int *status);
 int						tokenizer(char *input);
 int						create_token_struct(t_token *tokens, char **line);
-int						equal_sign_check(char *string);
-int						env_assign_check(char *string);
 int						check_for_redirect_out_and_append(const char *read_line,
 							int *i);
 int						check_for_redirect_in_and_heredoc(const char *read_line,

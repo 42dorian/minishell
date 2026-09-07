@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 12:53:31 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/06 18:46:06 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/07 13:25:53 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int    handle_expansions(t_envs *env_list, t_token *tokens, int exit_code)
 
     i = 0;
     len = 0;
-    while (tokens[i].value)
+    while (tokens[i].type != -1)
     {
         if (dollar_in_word(tokens[i].value))
         {
@@ -138,12 +138,18 @@ char    *get_valid_expandable(const char *expandable)
     return (valid_expandable);
 }
 
-char    *get_from_my_env_list(const char *expandable, t_envs *env_list)
+char    *get_from_my_env_list(const char *expandable, t_envs env_list)
 {
-    while (env_list && env_list->key)
+    t_envs *next_one;
+
+    while (env_list.key)
     {
-        if (string_compare(expandable, env_list->key))
-            return (env_list->value);
+        if (string_compare(expandable, env_list.key))
+            return (normal_copy(env_list.value));
+        if (!env_list.next)
+            break ;
+        next_one = env_list.next;
+        env_list = *next_one;
     }
     return (NULL);
 }
@@ -173,7 +179,7 @@ int     get_len_of_real_env(const char *test_env, t_envs *env_list)
 
     real_env = getenv(test_env);
     if (!real_env)
-        real_env = get_from_my_env_list(test_env, env_list);
+        real_env = get_from_my_env_list(test_env, *env_list);
     if (!real_env)
         len = -1;
     else
@@ -188,13 +194,13 @@ int     get_len_of_current_expandable(const char *expandable, t_envs *env_list, 
     int     len;
 
     test_env = get_valid_expandable(expandable);
+    if (string_compare(test_env, "$"))
+        return (free(test_env), get_pid_len());
+    else if (string_compare(test_env, "?"))
+        return (free(test_env), how_many_digits(exit_code));
     len = get_len_of_real_env(test_env, env_list);
     if (len == -1)
         return (free(test_env), -1);
-    if (string_compare(test_env, "$"))
-        return (get_pid_len());
-    else if (string_compare(test_env, "?"))
-        return (how_many_digits(exit_code));
     else
         return (len);
 }
@@ -235,7 +241,7 @@ int     get_full_len_of_expandable(t_token curr_token, t_envs *env_list, t_token
     single_quote_counter = 0;
     i = 0;
     curr_len = 0;
-    total_len;
+    total_len = 0;
     while (curr_token.value[i])
     {
         if (is_single_quote(curr_token.value[i]))
@@ -288,6 +294,7 @@ char    *ft_itoa(int number)
         converted[i++] = num_dup % 10 + '0';
         num_dup /= 10;
     }
+    converted[i] = 0;
     return (converted);
 }
 
@@ -301,7 +308,7 @@ void    make_expansion(char *fully_expnaded, const char *mock_expand, t_envs *en
     expand_index = ft_strlen(fully_expnaded);
     test_env = getenv(mock_expand);
     if (!test_env)
-        test_env = get_from_my_env_list(mock_expand, env_list);
+        test_env = get_from_my_env_list(mock_expand, *env_list);
     if (string_compare(mock_expand, "$"))
         test_env = convert_pid_to_string();
     else if (string_compare(mock_expand, "?"))
@@ -343,6 +350,5 @@ char    *get_full_expandable_word(t_token curr_token, t_envs *env_list, int len,
             cat_to_fully_expanded(fully_expanded, curr_token.value[i++]);
     }
     fully_expanded[len] = 0;
-    printf("expansion successfull:\n %s\n", fully_expanded);
     return (fully_expanded);
 }

@@ -268,7 +268,7 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
     split_line = split_read_line(read_line);
     if (!split_line)
         return (NULL);
-    tokens = malloc(sizeof(t_token) * (word_counter(read_line) + 2));
+    tokens = malloc(sizeof(t_token) * (word_counter(read_line) + 1));
     if (!tokens)
         return (split_clean_up(split_line, word_counter(read_line)), NULL);
     printf("GEC1\n");
@@ -283,7 +283,7 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
     if (!remove_quotes(tokens))
         return (clean_up_token_and_env_list(tokens, &env_list), NULL);
     printf("GEC6\n");
-    syntax_check(tokens);
+    syntax_check(tokens, status);
     return (tokens);
 }
 
@@ -295,8 +295,11 @@ int main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 
-	ft_bzero(&shell, sizeof(t_shell));
-	add_envp_to_list(&shell.env_list, envp);
+	cmds = NULL;
+	global_envs = NULL;
+	status = 0;
+	if (!add_envp_to_list(&global_envs, (const char **)envp))
+        return (1);
 	init_interactive_signals();
 	while ((line = readline("minishell$ ")))
 	{

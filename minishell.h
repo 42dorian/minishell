@@ -58,10 +58,6 @@ typedef struct s_shell
 typedef struct s_cd
 {
 	char	*target_path;
-	char	*old_pwd;
-	char	*pwd;
-	char	*value_old_path;
-	char	*value_new_path;
 	char	old_path[PATH_MAX];
 	char	new_path[PATH_MAX];
 }			t_cd;

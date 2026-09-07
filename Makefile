@@ -32,8 +32,8 @@ SOURCE =	split.c \
 			env.c \
 			export.c \
 			unset.c \
-			exit.c
-
+			exit.c \
+			change_dir.c
 
 
 # CFLAGS = -Wall -Wextra -Werror -g

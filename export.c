@@ -1,89 +1,128 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/09/05 17:45:55 by dabdulla          #+#    #+#             */
+/*   Updated: 2026/09/05 21:24:09 by dabdulla         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-static char *add_key(char *key);
-static char *add_value(char *value);
-static int key_exists(char *key, t_envs **env_list);
-static int add_new_list(t_envs *new, char **key_value, char *cmd, t_envs *env_list);
+static t_envs	*key_exists(char *key, t_envs *env_list);
+static int		add_new_list(char *cmd, t_envs **env_list);
+static int		print_envs(t_envs *env_list);
 
-
-int export_bi(t_cmds *cmd, t_envs *env_list)
+int	export_bi(t_cmds *cmd, t_envs **env_list)
 {
-	t_envs *new;
-	char **key_value;
-	int i;
+	int	i;
+	int	return_val;
+	int	exit_code;
 
 	if (cmd->cmd[1] == NULL)
-		return (1);
+		return (print_envs(*env_list));
 	i = 1;
+	exit_code = 0;
 	while (cmd->cmd[i])
 	{
-		if (add_new_list(new, key_value, cmd->cmd[i], env_list) == 1)
+		return_val = add_new_list(cmd->cmd[i], env_list);
+		if (return_val == 1)
 			return (1);
+		else if (return_val == 2)
+		{
+			ft_putstr_fd("minishell: export: '", STDERR_FILENO);
+			ft_putstr_fd(cmd->cmd[i], STDERR_FILENO);
+			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+			exit_code = 1;
+		}
 		i++;
 	}
-	return (0);
+	return (exit_code);
 }
 
-
-int add_new_list(t_envs *new, char **key_value, char *cmd, t_envs *env_list)
+int	add_new_list(char *cmd, t_envs **env_list)
 {
-	key_value = ft_split(cmd, '=');
-	if (!key_value)
-		return (1);
-	if (key_exists(key_value[0], &env_list))
+	char	*equal_pos;
+	char	*key;
+	char	*value;
+
+	equal_pos = ft_strchr(cmd, '=');
+	if (!equal_pos)
 	{
-		free(env_list->value);
-		env_list->value = add_value(key_value[1]);
-		if (!env_list->value)
-			return (1);
-		return (0);
+		key = ft_strdup(cmd);
+		if (!key)
+			return (0);
+		value = NULL;
 	}
-	new = ft_calloc(1, sizeof(t_envs));
-	if (!new)
+	else
+	{
+		key = ft_substr(cmd, 0, equal_pos - cmd);
+		value = ft_strdup(equal_pos + 1);
+	}
+	if (valid_identifier(key))
+		return (free(value), free(key), 2);
+	if (update_or_add(env_list, value, key))
 		return (1);
-	new->key = add_key(key_value[0]);
-	if (!new->key)
-		return (free(new), 1);
-	new->value = add_value(key_value[1]);
-	if (!new->value)
-		return (1);
-	ft_lstadd_back(&env_list, new);
-	free_split(key_value);
 	return (0);
 }
 
-char *add_key(char *key)
+int	update_or_add(t_envs **env_list, char *value, char *key)
 {
-	char *tmp;
+	t_envs	*head;
+	t_envs	*new;
 
-	tmp = ft_strdup(key);
-	if (!tmp)
-		return (NULL);
-	return (tmp);
-}
-
-char *add_value(char *value)
-{
-	char *tmp;
-
-	tmp = ft_strdup(value);
-	if (!tmp)
-		return (NULL);
-	return (tmp);
-}
-
-int key_exists(char *key, t_envs **env_list)
-{
-	t_envs *tmp;
-
-	tmp = *env_list;
-	while(tmp)
+	head = key_exists(key, *env_list);
+	if (head)
 	{
-		if (ft_strncmp(key, tmp->key, ft_strlen(key)) == 0)
+		if (value)
 		{
-			*env_list = tmp;
-			return (1);
+			free(head->value);
+			head->value = value;
 		}
+		free(key);
+	}
+	else
+	{
+		new = ft_calloc(1, sizeof(t_envs));
+		if (!new)
+			return (1);
+		new->key = key;
+		new->value = value;
+		ft_lstadd_back(env_list, new);
+	}
+	return (0);
+}
+
+t_envs	*key_exists(char *key, t_envs *env_list)
+{
+	while (env_list)
+	{
+		if (ft_strncmp(key, env_list->key, ft_strlen(key) + 1) == 0)
+			return (env_list);
+		env_list = env_list->next;
+	}
+	return (NULL);
+}
+
+int	print_envs(t_envs *env_list)
+{
+	t_envs	*tmp;
+
+	tmp = env_list;
+	while (tmp)
+	{
+		ft_putstr_fd("declare -x ", STDOUT_FILENO);
+		ft_putstr_fd(tmp->key, STDOUT_FILENO);
+		if (tmp->value != NULL)
+		{
+			ft_putstr_fd("=\"", STDOUT_FILENO);
+			ft_putstr_fd(tmp->value, STDOUT_FILENO);
+			ft_putchar_fd('"', STDOUT_FILENO);
+		}
+		ft_putstr_fd("\n", STDOUT_FILENO);
 		tmp = tmp->next;
 	}
 	return (0);

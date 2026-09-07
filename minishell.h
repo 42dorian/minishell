@@ -230,8 +230,10 @@ void pause_interactive_signals(void);
 void init_heredoc_signals(void);
 char **create_envp(t_envs *env_list);
 int env(t_envs *env_list);
-int export_bi(t_cmds *cmd, t_envs *env_list);
-int unset(t_cmds *cmd, t_envs *env_list);
+int export_bi(t_cmds *cmd, t_envs **env_list);
+int unset(t_cmds *cmd, t_envs **env_list);
 int exit_bi(t_cmds *cmd, t_shell *shell);
-
+int valid_identifier(char *key);
+int change_dir(t_cmds *cmds, t_envs **env_list);
+int		update_or_add(t_envs **env_list, char *value, char *key);
 #endif

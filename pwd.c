@@ -18,7 +18,7 @@ int	pwd(void)
 
 	if (!getcwd(buffer, sizeof(buffer)))
 	{
-		perror("pwd");
+		print_error(strerror(errno), "pwd", STDERR_FILENO);
 		return (1);
 	}
 	ft_putstr_fd(buffer, STDOUT_FILENO);

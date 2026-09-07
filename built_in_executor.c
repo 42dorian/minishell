@@ -50,7 +50,7 @@ int	run_built_in(t_cmds *cmd, t_envs *env_list, t_shell *shell)
 	if (cmd_len == 4 && ft_strncmp(cmd->cmd[0], "exit", 4) == 0)
 		return (exit_bi(cmd, shell));
 	if (cmd_len == 2 && ft_strncmp(cmd->cmd[0], "cd", 2) == 0)
-		return (change_dir(cmd, &shell->env_list));
+		return (cd_bi(cmd, &shell->env_list));
 	return (0);
 }
 

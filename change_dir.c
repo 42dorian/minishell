@@ -12,39 +12,101 @@
 
 #include "minishell.h"
 
-int change_dir(t_cmds *cmd, t_envs **env_list)
-{
-	char *target_path;
-	char old_path[PATH_MAX];
-	char new_path[PATH_MAX];
+int	change_dir(t_cd *cd, t_cmds *cmd, t_envs **env_list);
+int home_dir(t_cd *cd, t_cmds *cmd, t_envs **env_list);
+int update_pwd(char *old_pwd, char *pwd, t_cd *cd, t_envs **env_list);
 
+int	cd_bi(t_cmds *cmd, t_envs **env_list)
+{
+	t_cd 	cd_struct;
+
+	ft_bzero(&cd_struct, sizeof(cd_struct));
 	if (!cmd->cmd[1])
 	{
-		// go to home or print error
+		if (home_dir(&cd_struct, cmd, env_list))
+			return (1);
+		return (0);
 	}
 	else
-		target_path = cmd->cmd[1];
-	if (!getcwd(old_path, sizeof(old_path)))
-	{
-		print_error(strerror(errno), cmd->cmd[0], STDERR_FILENO);
-		return (1);
-	}
-	if (chdir(target_path) != 0)
-	{
-		print_error(strerror(errno), cmd->cmd[0], STDERR_FILENO);
-		return (1);
-	}
-	if (!getcwd(new_path, sizeof(new_path)))
-	{
-		print_error(strerror(errno), cmd->cmd[0], STDERR_FILENO);
-		return (1);
-	}
-	char *old_pwd = ft_strdup("OLDPWD");//failcheck
-	char *pwd = ft_strdup("PWD");//failcheck
-	char *value_old_path= ft_strdup(old_path);
-	char *value_new_path = ft_strdup(new_path);
+		cd_struct.target_path = cmd->cmd[1];
+	change_dir(&cd_struct, cmd, env_list);
+	return (0);
+}
 
-	update_or_add(env_list, value_old_path, old_pwd);
-	update_or_add(env_list, value_new_path, pwd);
+int	change_dir(t_cd *cd, t_cmds *cmd, t_envs **env_list)
+{
+	if (!getcwd(cd->old_path, sizeof(cd->old_path)))
+	{
+		print_error(strerror(errno), cmd->cmd[0], STDERR_FILENO);
+		return (1);
+	}
+	if (chdir(cd->target_path) != 0)
+	{
+		print_error(strerror(errno), cmd->cmd[0], STDERR_FILENO);
+		return (1);
+	}
+	if (!getcwd(cd->new_path, sizeof(cd->new_path)))
+	{
+		print_error(strerror(errno), cmd->cmd[0], STDERR_FILENO);
+		return (1);
+	}
+	if (update_pwd(cd->old_pwd, cd->pwd, cd, env_list))
+		return (1);
+	return (0);
+}
+
+int update_pwd(char *old_pwd, char *pwd, t_cd *cd, t_envs **env_list)
+{
+	cd->old_pwd = ft_strdup(old_pwd);
+	if (!cd->old_pwd)
+		return (1);
+	cd->pwd = ft_strdup(pwd);
+	if (!cd->pwd)
+		return (1);
+	cd->value_old_path = ft_strdup(cd->old_path);
+	if (!cd->value_old_path)
+		return (1);
+	cd->value_new_path = ft_strdup(cd->new_path);
+	if (!cd->value_new_path)
+		return (1);
+	if (update_or_add(env_list, cd->value_old_path, cd->old_pwd))
+		return (1);
+	if (update_or_add(env_list, cd->value_new_path, cd->pwd))
+		return (1);
+	return (0);
+}
+
+int home_dir(t_cd *cd, t_cmds *cmd, t_envs **env_list)
+{
+	t_envs *tmp;
+
+	tmp = *env_list;
+	while(tmp)
+	{
+		if (ft_strncmp(tmp->value, "HOME", 5) == 0)
+		{
+			cd->target_path = tmp->value;
+			printf("HERE");
+		}
+		printf("VAL: %s\n",tmp->value);
+		tmp = tmp->next;
+	}
+	if (!getcwd(cd->old_path, sizeof(cd->old_path)))
+	{
+		print_error(strerror(errno), cmd->cmd[0], STDERR_FILENO);
+		return (1);
+	}
+	if (chdir(cd->target_path) != 0)
+	{
+		print_error("HOME is not set", cmd->cmd[0], STDERR_FILENO);
+		return (1);
+	}
+	if (!getcwd(cd->new_path, sizeof(cd->new_path)))
+	{
+		print_error(strerror(errno), cmd->cmd[0], STDERR_FILENO);
+		return (1);
+	}
+	if (update_pwd(cd->old_pwd, "HOME", cd, env_list))
+		return (1);
 	return (0);
 }

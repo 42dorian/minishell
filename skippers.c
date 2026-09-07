@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   skippers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
+/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 17:44:27 by bguhty            #+#    #+#             */
-/*   Updated: 2026/06/03 19:13:59 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/06 18:52:21 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,3 @@ void     skip_non_white_spaces(const char *read_line, int *i)
     }
 }
 
-int     skip_to_next_dollar_sign(char *expandable)
-{
-    int i;
-
-    i = 0;
-    while (expandable[i])
-    {
-        if (is_dollar_sign(expandable[i]) || check_for_quote_without_quote_type(expandable[i]))
-            break ;
-        i++;
-    }
-    return (i);
-}

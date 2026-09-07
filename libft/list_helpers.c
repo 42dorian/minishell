@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 13:08:42 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/08/28 19:53:08 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/03 11:11:57 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	ft_lstclear(t_envs **lst, void (*del)(void *))
     while (tmp)
     {
         next = tmp->next;
+        del(tmp->key);
         del(tmp->value);
         free(tmp);
         tmp = next;

@@ -26,6 +26,12 @@
 // #include "is_special_character.c"
 // #include "special_characters_checkers.c"
 // #include "word_count_helpers.c"
+// #include "libft/ft_strlen.c"
+// #include "libft/list_general.c"
+// #include "libft/list_helpers.c"
+// #include "libft/ft_calloc.c"
+// #include "libft/ft_memset.c"
+// #include "libft/ft_bzero.c"
 
 volatile sig_atomic_t g_signal = 0;
 
@@ -93,7 +99,7 @@ char    *get_rid_of_them_quotes(t_token *tokens, int i)
     local_index = 0;
     new_word = malloc(sizeof(char) * (count_valid_char(tokens[i].value) + 1));
     if (!new_word)
-        return (NULL);
+        return (free((void*)tokens[i].value), NULL);
     while (tokens[i].value[j])
     {
         get_real_quote_type(tokens[i].value, &quote_type, &j);
@@ -107,20 +113,22 @@ char    *get_rid_of_them_quotes(t_token *tokens, int i)
     return (new_word);
 }
 
-void    remove_quotes(t_token *tokens)
+int    remove_quotes(t_token *tokens)
 {
     int i;
     int j;
 
-    i = 1;
+    i = 0;
     j = 0;
     while (tokens[i].value)
     {
         while (tokens[i].value[j])
         {
-            if (check_for_quote_without_quote_type(tokens[i].value[j]))
+            if (is_quote(tokens[i].value[j]))
             {
                 tokens[i].value = get_rid_of_them_quotes(tokens, i);
+                if (!tokens[i].value)
+                    return (0);
                 break ;
             }
             j++;
@@ -128,6 +136,7 @@ void    remove_quotes(t_token *tokens)
         i++;
         j = 0;
     }
+    return (1);
 }
 
 void    copy_key(const char *envp, char *new_key)
@@ -180,18 +189,9 @@ char    *insert_value(const char *envp)
     return (new_value);
 }
 
-int     clean_up_env_list(t_envs *env_list, int i)
+int     clean_up_env_list(t_envs **env_list)
 {
-    int j;
-
-    j = 0;
-    while (j <= i)
-    {
-        free(env_list[j].key);
-        free(env_list[j].value);
-        j++;
-    }
-    free(env_list);
+    ft_lstclear(env_list, free);
     return (0);
 }
 
@@ -205,7 +205,7 @@ int     get_env_len(const char **envp)
     return (len);
 }
 
-void    add_envp_to_list(t_envs **my_list, const char **envp)
+int    add_envp_to_list(t_envs **my_list, const char **envp)
 {
     t_envs *new_node;
     int     i;
@@ -216,9 +216,13 @@ void    add_envp_to_list(t_envs **my_list, const char **envp)
     while (i < envp_len)
     {
         new_node = copy_from_envp_to_own_env_list(envp, i);
-        ft_lstadd_back(my_list, new_node);
+        if (!new_node)
+            return(clean_up_env_list(my_list));
+        else
+            ft_lstadd_back(my_list, new_node);
         i++;
     }
+    return (1);
 }
 
 t_envs     *copy_from_envp_to_own_env_list(const char **envp, int i)
@@ -226,23 +230,33 @@ t_envs     *copy_from_envp_to_own_env_list(const char **envp, int i)
     t_envs *new_node;
 
     new_node = malloc(sizeof(t_envs));
+    if (!new_node)
+        return (NULL);
     new_node->key = insert_key(envp[i]);
+    if (!new_node->key)
+        return (free(new_node), NULL);
     new_node->value = insert_value(envp[i]);
+    if (!new_node->value)
+        return (free(new_node->key), free(new_node), NULL);
     new_node->next = NULL;
     return (new_node);
 }
 
-int     get_len_of_envp(const char **envp)
+void        clean_up_tokens_and_split_line(t_token *tokens, char **split_line)
 {
     int i;
-
+    
     i = 0;
-    while (envp[i])
-        i++;
-    return (i);
-}
+    while (tokens[i].type != -1)
+        free((void*)tokens[i++].value);
+    i = 0;
+    while (split_line[i])
+        free(split_line[i++]);
+    free(split_line);
+    free(tokens);
+}     
 
-t_token    *minishell(const char *read_line, t_envs *env_list)
+t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
 {
     int     i;
     t_token *tokens;
@@ -252,54 +266,28 @@ t_token    *minishell(const char *read_line, t_envs *env_list)
     if(*read_line == '\0')
    		return (NULL);
     split_line = split_read_line(read_line);
-    // printf("%i\n", word_counter(read_line));
-    tokens = malloc(sizeof(t_token) * (word_counter(read_line) + 2));
-    create_token_struct(tokens, split_line);
-    add_env_variables_to_env_list(env_list, tokens);
-    handle_expansions(env_list, tokens);
-    remove_quotes(tokens);
-    // while (split_line[i])
-    // {
-    //     printf("type: %i, value: %s\n", tokens[i + 1].type, tokens[i + 1].value);
-    //     i++;
-    // }
-    // while (env_list->next != NULL)
-    // {
-    //     printf("%s=%s\n", env_list->key, env_list->value);
-    //     env_list = env_list->next;
-    // }
-    if (syntax_check(tokens))
+    if (!split_line)
         return (NULL);
+    tokens = malloc(sizeof(t_token) * (word_counter(read_line) + 2));
+    if (!tokens)
+        return (split_clean_up(split_line, word_counter(read_line)), NULL);
+    printf("GEC1\n");
+    if (!create_token_struct(tokens, split_line))
+        return (clean_up_tokens_and_split_line(tokens, split_line), NULL);
+    printf("GEC2\n");
+    split_clean_up(split_line, word_counter(read_line));
+    printf("GEC4\n");
+    if (!handle_expansions(env_list, tokens, *status))
+        return (NULL);
+    printf("GEC5\n");
+    if (!remove_quotes(tokens))
+        return (clean_up_token_and_env_list(tokens, &env_list), NULL);
+    printf("GEC6\n");
+    syntax_check(tokens);
     return (tokens);
 }
 
-void    do_nothing_int(int n)
-{
-    n += 2;
-}
-
-void    do_nothing_ptr(char **ptr)
-{
-    ptr[0][0] = 0;
-
-}
-
-// int old_main(int args, char **argv, const char **envp)
-// {
-//     t_token    *okcso;
-//     t_envs     *env_list;
-
-//     env_list = NULL;
-//     do_nothing_int(args);
-//     do_nothing_ptr(argv);
-//     add_envp_to_list(&env_list, envp);
-//     okcso = minishell("here=fasz", env_list);
-//     if (!okcso)
-//         return (1);
-//     return (0);
-// }
-
-int main(int ac, char **av, const char **envp)
+int main(int ac, char **av, char **envp)
 {
 	char *line;
 	t_shell shell;

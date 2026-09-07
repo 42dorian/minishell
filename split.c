@@ -6,42 +6,29 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 14:02:51 by bguthy            #+#    #+#             */
-/*   Updated: 2026/08/27 11:14:41 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/06 19:11:43 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// char    *copy_till_next_word(const char *read_line, int *i)
-// {
-//     int     letters;
-//     int     local_index;
-//     char    *new_word;
-//     int     quote_type;
-    
-//     local_index = 0;
-//     quote_type = 0;
-//     letters = count_letters(read_line, *i);
-//     new_word = malloc(sizeof(char) * (letters + 1));
-//     if (!new_word)
-//         return (NULL);
-//     while (!is_white_space(read_line[*i]) && read_line[*i])
-//     {
-//         new_word[local_index++] = read_line[(*i)++];
-//         if (check_for_quote(read_line[*i], &quote_type))
-//             copy_till_next_quote(read_line, i, quote_type);
-//         if (is_heredoc_or_append(read_line[*i], read_line[(*i) + 1]) && local_index >= letters)
-//             break ;
-//         else if (local_index >= letters && is_redir_or_pipe(read_line[*i]) && (!is_redir_or_pipe(new_word[local_index - 1]) || is_redir_or_pipe(new_word[local_index - 1])))
-//             break ;
-//     }
-//     new_word[local_index] = 0;
-//     return (new_word);
-// }
+int     is_single_quote(const char letter)
+{
+    if (letter == SINGLE_QUOTE)
+        return (1);
+    return (0);
+}
+
+int     is_double_quote(const char letter)
+{
+    if (letter == DOUBLE_QUOTE)
+        return (1);
+    return (0);
+}
 
 int     is_quote(const char letter)
 {
-    if (letter == SINGLE_QUOTE || letter == DOUBLE_QUOTE)
+    if (is_single_quote(letter) || is_double_quote(letter))
         return (1);
     return (0);
 }
@@ -100,17 +87,6 @@ int     count_letters_for_dollar_sign(const char *read_line, int *i)
     return (letters);
 }
 
-int     dollar_ended_naturally(const char *read_line, int i)
-{
-    while (read_line[i])
-    {
-        if (!is_valid_after_dollar_sign(read_line[i]))
-            return (0);
-        i++;
-    }
-    return (1);
-}
-
 int     count_letters_till_next_word(const char *read_line, int i)
 {
     int letters;
@@ -119,11 +95,7 @@ int     count_letters_till_next_word(const char *read_line, int i)
     while (read_line[i])
     {
         if (is_dollar_sign(read_line[i]))
-        {
             letters += count_letters_for_dollar_sign(read_line, &i);
-            // if (!dollar_ended_naturally(read_line, i))
-            //     break ;
-        }
         if (is_quote(read_line[i]))
             letters+= count_letters_till_next_quote(read_line, &i);
         if (is_white_space(read_line[i]) || !read_line[i])
@@ -193,7 +165,7 @@ char    **allocating_double_pointer(const char *read_line)
     return (split_line);
 }
 
-void    fill_up_double_pointer(char **split_line, const char *read_line)
+int    fill_up_double_pointer(char **split_line, const char *read_line)
 {
     int i;
     int w;
@@ -206,9 +178,10 @@ void    fill_up_double_pointer(char **split_line, const char *read_line)
         if (!is_white_space(read_line[i]) && read_line[i])
             split_line[w++] = copy_till_next_word(read_line, &i);
         if (split_line[w - 1] == NULL)
-            return (split_clean_up(split_line, w));
+            return (split_clean_up(split_line, w), 0);
     }
     split_line[w] = NULL;
+    return (1);
 }
 
 char    **split_read_line(const char *read_line)
@@ -217,6 +190,8 @@ char    **split_read_line(const char *read_line)
     split_line = allocating_double_pointer(read_line);
     if (!split_line)
         return (NULL);
-    fill_up_double_pointer(split_line, read_line);
-   return (split_line);
+    if (!fill_up_double_pointer(split_line, read_line))
+        return (NULL);
+    else
+        return (split_line);
 }

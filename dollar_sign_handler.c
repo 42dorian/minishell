@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 17:33:26 by bguhty            #+#    #+#             */
-/*   Updated: 2026/08/27 10:59:44 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/02 15:21:06 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void    process_after_dollar_sign(const char *read_line, int *i, int *words)
 {
     while (read_line[*i] && !is_white_space(read_line[*i]))
     {
-        if (check_for_quote_without_quote_type(read_line[*i]))
+        if (is_quote(read_line[*i]))
         {
             (*words)++;
             return ;

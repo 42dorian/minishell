@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 17:13:55 by bguhty            #+#    #+#             */
-/*   Updated: 2026/08/28 19:56:50 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/06 19:08:01 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,7 @@
 
 int tokenizer(char *input)
 {
-    if (env_assign_check(input))
-        return token_env_assign;
-    else if (string_compare(input, "|"))
+    if (string_compare(input, "|"))
         return token_pipe;
     else if (string_compare(input, ">>"))
         return token_append;
@@ -30,30 +28,50 @@ int tokenizer(char *input)
         return token_word;
 }
 
-const char    *create_exit_code()
-{
-    const char  *exit_code;
 
-    exit_code = malloc(sizeof(char) * (10));
-    if (!exit_code)
+char    *normal_copy(const char *get_copied)
+{
+    int     i;
+    char    *new_word;
+    
+    i = 0;
+    new_word = malloc(sizeof(char) * (ft_strlen(get_copied) + 1));
+    if (!new_word)
         return (NULL);
-    exit_code = "exit_code\0";
-    return (exit_code);
+    while (i < ft_strlen(get_copied))
+    {
+        new_word[i] = get_copied[i];
+        i++;
+    }
+    new_word[i] = 0;
+    return (new_word);
 }
 
-void    create_token_struct(t_token *tokens, char **line)
+int     clean_up_token_list(t_token *tokens, int len)
+{
+    int i;
+    
+    i = 0;
+    while (i < len)
+        free((void*)tokens[i++].value);
+    free(tokens);
+    return (0);
+}
+
+int    create_token_struct(t_token *tokens, char **line)
 {
     int i;
 
     i = 0;
-    // tokens[i].value = create_exit_code();
-    // tokens[i].type = EXIT_SUCCESS;
     while (line[i])
     {
-        tokens[i].value = line[i];
+        tokens[i].value = normal_copy(line[i]);
+        if (!tokens[i].value)
+            return(clean_up_token_list(tokens, i));
         tokens[i].type = tokenizer(line[i]);
         i++;
     }
     tokens[i].value = NULL;
     tokens[i].type = -1;
+    return (1);
 }

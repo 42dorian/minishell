@@ -6,20 +6,11 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 21:09:28 by bguhty            #+#    #+#             */
-/*   Updated: 2026/08/27 09:37:14 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/06 19:10:16 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int    set_quote_type(const char letter)
-{
-    if (letter == SINGLE_QUOTE)
-        return (SINGLE_QUOTE);
-    else
-        return (DOUBLE_QUOTE);
-    return (0);
-}
 
 int check_for_quote(const char letter, int *quote_type)
 {
@@ -29,15 +20,6 @@ int check_for_quote(const char letter, int *quote_type)
         return (*quote_type = DOUBLE_QUOTE, 1);
     else
         return (0);
-}
-
-int check_for_quote_without_quote_type(const char letter)
-{
-    if (letter == SINGLE_QUOTE)
-        return (1);
-    else if (letter == DOUBLE_QUOTE)
-        return (1);
-    return (0);
 }
 
 int     letter_after_dollar_is_num_or_astrisk(const char letter)
@@ -84,24 +66,6 @@ int     is_special_character(const char *read_line, int i, int *letters)
     return (0);
 }
 
-int     count_letters(const char *read_line, int i)
-{
-    int letters;
-
-    letters = 0;
-    while (read_line[i])
-    {
-        if (is_white_space(read_line[i]))
-            return (letters);
-        else if (check_for_quote_without_quote_type(read_line[i]) && letters > 0)
-            return (letters);
-        if (is_special_character(read_line, i, &letters))
-            return (letters);
-        i++;
-        letters++;
-    }
-    return (letters);
-}
 
 void    split_clean_up(char **split_line, int i)
 {
@@ -111,4 +75,5 @@ void    split_clean_up(char **split_line, int i)
     while (j < i)
         free(split_line[j++]);
     free(split_line);
+    split_line = NULL;
 }

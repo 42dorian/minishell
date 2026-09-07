@@ -6,23 +6,11 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 12:53:31 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/08/28 19:43:25 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/06 18:46:06 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// int     ft_strlen(const char *s)
-// {
-//     int i;
-
-//     i = 0;
-//     if (!s)
-//         return (i);
-//     while (s[i])
-//         i++;
-//     return (i);
-// }
 
 int     dollar_in_word(const char *word)
 {
@@ -36,16 +24,6 @@ int     dollar_in_word(const char *word)
         i++;
     }
     return (0);
-}
-
-int     invalid_for_after_dollar(const char letter)
-{
-    if (letter == DOLLAR_SIGN)
-        return (1);
-    else if (check_for_quote_without_quote_type(letter))
-        return (1);
-    else
-        return (0);
 }
 
 int     get_pid_len()
@@ -81,6 +59,8 @@ char    *convert_pid_to_string()
     pid = (int)pid;
     digits = digit_counter(pid);
     pid_string = malloc(sizeof(char) * (digits + 1));
+    if (!pid_string)
+        return (NULL);
     pid_string[digits] = 0;
     while (pid > 0)
     {
@@ -90,38 +70,25 @@ char    *convert_pid_to_string()
     return (pid_string);
 }
 
-char    *copy_till_equal_sign(char *expandable)
-{
-    int     i;
-    char    *new_key;
-
-    i = 0;
-    new_key = malloc(sizeof(char) * (key_counter(expandable) + 1));
-    while (expandable[i] != EQUAL_SIGN)
-    {
-        new_key[i] = expandable[i];
-        i++;
-    }
-    new_key[i] = 0;
-    return (new_key);
-}
-
-void    handle_expansions(t_envs *env_list, t_token *tokens)
+int    handle_expansions(t_envs *env_list, t_token *tokens, int exit_code)
 {
     int i;
     int len;
 
-    i = 1;
+    i = 0;
     len = 0;
     while (tokens[i].value)
     {
         if (dollar_in_word(tokens[i].value))
         {
-            len = get_full_len_of_expandable(tokens[i], env_list, tokens);
+            len = get_full_len_of_expandable(tokens[i], env_list, tokens, exit_code);
+            if (len == -1)
+                return (clean_up_token_and_env_list(tokens, &env_list));
             tokens[i].value = get_full_expandable_word(tokens[i], env_list, len, tokens[0].type);
         }
         i++;
     }
+    return (1);
 }
 
 int     is_valid_after_dollar_sign(const char letter)
@@ -160,6 +127,8 @@ char    *get_valid_expandable(const char *expandable)
     i = 0;
     len = get_len_of_valid_expandable(expandable);
     valid_expandable = malloc(sizeof(char) * (len + 1));
+    if (!valid_expandable)
+        return (NULL);
     while (i < len)
     {
         valid_expandable[i] = expandable[i];
@@ -197,20 +166,37 @@ int     how_many_digits(int number)
     return (digits);
 }
 
+int     get_len_of_real_env(const char *test_env, t_envs *env_list)
+{
+    char    *real_env;
+    int     len;
+
+    real_env = getenv(test_env);
+    if (!real_env)
+        real_env = get_from_my_env_list(test_env, env_list);
+    if (!real_env)
+        len = -1;
+    else
+        len = ft_strlen(real_env);
+    return (len);
+}
+
 int     get_len_of_current_expandable(const char *expandable, t_envs *env_list, int exit_code)
 {
     char    *test_env;
     char    *real_env;
+    int     len;
 
     test_env = get_valid_expandable(expandable);
-    real_env = getenv(test_env);
-    if (!real_env)
-        real_env = get_from_my_env_list(test_env, env_list);
+    len = get_len_of_real_env(test_env, env_list);
+    if (len == -1)
+        return (free(test_env), -1);
     if (string_compare(test_env, "$"))
         return (get_pid_len());
     else if (string_compare(test_env, "?"))
         return (how_many_digits(exit_code));
-    return (ft_strlen(real_env));
+    else
+        return (len);
 }
 
 int     count_valid_characters_after_dollar_sign(const char *curr_expandable)
@@ -232,36 +218,6 @@ int     count_valid_characters_after_dollar_sign(const char *curr_expandable)
     return (i);
 }
 
-// void	*ft_memset(void *s, int c, size_t n)
-// {
-// 	unsigned char	*str;
-
-// 	str = (unsigned char *)s;
-// 	while (n--)
-// 		*str++ = c;
-// 	return (s);
-// }
-
-// void	*ft_calloc(size_t nmemb, size_t size)
-// {
-// 	void	*ptr;
-
-// 	if (nmemb == 0 || size == 0)
-// 	{
-// 		ptr = malloc(0);
-// 		if (!ptr)
-// 			return (NULL);
-// 		return (ptr);
-// 	}
-// 	if (nmemb > (size_t) - 1 / size)
-// 		return (NULL);
-// 	ptr = malloc(nmemb * size);
-// 	if (!ptr)
-// 		return (NULL);
-// 	ft_memset(ptr, 0, nmemb * size);
-// 	return (ptr);
-// }
-
 int     is_end(const char letter)
 {
     if (is_white_space(letter) || letter == 0)
@@ -269,31 +225,38 @@ int     is_end(const char letter)
     return (0);
 }
 
-int     get_full_len_of_expandable(t_token curr_token, t_envs *env_list, t_token *tokens)
+int     get_full_len_of_expandable(t_token curr_token, t_envs *env_list, t_token *tokens, int exit_code)
 {
     int     i;
-    int     len;
-    int     quote_counter;
+    int     total_len;
+    int     curr_len;
+    int     single_quote_counter;
 
-    quote_counter = 0;
+    single_quote_counter = 0;
     i = 0;
-    len = 0;
+    curr_len = 0;
+    total_len;
     while (curr_token.value[i])
     {
-        if (is_quote(curr_token.value[i]))
-            quote_counter++;
-        if (is_dollar_sign(curr_token.value[i]) && !is_end(curr_token.value[i + 1]) && quote_counter % 2 == 0)
+        if (is_single_quote(curr_token.value[i]))
+            single_quote_counter++;
+        if (is_dollar_sign(curr_token.value[i]) && !is_end(curr_token.value[i + 1]) && single_quote_counter % 2 == 0)
         {
-            len += get_len_of_current_expandable(&curr_token.value[i + 1], env_list, tokens[0].type);
+            curr_len = get_len_of_current_expandable(&curr_token.value[i + 1], env_list, exit_code);
+            if (curr_len == -1)
+                return (-1);
+            else
+                total_len += curr_len;
             i += (count_valid_characters_after_dollar_sign(&curr_token.value[i]));
+            curr_len = 0;
         }
         else
         {
-            len++;
+            total_len++;
             i++;
         }
     }
-    return (len);
+    return (total_len);
 }
 
 void    cat_to_fully_expanded(char *fully_expanded, const char new_letter)
@@ -380,5 +343,6 @@ char    *get_full_expandable_word(t_token curr_token, t_envs *env_list, int len,
             cat_to_fully_expanded(fully_expanded, curr_token.value[i++]);
     }
     fully_expanded[len] = 0;
+    printf("expansion successfull:\n %s\n", fully_expanded);
     return (fully_expanded);
 }

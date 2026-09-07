@@ -10,7 +10,6 @@ SOURCE =	split.c \
 			syntax_error_check.c \
 			environment_creation.c \
 			dollar_sign_handler.c \
-			env_assign.c \
 			is_special_character.c \
 			skippers.c \
 			special_characters_checkers.c \

@@ -114,18 +114,21 @@ int	run_cmd(t_cmds *cmd, char **envp, int *status)
 
 void wait_single_pid(pid_t pid, int *status, int last_pid)
 {
+	int raw_status;
+
 	if (pid > 0)
 	{
-		waitpid(pid, status, 0);
-		if (WIFEXITED(*status))
-			*status = WEXITSTATUS(*status);
-		else if(WIFSIGNALED(*status))
+		if (waitpid(pid, &raw_status, 0) == -1)
+			return ;
+		if (WIFEXITED(raw_status))
+			*status = WEXITSTATUS(raw_status);
+		else if(WIFSIGNALED(raw_status))
 		{
-			if (WTERMSIG(*status) == SIGQUIT && last_pid)
+			if (WTERMSIG(raw_status) == SIGQUIT && last_pid)
 				printf("Quit: 3\n");
-			else if(WTERMSIG(*status) == SIGINT && last_pid)
+			else if(WTERMSIG(raw_status) == SIGINT && last_pid)
 				printf("\n");
-			*status = 128 + WTERMSIG(*status);
+			*status = 128 + WTERMSIG(raw_status);
 		}
 	}
 }

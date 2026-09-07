@@ -60,21 +60,21 @@ int	handle_pipe(t_cmds **head, t_cmds **curr)
 	return (1);
 }
 
-char *expanded_line(char *line, t_envs *env)
-{
-	t_token token;
-	t_token array[1];
-	int len;
-	char *expanded;
+// char *expanded_line(char *line, t_envs *env)
+// {
+// 	t_token token;
+// 	t_token array[1];
+// 	int len;
+// 	char *expanded;
 
-	token.value = line;
-	token.type = token_word;
+// 	token.value = line;
+// 	token.type = token_word;
 
-	array[0].type = 0;
-	len = get_full_len_of_expandable(token, env, &token);
-	expanded = get_full_expandable_word(token, env, len, 0);
-	return (expanded);
-}
+// 	array[0].type = 0;
+// 	len = get_full_len_of_expandable(token, env, &token);
+// 	expanded = get_full_expandable_word(token, env, len, 0);
+// 	return (expanded);
+// }
 
 static void	fill_heredoc(int write_fd, char *eof, t_envs *env)
 {
@@ -103,11 +103,11 @@ static void	fill_heredoc(int write_fd, char *eof, t_envs *env)
 			free(line);
 			break ;
 		}
-		line_expanded = expanded_line(line, env);
-		free(line);
-		ft_putstr_fd(line_expanded, write_fd);
+		// line_expanded = expanded_line(line, env);
+		ft_putstr_fd(line, write_fd);
 		ft_putchar_fd('\n', write_fd);
-		free(line_expanded);
+		free(line);
+		// free(line_expanded);
 	}
 }
 
@@ -119,7 +119,7 @@ int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env)
 
 	status = 0;
 	if (pipe(fd) == -1)
-		return (perror("minishell"), 0);
+		return (print_error(strerror(errno), "test", STDERR_FILENO), 0);
 	pause_interactive_signals();
 	pid = fork();
 	if (pid == 0)

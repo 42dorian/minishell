@@ -33,7 +33,7 @@ int	export_bi(t_cmds *cmd, t_envs **env_list)
 			return (1);
 		else if (return_val == 2)
 		{
-			ft_putstr_fd("minishell: export: '", STDERR_FILENO);
+			ft_putstr_fd("minishell: export: `", STDERR_FILENO);
 			ft_putstr_fd(cmd->cmd[i], STDERR_FILENO);
 			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
 			exit_code = 1;

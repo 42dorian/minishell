@@ -15,6 +15,7 @@
 int	change_dir(t_cd *cd, t_cmds *cmd, t_envs **env_list);
 int home_dir(t_cd *cd, t_cmds *cmd, t_envs **env_list);
 int update_pwd(char *old_pwd, char *pwd, t_cd *cd, t_envs **env_list);
+int old_dir(t_cd *cd, t_cmds *cmd, t_envs **env_list);
 
 int	cd_bi(t_cmds *cmd, t_envs **env_list)
 {
@@ -24,6 +25,12 @@ int	cd_bi(t_cmds *cmd, t_envs **env_list)
 	if (!cmd->cmd[1])
 	{
 		if (home_dir(&cd_struct, cmd, env_list))
+			return (1);
+		return (0);
+	}
+	else if (ft_strncmp(cmd->cmd[1], "-", 0) == 0)
+	{
+		if (old_dir(&cd_struct, cmd, env_list))
 			return (1);
 		return (0);
 	}
@@ -83,12 +90,8 @@ int home_dir(t_cd *cd, t_cmds *cmd, t_envs **env_list)
 	tmp = *env_list;
 	while(tmp)
 	{
-		if (ft_strncmp(tmp->value, "HOME", 5) == 0)
-		{
+		if (ft_strncmp(tmp->key, "HOME", 4) == 0)
 			cd->target_path = tmp->value;
-			printf("HERE");
-		}
-		printf("VAL: %s\n",tmp->value);
 		tmp = tmp->next;
 	}
 	if (!getcwd(cd->old_path, sizeof(cd->old_path)))
@@ -99,6 +102,37 @@ int home_dir(t_cd *cd, t_cmds *cmd, t_envs **env_list)
 	if (chdir(cd->target_path) != 0)
 	{
 		print_error("HOME is not set", cmd->cmd[0], STDERR_FILENO);
+		return (1);
+	}
+	if (!getcwd(cd->new_path, sizeof(cd->new_path)))
+	{
+		print_error(strerror(errno), cmd->cmd[0], STDERR_FILENO);
+		return (1);
+	}
+	if (update_pwd(cd->old_pwd, "HOME", cd, env_list))
+		return (1);
+	return (0);
+}
+
+int old_dir(t_cd *cd, t_cmds *cmd, t_envs **env_list)
+{
+	t_envs *tmp;
+
+	tmp = *env_list;
+	while(tmp)
+	{
+		if (ft_strncmp(tmp->key, "OLDPWD", 6) == 0)
+			cd->target_path = tmp->value;
+		tmp = tmp->next;
+	}
+	if (!getcwd(cd->old_path, sizeof(cd->old_path)))
+	{
+		print_error(strerror(errno), cmd->cmd[0], STDERR_FILENO);
+		return (1);
+	}
+	if (chdir(cd->target_path) != 0)
+	{
+		print_error("OLDPWD is not set", cmd->cmd[0], STDERR_FILENO);
 		return (1);
 	}
 	if (!getcwd(cd->new_path, sizeof(cd->new_path)))

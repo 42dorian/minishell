@@ -19,11 +19,6 @@ static void handle_sigquit(int sig);
 void handle_sigint(int sig)
 {
 	g_signal = sig;
-	sh_new_line();
-}
-
-void sh_new_line(void)
-{
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);

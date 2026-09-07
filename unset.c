@@ -27,10 +27,10 @@ int	unset(t_cmds *cmd, t_envs **env_list)
 	{
 		if (valid_identifier(cmd->cmd[i]))
 		{
-			ft_putstr_fd("minishell: unset: '", STDERR_FILENO);
-			ft_putstr_fd(cmd->cmd[i], STDERR_FILENO);
-			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
-			exit_code = 1;
+			// ft_putstr_fd("minishell: unset: '", STDERR_FILENO);
+			// ft_putstr_fd(cmd->cmd[i], STDERR_FILENO);
+			// ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+			exit_code = 0;
 		}
 		else
 			remove_env(cmd->cmd[i], env_list);

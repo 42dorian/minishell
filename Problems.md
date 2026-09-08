@@ -40,7 +40,7 @@ Problems, tests and TO-DOs
 - [ ] handle ""
 - [ ] "echo hi >./outfiles/outfile01 | echo bye" < handle properly
 - [ ] | echo -n oui < handle this properly
-- [ ] awk 'BEGIN{for(i=1;i<=10;i++){for(j=1;j<=10;j++){printf("%4d ",i*j)} printf("\n")}}' /dev/null | tail -n 10      < handle this properly
+- [x] awk 'BEGIN{for(i=1;i<=10;i++){for(j=1;j<=10;j++){printf("%4d ",i*j)} printf("\n")}}' /dev/null | tail -n 10      < handle this properly
 - [ ] valgrind/funcheck
 - [ ] run testers
 - [ ] cleanup the directoryies and check for leftover files

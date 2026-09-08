@@ -24,7 +24,11 @@ char	*handling_path(char *cmd_name, char *path, int *exit_status)
 
 	status = 0;
 	if (ft_strncmp(cmd_name, "", 1) == 0)
+	{
+		print_error("command not found", cmd_name, NULL, STDERR_FILENO);
+		*exit_status = 1;
 		return (NULL);
+	}
 	if (ft_strchr(cmd_name, '/'))
 	{
 		status = check_access(cmd_name);

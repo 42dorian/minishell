@@ -37,6 +37,9 @@ Problems, tests and TO-DOs
 - [x] test heredoc with quotes and everything
 - [x] finish built-ins
 - [x] handle $?
+- [ ] handle ""
+- [ ] | echo -n oui < handle this properly
+- [ ] awk 'BEGIN{for(i=1;i<=10;i++){for(j=1;j<=10;j++){printf("%4d ",i*j)} printf("\n")}}' /dev/null | tail -n 10      < handle this properly
 - [ ] valgrind/funcheck
 - [ ] run testers
 - [ ] cleanup the directoryies and check for leftover files

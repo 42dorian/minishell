@@ -22,7 +22,7 @@ int	exit_bi(t_cmds *cmd, t_shell *shell)
 	long long	exit_code;
 
 	exit_code = 0;
-	ft_putstr_fd("exit\n", STDERR_FILENO);
+	ft_putstr_fd("exit\n", STDOUT_FILENO);
 	if (!cmd->cmd[1])
 		exit(shell->status);
 	if (valid_long(cmd->cmd[1]))

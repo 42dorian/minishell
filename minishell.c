@@ -11,27 +11,27 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "env_assign_helpers.c"
-#include "rest_helpers.c"
-#include "split_helpers.c"
-#include "split.c"
-#include "stepping_in_input.c"
-#include "syntax_error_check.c"
-#include "expansion_check.c"
-#include "environment_creation.c"
-#include "skippers.c"
-#include "tokenizing.c"
-#include "dollar_sign_handler.c"
-#include "is_special_character.c"
-#include "special_characters_checkers.c"
-#include "word_count_helpers.c"
-#include "libft/ft_strlen.c"
-#include "libft/list_general.c"
-#include "libft/list_helpers.c"
-#include "libft/ft_calloc.c"
-#include "libft/ft_memset.c"
-#include "libft/ft_bzero.c"
-#include "libft/ft_itoa.c"
+// #include "env_assign_helpers.c"
+// #include "rest_helpers.c"
+// #include "split_helpers.c"
+// #include "split.c"
+// #include "stepping_in_input.c"
+// #include "syntax_error_check.c"
+// #include "expansion_check.c"
+// #include "environment_creation.c"
+// #include "skippers.c"
+// #include "tokenizing.c"
+// #include "dollar_sign_handler.c"
+// #include "is_special_character.c"
+// #include "special_characters_checkers.c"
+// #include "word_count_helpers.c"
+// #include "libft/ft_strlen.c"
+// #include "libft/list_general.c"
+// #include "libft/list_helpers.c"
+// #include "libft/ft_calloc.c"
+// #include "libft/ft_memset.c"
+// #include "libft/ft_bzero.c"
+// #include "libft/ft_itoa.c"
 
 volatile sig_atomic_t g_signal = 0;
 
@@ -288,14 +288,14 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
     //printf("GEC2\n");
     split_clean_up(split_line, word_counter(read_line));
     //printf("GEC3\n");
-    printf("before expansion: %s\n", tokens[i].value);
+    // printf("before expansion: %s\n", tokens[i].value);
     if (!handle_expansions(env_list, tokens, status))
         return (NULL);
     //printf("GEC4\n");
-    printf("after expansion: %s\n", tokens[i].value);
+    // printf("after expansion: %s\n", tokens[i].value);
     if (!remove_quotes(tokens))
         return (clean_up_token_and_env_list(tokens, &env_list), NULL);
-    printf("after expansion and removing quotes: %s\n", tokens[i].value);
+    // printf("after expansion and removing quotes: %s\n", tokens[i].value);
     syntax_check(tokens, status);
     return (tokens);
 }

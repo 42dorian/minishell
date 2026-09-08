@@ -16,12 +16,12 @@ int     syntax_error_message_display(const char *token_value)
 {
     if (!token_value)
     {
-    	write(STDERR_FILENO, "minishell: syntax error near the token `newline'\n", 49);
+    	ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", STDERR_FILENO);
     }
     else
     {
-    	write(STDERR_FILENO, "minishell: syntax error near the token `", 40);
-     	write(STDERR_FILENO, token_value, ft_strlen(token_value));
+    	ft_putstr_fd("minishell: syntax error near unexpected token `", STDERR_FILENO);
+     	ft_putstr_fd((char *)token_value, STDERR_FILENO);
       	write(STDERR_FILENO, "'\n", 2);
     }
 

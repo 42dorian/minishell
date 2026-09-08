@@ -38,12 +38,13 @@ Problems, tests and TO-DOs
 - [x] finish built-ins
 - [x] handle $?
 - [ ] handle ""
+- [ ] "echo hi >./outfiles/outfile01 | echo bye" < handle properly
 - [ ] | echo -n oui < handle this properly
 - [ ] awk 'BEGIN{for(i=1;i<=10;i++){for(j=1;j<=10;j++){printf("%4d ",i*j)} printf("\n")}}' /dev/null | tail -n 10      < handle this properly
 - [ ] valgrind/funcheck
 - [ ] run testers
 - [ ] cleanup the directoryies and check for leftover files
-- [ ] when clicking CTRL+C in "interactive" mode, the exit code updates
+- [x] when clicking CTRL+C in "interactive" mode, the exit code updates
 - [ ] don't use printf to print errors or in general, we need to use ft_putstr_fd so we put errors in fd=2 for errors and fd=1 for normal standard output
 - [x] using ARG=1 shouldnt add to the ENV
 - [ ] handle heredoc separately and create expansions there

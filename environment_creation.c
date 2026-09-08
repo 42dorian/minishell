@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 11:41:39 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/06 18:47:28 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/08 13:57:07 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,6 @@ int     clean_up_token_and_env_list(t_token *tokens, t_envs **env_list)
     while (tokens[i].type != -1)
         free((void*)tokens[i++].value);
     free(tokens);
+    tokens = NULL;
     return (0);
 }

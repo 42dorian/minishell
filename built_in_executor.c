@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 11:15:38 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/08/28 12:53:30 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/05 21:28:56 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,25 @@ int	is_built_in(char *cmd)
 	return (0);
 }
 
-int	run_built_in(t_cmds *cmd, char **envp)
+int	run_built_in(t_cmds *cmd, t_envs *env_list, t_shell *shell)
 {
 	int	cmd_len;
 
-	(void)envp;
 	cmd_len = ft_strlen(cmd->cmd[0]);
 	if (cmd_len == 3 && ft_strncmp(cmd->cmd[0], "pwd", 3) == 0)
 		return (pwd());
 	if (cmd_len == 4 && ft_strncmp(cmd->cmd[0], "echo", 4) == 0)
 		return (echo(cmd));
+	if (cmd_len == 3 && ft_strncmp(cmd->cmd[0], "env", 3) == 0)
+		return (env(env_list));
+	if (cmd_len == 6 && ft_strncmp(cmd->cmd[0], "export", 6) == 0)
+			return (export_bi(cmd, &shell->env_list));
+	if (cmd_len == 5 && ft_strncmp(cmd->cmd[0], "unset", 5) == 0)
+		return (unset(cmd, &shell->env_list));
+	if (cmd_len == 4 && ft_strncmp(cmd->cmd[0], "exit", 4) == 0)
+		return (exit_bi(cmd, shell));
+	if (cmd_len == 2 && ft_strncmp(cmd->cmd[0], "cd", 2) == 0)
+		return (cd_bi(cmd, &shell->env_list));
 	return (0);
 }
 

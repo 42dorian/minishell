@@ -47,6 +47,21 @@ extern volatile sig_atomic_t g_signal;
 typedef struct s_cmds	t_cmds;
 typedef struct s_envs	t_envs;
 
+typedef struct s_shell
+{
+	t_cmds *cmds;
+	t_envs *env_list;
+	char **envp;
+	int status;
+}t_shell;
+
+typedef struct s_cd
+{
+	char	*target_path;
+	char	old_path[PATH_MAX];
+	char	new_path[PATH_MAX];
+}			t_cd;
+
 typedef enum e_token_type
 {
 	token_word,
@@ -66,7 +81,7 @@ typedef struct s_cmds
 	int					exit_status;
 	t_cmds				*next;
 	pid_t				pid;
-	t_envs				*global_envs;
+	char				**envp;
 }						t_cmds;
 
 typedef struct s_token
@@ -149,33 +164,42 @@ char					*handling_path(char *cmd_name, char *path, int *exit_status);
 
 int						check_access(char *cmd);
 int						check_cmd(char *cmd);
-void					print_error(char *msg, char *cmd, int fd);
+void	print_error(char *msg, char *cmd, char *arg, int fd);
 int						is_dir(char *cmd, struct stat *path_stat);
 int						pwd(void);
 void free_cmd(t_cmds *cmds);
 t_cmds	*new_cmd(void);
 t_cmds	*add_cmd(t_cmds *head, t_cmds *new_list);
-int		add_arg_to_cmd(t_cmds *node, char *arg);
-int		process_token(t_cmds **head, t_cmds **curr, t_token *token, int *i);
+int		add_arg_to_cmd(t_cmds *node, const char *arg);
+
+int	process_token(t_cmds **head, t_cmds **cur, t_token *t, int *i, t_envs *env);
+
 int		handle_in(t_cmds *curr, t_token *tokens, int *i);
 int		handle_out(t_cmds *curr, t_token *tokens, int *i);
 int		handle_pipe(t_cmds **head, t_cmds **curr);
-int handle_heredoc(t_cmds *curr, t_token *token, int *i);
-t_cmds	*build_cmds(t_token *tokens);
+
+int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env);
+
+t_cmds	*build_cmds(t_token *tokens, t_envs *env);
 int find_path(char **envp);
-int execute_cmds(t_cmds *cmds, char **envp);
+
+int	execute_cmds(t_shell *shell);
 int run_cmd(t_cmds *cmd, char **envp, int *status);
 int is_built_in(char *cmd);
 int	restore_io(int saved_stdin, int saved_stdout);
-int	execute_single_cmd(t_cmds *cmds, char **envp, int *status);
+
+int	execute_single_cmd(t_shell *shell);
 int change_io(t_cmds *cmds);
 void	child_redirections(t_cmds *cmds, int *fd, int stored_input);
 void close_inherited_fds(t_cmds *cmds);
 void safe_dup2(int oldfd, int newfd);
-void run_child(t_cmds *cmds, int *fd, int stored_input, char **envp);
+// void run_child(t_cmds *cmds, int *fd, int stored_input, char **envp);
+void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell);
+
 void clean_parent(t_cmds *cmds, int *fd, int *stored_input);
 void wait_pids(t_cmds *cmds, int *status);
-int run_built_in(t_cmds *cmd, char **envp);
+// int	run_built_in(t_cmds *cmd, t_envs *env_list);
+int	run_built_in(t_cmds *cmd, t_envs *env_list, t_shell *shell);
 int echo(t_cmds *cmd);
 void wait_single_pid(pid_t pid, int *status, int last_pid);
 
@@ -192,6 +216,13 @@ int     is_end(const char letter);
 void init_interactive_signals(void);
 void init_execution_signals(void);
 void pause_interactive_signals(void);
-
-
+void init_heredoc_signals(void);
+char **create_envp(t_envs *env_list);
+int env(t_envs *env_list);
+int export_bi(t_cmds *cmd, t_envs **env_list);
+int unset(t_cmds *cmd, t_envs **env_list);
+int exit_bi(t_cmds *cmd, t_shell *shell);
+int valid_identifier(char *key);
+int cd_bi(t_cmds *cmd, t_envs **env_list);
+int		update_or_add(t_envs **env_list, char *value, char *key);
 #endif

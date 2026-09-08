@@ -26,8 +26,14 @@ SOURCE =	split.c \
 			built_in_executor_helper.c \
 			signals.c \
 			pwd.c \
-			echo.c
-
+			echo.c \
+			envp.c \
+			env.c \
+			export.c \
+			unset.c \
+			exit.c \
+			change_dir.c \
+			general_helpers.c
 
 
 # CFLAGS = -Wall -Wextra -Werror -g

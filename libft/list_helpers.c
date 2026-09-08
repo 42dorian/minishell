@@ -66,7 +66,7 @@ t_envs	*ft_lstmap(t_envs *lst, void *(*f)(void *), void (*del)(void *))
 {
     t_envs *new_list;
     t_envs *new_node;
-    
+
     new_list = NULL;
     if(!lst || !f || !del)
         return (NULL);

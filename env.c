@@ -1,27 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/18 10:43:33 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/07 23:02:13 by dabdulla         ###   ########.fr       */
+/*   Created: 2026/09/02 18:56:07 by dabdulla          #+#    #+#             */
+/*   Updated: 2026/09/05 19:02:23 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	pwd(void)
+int	env(t_envs *env_list)
 {
-	char	buffer[PATH_MAX];
+	t_envs	*tmp;
 
-	if (!getcwd(buffer, sizeof(buffer)))
+	tmp = env_list;
+	while (tmp)
 	{
-		print_error(strerror(errno), "pwd", NULL, STDERR_FILENO);
-		return (1);
+		if (tmp->value != NULL)
+		{
+			ft_putstr_fd(tmp->key, STDOUT_FILENO);
+			ft_putstr_fd("=", STDOUT_FILENO);
+			ft_putstr_fd(tmp->value, STDOUT_FILENO);
+			ft_putstr_fd("\n", STDOUT_FILENO);
+		}
+		tmp = tmp->next;
 	}
-	ft_putstr_fd(buffer, STDOUT_FILENO);
-	ft_putstr_fd("\n", STDOUT_FILENO);
 	return (0);
 }

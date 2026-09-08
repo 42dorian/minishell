@@ -257,7 +257,7 @@ t_envs     *copy_from_envp_to_own_env_list(const char **envp, int i)
 void        clean_up_tokens_and_split_line(t_token *tokens, char **split_line)
 {
     int i;
-    
+
     i = 0;
     while (tokens[i].type != -1)
         free((void*)tokens[i++].value);
@@ -266,7 +266,7 @@ void        clean_up_tokens_and_split_line(t_token *tokens, char **split_line)
         free(split_line[i++]);
     free(split_line);
     free(tokens);
-}     
+}
 
 t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
 {
@@ -300,93 +300,44 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
     return (tokens);
 }
 
-int main()//int args, char **argv, char **envp)
+int main(int ac, char **av, const char **envp)
 {
 	char *line;
-	int status;
+	t_shell shell;
 	t_token *tokens;
-	t_envs *global_envs;
-	t_cmds *cmds;
+	(void)ac;
+	(void)av;
 
-    line = malloc(sizeof(char) * (9));
-    line[0] = '"';
-    //line[1] = '\'';
-    line[1] = '$';
-    line[2] = 'S';
-    line[3] = 'H';
-    line[4] = 'E';
-    line[5] = 'L';
-    line[6] = 'L';
-    //line[8] = '\'';
-    line[7] = '"';
-    line[8] = 0;
-    char *envp[] ={"SHELL=/bin/bash",
-    "COLORTERM=truecolor",
-    "TERM_PROGRAM_VERSION=1.107.0",
-    "SSH_AUTH_SOCK=/run/user/501/vscode-ssh-auth-sock-711369456",
-    "HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew",
-    "PWD=/home/guthybarnakoppany/minishell",
-    "LOGNAME=guthybarnakoppany",
-    "XDG_SESSION_TYPE=tty",
-    "VSCODE_GIT_ASKPASS_NODE=/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/node",
-    "HOME=/home/guthybarnakoppany",
-    "LANG=en_US.UTF-8",
-    "LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.swp=00;90:*.tmp=00;90:*.dpkg-dist=00;90:*.dpkg-old=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:",
-    "SSL_CERT_DIR=/usr/lib/ssl/certs",
-    "GIT_ASKPASS=/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/extensions/git/dist/askpass.sh",
-    "SSH_CONNECTION=::1 0 ::1 22",
-    "INFOPATH=/home/linuxbrew/.linuxbrew/share/info:",
-    "VSCODE_GIT_ASKPASS_EXTRA_ARGS=",
-    "VSCODE_PYTHON_AUTOACTIVATE_GUARD=1",
-    "LESSCLOSE=/usr/bin/lesspipe %s %s",
-    "XDG_SESSION_CLASS=user",
-    "TERM=xterm-256color",
-    "feher=fasz",
-    "LESSOPEN=| /usr/bin/lesspipe %s",
-    "USER=guthybarnakoppany",
-    "VSCODE_GIT_IPC_HANDLE=/run/user/501/vscode-git-4fa45dc6e4.sock",
-    "HOMEBREW_CELLAR=/home/linuxbrew/.linuxbrew/Cellar",
-    "SHLVL=2",
-    "HOMEBREW_REPOSITORY=/home/linuxbrew/.linuxbrew/Homebrew",
-    "XDG_RUNTIME_DIR=/run/user/501",
-    "SSL_CERT_FILE=/usr/lib/ssl/cert.pem",
-    "DEBUGINFOD_URLS=https://debuginfod.ubuntu.com ",
-    "VSCODE_GIT_ASKPASS_MAIN=/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/extensions/git/dist/askpass-main.js",
-    "BROWSER=/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/bin/helpers/browser.sh",
-    "PATH=/home/guthybarnakoppany/.local/funcheck/host:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/bin/remote-cli:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/opt/orbstack-guest/bin-hiprio:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/opt/orbstack-guest/bin:/opt/orbstack-guest/data/bin/cmdlinks:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin",
-    "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/501/bus",
-    "TERM_PROGRAM=vscode",
-    "VSCODE_IPC_HOOK_CLI=/run/user/501/vscode-ipc-3143531e-3d1c-480d-ae4c-a7c1c2fdd299.sock",
-    "_=/usr/bin/env", NULL};
-	cmds = NULL;
-	global_envs = NULL;
-	status = 0;
-	if (!add_envp_to_list(&global_envs, (const char **)envp))
+	ft_bzero(&shell, sizeof(shell));
+	if (!add_envp_to_list(&shell.env_list, envp))
         return (1);
-	// init_interactive_signals();
-	// while ((line = readline("minishell$ ")))
-	// {
-	// 	if (!ft_strncmp(line, "exitcode", 8))
-	// 	{
-	// 		printf("%d\n", status);
-	// 		continue;
-	// 	}
-	// 	tokens = minishell(line, global_envs, &status);
-	// 	if (!tokens)
-	// 		continue;
-	// 	cmds = build_cmds(tokens);
-	// 	if (!cmds)
-	// 	{
-	// 		status = 1;
-	// 		continue;
-	// 	}
-	// 	status = execute_cmds(cmds, envp);
-	// 	if (line[0] != '\0' || !line)
-	// 		add_history(line);
-	// }
-    tokens = minishell(line, global_envs, &status);
-    if (tokens)
-        clean_up_token_and_env_list(tokens, &global_envs);
-    free(line);
-    return (0);
+	init_interactive_signals();
+	while ((line = readline("minishell$ ")))
+	{
+		if (WTERMSIG(g_signal) != 0)
+		{
+			shell.status = 128 + WTERMSIG(g_signal);
+			g_signal = 0;
+		}
+
+		if (!ft_strncmp(line, "exitcode", 8))
+		{
+			printf("%d\n", shell.status);
+			continue;
+		}
+		tokens = minishell(line, shell.env_list, &shell.status);
+		if (!tokens || shell.status == 2)
+			continue;
+		shell.cmds = build_cmds(tokens, shell.env_list);
+		if (!shell.cmds)
+		{
+			shell.status = 1;
+			continue;
+		}
+		shell.status = execute_cmds(&shell);
+		if (line[0] != '\0' || !line)
+			add_history(line);
+	}
+	ft_putstr_fd("exit\n", STDOUT_FILENO);
+    return (shell.status);
 }

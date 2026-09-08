@@ -15,9 +15,16 @@
 int     syntax_error_message_display(const char *token_value)
 {
     if (!token_value)
-        printf("minishell: syntax error near the token `newline'\n");
+    {
+    	write(STDERR_FILENO, "minishell: syntax error near the token `newline'\n", 49);
+    }
     else
-        printf("minishell: syntax error near the token `%s'\n", token_value);
+    {
+    	write(STDERR_FILENO, "minishell: syntax error near the token `", 40);
+     	write(STDERR_FILENO, token_value, ft_strlen(token_value));
+      	write(STDERR_FILENO, "'\n", 2);
+    }
+
     return (1);
 }
 
@@ -56,7 +63,7 @@ int heredoc_check(t_token *tokens, int i)
 void syntax_check(t_token *tokens, int *status)
 {
     int i;
-    
+
     i = 1;
     while (tokens[i].value)
     {

@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 11:26:00 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/07/28 11:26:48 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/07 22:56:53 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,7 @@ int	check_access(char *cmd)
 	return (status);
 }
 
-void	print_error(char *msg, char *cmd, int fd)
-{
-	ft_putstr_fd("minishell: ", fd);
-	ft_putstr_fd(cmd, fd);
-	ft_putstr_fd(": ", fd);
-	ft_putstr_fd(msg, fd);
-	ft_putchar_fd('\n', fd);
-}
+
 
 int	is_dir(char *cmd, struct stat *path_stat)
 {

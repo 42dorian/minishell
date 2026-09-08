@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/26 18:53:03 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/08/29 11:11:38 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/07 23:01:30 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	print_status(int status, char *cmd);
 static char	*format_path(char *cmd_name, char *path);
-void assign_exit_status(int status, int *exit_status);
+static void assign_exit_status(int status, int *exit_status);
 
 char	*handling_path(char *cmd_name, char *path, int *exit_status)
 {
@@ -113,12 +113,12 @@ static void	print_status(int status, char *cmd)
 	if (status == 0)
 	{
 		if (ft_strchr(cmd, '/'))
-			print_error("No such file or directory", cmd, 2);
+			print_error("No such file or directory", cmd, NULL, 2);
 		else
-			print_error("command not found", cmd, 2);
+			print_error("command not found", cmd, NULL, 2);
 	}
 	else if (status == 1)
-		print_error("is a directory", cmd, 2);
+		print_error("is a directory", cmd, NULL, 2);
 	else if (status == 2)
-		print_error("Permission denied", cmd, 2);
+		print_error("Permission denied", cmd, NULL, 2);
 }

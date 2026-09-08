@@ -43,6 +43,7 @@ Problems, tests and TO-DOs
 - [ ] when clicking CTRL+C in "interactive" mode, the exit code updates
 - [ ] don't use printf to print errors or in general, we need to use ft_putstr_fd so we put errors in fd=2 for errors and fd=1 for normal standard output
 - [x] using ARG=1 shouldnt add to the ENV
+- [ ] handle heredoc separately and create expansions there
 
 ---
 

@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/02 19:38:04 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/08 10:31:16 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -308,7 +308,7 @@ int main(int ac, char **av, const char **envp)
 			continue;
 		}
 		tokens = minishell(line, shell.env_list, &shell.status);
-		if (!tokens)
+		if (!tokens || shell.status == 2)
 			continue;
 		shell.cmds = build_cmds(tokens, shell.env_list);
 		if (!shell.cmds)

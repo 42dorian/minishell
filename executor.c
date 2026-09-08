@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 09:57:52 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/07 23:01:30 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/08 10:26:40 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	execute_cmds(t_shell *shell)
 	{
 		execute_single_cmd(shell);
 		clean_parent(shell->cmds, fd, &stored_input);
-		return (shell->status);
+		return (free_split(shell->envp), shell->status);
 	}
 	pause_interactive_signals();
 	while (shell->cmds)
@@ -163,6 +163,16 @@ static int	fork_pipe(t_cmds *cmds, int *fd, int *stored_input, t_shell *shell)
 			return (0);
 	}
 	cmds->pid = fork();
+	if (cmds->pid == -1)
+	{
+		if (cmds->next)
+		{
+			close(fd[0]);
+			close(fd[1]);
+		}
+		print_error(strerror(errno), "fork", NULL, STDERR_FILENO);
+		return (0);
+	}
 	if (cmds->pid == 0)
 	{
 		init_execution_signals();

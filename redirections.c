@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 10:32:32 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/07 23:03:08 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/08 10:28:44 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ int	handle_in(t_cmds *curr, t_token *tokens, int *i)
 		close(curr->fd_in);
 	curr->fd_in = open(tokens[*i + 1].value, O_RDONLY);
 	if (curr->fd_in == -1)
+	{
 		print_error(strerror(errno), tokens[*i + 1].value, NULL, 2);
+		return (0);
+	}
 	return (1);
 }
 
@@ -33,14 +36,20 @@ int	handle_out(t_cmds *curr, t_token *token, int *i)
 		curr->fd_out = open(token[*i + 1].value, O_WRONLY | O_CREAT | O_TRUNC,
 				0644);
 		if (curr->fd_out == -1)
+		{
 			print_error(strerror(errno), token[*i + 1].value, NULL, 2);
+			return (0);
+		}
 	}
-	if (token[*i].type == token_append)
+	else if (token[*i].type == token_append)
 	{
 		curr->fd_out = open(token[*i + 1].value, O_WRONLY | O_CREAT | O_APPEND,
 				0644);
 		if (curr->fd_out == -1)
+		{
 			print_error(strerror(errno), token[*i + 1].value, NULL, 2);
+			return (0);
+		}
 	}
 	return (1);
 }
@@ -80,16 +89,13 @@ static void	fill_heredoc(int write_fd, char *eof, t_envs *env)
 {
 	char	*line;
 	char 	*line_expanded;
-	int line_count;
 	t_token *tokens;
 
 	tokens = NULL;
 	line = NULL;
 	line_expanded = NULL;
-	line_count = 0;
 	while (1)
 	{
-		line_count++;
 		line = readline("> ");
 		if (!line)
 		{
@@ -97,6 +103,7 @@ static void	fill_heredoc(int write_fd, char *eof, t_envs *env)
 			ft_putstr_fd("here-document delimited by end-of-file (wanted '", STDOUT_FILENO);
 			ft_putstr_fd(eof, STDOUT_FILENO);
 			ft_putstr_fd("')\n", STDOUT_FILENO);
+			return ;
 		}
 		if ((ft_strlen(line) == ft_strlen(eof) && ft_strncmp(line, eof,ft_strlen(eof)) == 0))
 		{

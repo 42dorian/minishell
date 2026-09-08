@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 13:20:37 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/07 13:28:49 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/07 15:29:16 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,16 +146,16 @@ int						is_dollar_after_dollar(const char letter);
 int						is_redir(const char letter);
 int						is_redir_in(const char letter);
 int						is_redir_out(const char letter);
-int						handle_expansions(t_envs *env_list, t_token *tokens, int exit_code);
+int						handle_expansions(t_envs *env_list, t_token *tokens, int *exit_code);
 int						is_astrisk(const char letter);
 int						is_terminator(const char letter);
 int						letter_after_dollar_is_num_or_astrisk(const char letter);
 int						is_underline(char letter);
 int						is_white_space_or_special_character(const char letter);
 int						key_counter(const char *envp);
-char    				*get_full_expandable_word(t_token curr_token, t_envs *env_list, int len, int exit_code);
-int     				get_full_len_of_expandable(t_token curr_token, t_envs *env_list, t_token *tokens, int exit_code);
-int     				get_len_of_current_expandable(const char *expandable, t_envs *env_list, int exit_code);
+char    				*get_full_expandable_word(t_token curr_token, t_envs *env_list, int len, int *exit_code);
+int     				get_full_len_of_expandable(t_token curr_token, t_envs *env_list, t_token *tokens, int *exit_code);
+int     				get_len_of_current_expandable(const char *expandable, t_envs *env_list, int *exit_code);
 int						digit_counter(pid_t pid);
 char					*find_cmd_path(char *cmd_name, char **split_path,
 							int *status);

@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 12:53:31 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/07 13:25:53 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/08 14:20:24 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char    *convert_pid_to_string()
     return (pid_string);
 }
 
-int    handle_expansions(t_envs *env_list, t_token *tokens, int exit_code)
+int    handle_expansions(t_envs *env_list, t_token *tokens, int *exit_code)
 {
     int i;
     int len;
@@ -84,7 +84,7 @@ int    handle_expansions(t_envs *env_list, t_token *tokens, int exit_code)
             len = get_full_len_of_expandable(tokens[i], env_list, tokens, exit_code);
             if (len == -1)
                 return (clean_up_token_and_env_list(tokens, &env_list));
-            tokens[i].value = get_full_expandable_word(tokens[i], env_list, len, tokens[0].type);
+            tokens[i].value = get_full_expandable_word(tokens[i], env_list, len, exit_code);
         }
         i++;
     }
@@ -154,20 +154,21 @@ char    *get_from_my_env_list(const char *expandable, t_envs env_list)
     return (NULL);
 }
 
-int     how_many_digits(int number)
+int     how_many_digits(int *number)
 {
     int digits;
+    int local_num;
 
+    digits = 0;
+    local_num = *number;
     if (number == 0)
         return (1);
     if (number < 0)
-        digits = 1;
-    else
-        digits = 0;
-    while (number > 0)
+        digits++;
+    while (local_num > 0)
     {
         digits++;
-        number /= 10;
+        local_num /= 10;
     }
     return (digits);
 }
@@ -187,7 +188,7 @@ int     get_len_of_real_env(const char *test_env, t_envs *env_list)
     return (len);
 }
 
-int     get_len_of_current_expandable(const char *expandable, t_envs *env_list, int exit_code)
+int     get_len_of_current_expandable(const char *expandable, t_envs *env_list, int *exit_code)
 {
     char    *test_env;
     char    *real_env;
@@ -231,21 +232,31 @@ int     is_end(const char letter)
     return (0);
 }
 
-int     get_full_len_of_expandable(t_token curr_token, t_envs *env_list, t_token *tokens, int exit_code)
+int     get_full_len_of_expandable(t_token curr_token, t_envs *env_list, t_token *tokens, int *exit_code)
 {
     int     i;
     int     total_len;
     int     curr_len;
     int     single_quote_counter;
+    int     quote_flag;
 
     single_quote_counter = 0;
+    quote_flag = 0;
     i = 0;
     curr_len = 0;
     total_len = 0;
     while (curr_token.value[i])
     {
-        if (is_single_quote(curr_token.value[i]))
+        if (is_single_quote(curr_token.value[i]) && quote_flag != 2)
             single_quote_counter++;
+        if (is_single_quote(curr_token.value[i]) && quote_flag == 0)
+            quote_flag = 1;
+        if (is_double_quote(curr_token.value[i]) && quote_flag == 0)
+            quote_flag = 2;
+        if (is_single_quote(curr_token.value[i]) && quote_flag == 1)
+            quote_flag = 0;
+        if (is_double_quote(curr_token.value[i]) && quote_flag == 2)
+            quote_flag = 0;
         if (is_dollar_sign(curr_token.value[i]) && !is_end(curr_token.value[i + 1]) && single_quote_counter % 2 == 0)
         {
             curr_len = get_len_of_current_expandable(&curr_token.value[i + 1], env_list, exit_code);
@@ -273,42 +284,16 @@ void    cat_to_fully_expanded(char *fully_expanded, const char new_letter)
     fully_expanded[index] = new_letter;
 }
 
-char    *ft_itoa(int number)
-{
-    char    *converted;
-    int     num_dup;
-    int     i;
-
-    i = 0;
-    converted = malloc(sizeof(char) * (how_many_digits(number) + 1));
-    if (!converted)
-        return (NULL);
-    if (number < 0)
-    {
-        converted[i++] = '-';
-        number = -number;
-    }
-    num_dup = number;
-    while (i < how_many_digits(number))
-    {
-        converted[i++] = num_dup % 10 + '0';
-        num_dup /= 10;
-    }
-    converted[i] = 0;
-    return (converted);
-}
-
-void    make_expansion(char *fully_expnaded, const char *mock_expand, t_envs *env_list, int exit_code)
+void    make_expansion(char *fully_expnaded, const char *mock_expand, t_envs *env_list, int *exit_code)
 {
     int     expand_index;
     char    *test_env;
     int     env_index;
 
     env_index = 0;
+    test_env = NULL;
     expand_index = ft_strlen(fully_expnaded);
-    test_env = getenv(mock_expand);
-    if (!test_env)
-        test_env = get_from_my_env_list(mock_expand, *env_list);
+    test_env = get_from_my_env_list(mock_expand, *env_list);
     if (string_compare(mock_expand, "$"))
         test_env = convert_pid_to_string();
     else if (string_compare(mock_expand, "?"))
@@ -322,33 +307,46 @@ void    make_expansion(char *fully_expnaded, const char *mock_expand, t_envs *en
             env_index++;
         }
     }
+    free(test_env);
 }
 
-char    *get_full_expandable_word(t_token curr_token, t_envs *env_list, int len, int exit_code)
+char    *get_full_expandable_word(t_token curr_token, t_envs *env_list, int len, int *exit_code)
 {
     char    *fully_expanded;
     char    *mock_expand;
-    int quote_counter;
-    int i;
+    int     single_quote_counter;
+    int     i;
+    int     quote_flag;
 
+    quote_flag = 0;
     i = 0;
-    quote_counter = 0;
+    single_quote_counter = 0;
     fully_expanded = ft_calloc(sizeof(char), (len + 1));
     if (!fully_expanded)
         return (NULL);
     while (curr_token.value[i])
     {
-        if (is_quote(curr_token.value[i]))
-            quote_counter++;
-        if (is_dollar_sign(curr_token.value[i]) && !is_end(curr_token.value[i + 1]) && quote_counter % 2 == 0)
+        if (is_single_quote(curr_token.value[i]) && quote_flag != 2)
+            single_quote_counter++;
+        if (is_single_quote(curr_token.value[i]) && quote_flag == 1)
+            quote_flag = 0;
+        if (is_single_quote(curr_token.value[i]) && quote_flag == 0)
+            quote_flag = 1;
+        if (is_double_quote(curr_token.value[i]) && quote_flag == 2)
+            quote_flag = 0;
+        if (is_double_quote(curr_token.value[i]) && quote_flag == 0)
+            quote_flag = 2;
+        if (is_dollar_sign(curr_token.value[i]) && !is_end(curr_token.value[i + 1]) && single_quote_counter % 2 == 0)
         {
             mock_expand = get_valid_expandable(curr_token.value + i + 1);
             make_expansion(fully_expanded, mock_expand, env_list, exit_code);
             i += (ft_strlen(mock_expand) + 1);
+            //free(mock_expand);
         }
         else
             cat_to_fully_expanded(fully_expanded, curr_token.value[i++]);
     }
     fully_expanded[len] = 0;
+    free((void *)curr_token.value);
     return (fully_expanded);
 }

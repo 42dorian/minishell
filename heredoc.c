@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static void	fill_heredoc(int write_fd, char *eof, t_envs *env);
+static void	fill_quoted_heredoc(int write_fd, char *eof, t_envs *env);
 static char	*expanded_line(char *line, t_envs *env);
 static int contains_quotes(char *str);
 
@@ -21,16 +21,11 @@ static char	*expanded_line(char *line, t_envs *env)
 	return (expanded);
 }
 
-static void	fill_heredoc(int write_fd, char *eof, t_envs *env)
+static void	fill_quoted_heredoc(int write_fd, char *eof, t_envs *env)
 {
 	char	*line;
-	char	*line_expanded;
-	t_token	*tokens;
 
-	tokens = NULL;
 	line = NULL;
-	line_expanded = NULL;
-	return;
 	while (1)
 	{
 		line = readline("> ");
@@ -49,20 +44,42 @@ static void	fill_heredoc(int write_fd, char *eof, t_envs *env)
 			free(line);
 			break ;
 		}
-		// if (contains_quotes(line))
-		// {
-		// 	printf("HELLO");
-		// 	line_expanded = expanded_line(line, env);
-		// 	ft_putstr_fd(line, write_fd);
-		// 	ft_putchar_fd('\n', write_fd);
-		// 	free(line_expanded);
-		// }
-		// else
-		// {
-		// 	ft_putstr_fd(line, write_fd);
-		// 	ft_putchar_fd('\n', write_fd);
-		// 	free(line);
-		// }
+
+			ft_putstr_fd(line, write_fd);
+			ft_putchar_fd('\n', write_fd);
+			free(line);
+	}
+}
+
+static void	fill_unqoted_heredoc(int write_fd, char *eof, t_envs *env)
+{
+	char	*line;
+	char	*line_expanded;
+
+	line = NULL;
+	line_expanded = NULL;
+	while (1)
+	{
+		line = readline("> ");
+		if (!line)
+		{
+			ft_putstr_fd("minishell: warning: ", STDOUT_FILENO);
+			ft_putstr_fd("here-document delimited by end-of-file (wanted '",
+				STDOUT_FILENO);
+			ft_putstr_fd(eof, STDOUT_FILENO);
+			ft_putstr_fd("')\n", STDOUT_FILENO);
+			return ;
+		}
+		if ((ft_strlen(line) == ft_strlen(eof) && ft_strncmp(line, eof,
+					ft_strlen(eof)) == 0))
+		{
+			free(line);
+			break ;
+		}
+		line_expanded = expanded_line(line, env);
+		ft_putstr_fd(line_expanded, write_fd);
+		ft_putchar_fd('\n', write_fd);
+		free(line_expanded);
 	}
 }
 
@@ -72,13 +89,6 @@ int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env)
 	pid_t	pid;
 	int		status;
 
-	int j = 0;
-	while(token[j].value)
-	{
-		printf("token: %s\n", token[j].value);
-		j++;
-	}
-	return (1);
 	status = 0;
 	if (pipe(fd) == -1)
 		return (print_error(strerror(errno), "maybe *token[*i]", NULL,
@@ -88,7 +98,10 @@ int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env)
 	if (pid == 0)
 	{
 		init_heredoc_signals();
-		fill_heredoc(fd[1], token[*i + 1].value, env);
+		if (token[*i + 1].quoted)
+			fill_quoted_heredoc(fd[1], token[*i + 1].value, env);
+		else
+			fill_unqoted_heredoc(fd[1], token[*i + 1].value, env);
 		exit(0);
 	}
 	close(fd[1]);

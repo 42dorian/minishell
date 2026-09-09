@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
+/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/09 14:26:21 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/09 16:39:58 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@
 // #include "libft/ft_memset.c"
 // #include "libft/ft_bzero.c"
 // #include "libft/ft_itoa.c"
+// #include "libft/ft_strdup.c"
+// #include "libft/ft_memcpy.c"
 
 volatile sig_atomic_t g_signal = 0;
 
@@ -138,6 +140,7 @@ int    remove_quotes(t_token *tokens)
         {
             if (is_quote(tokens[i].value[j]))
             {
+                tokens[i].quoted = 1;
                 tokens[i].value = get_rid_of_them_quotes(tokens, i);
                 if (!tokens[i].value)
                     return (0);
@@ -268,6 +271,39 @@ void        clean_up_tokens_and_split_line(t_token *tokens, char **split_line)
     free(tokens);
 }
 
+int         display_unclosed_quote_error_message(int *status)
+{
+    write(2, "Unclosed quotes in input, make sure to match the unclosed quote!\n", 66);
+    *status = 2;
+    return (0);
+}
+
+int         empty_string_and_unclosed_quote_check(const char *read_line, int *status)
+{
+    int i;
+    int quote_type;
+    
+    i = 0;
+    quote_type = 0;
+    while (read_line[i])
+    {
+        if (is_quote(read_line[i]) && quote_type == 0)
+            quote_type = read_line[i++];
+        if (read_line[i] == quote_type)
+        {
+            i++;
+            quote_type = 0;
+        }
+        else
+            i++;
+    }
+    if (quote_type != 0)
+        return (display_unclosed_quote_error_message(status));
+    else if (*read_line == 0)
+        return (0);
+    return (1);
+}
+
 t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
 {
     int     i;
@@ -275,8 +311,8 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
     char    **split_line;
 
     i = 0;
-    if(*read_line == '\0')
-   		return (NULL);
+    if (!empty_string_and_unclosed_quote_check(read_line, status))
+        return (NULL);
     split_line = split_read_line(read_line);
     if (!split_line)
         return (NULL);
@@ -296,12 +332,13 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
 
 int main(int ac, char **av, const char **envp)
 {
-	char *line;
+	const char *line;
 	t_shell shell;
 	t_token *tokens;
     (void)ac;
     (void)av;
     
+    // line = "$FJ";
     // const char *envp[] = {"BROWSER=/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/bin/helpers/browser.sh",
     // "PATH=/home/guthybarnakoppany/.local/funcheck/host:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/bin/remote-cli:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/opt/orbstack-guest/bin-hiprio:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/opt/orbstack-guest/bin:/opt/orbstack-guest/data/bin/cmdlinks:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin",
     // "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/501/bus"
@@ -336,8 +373,8 @@ int main(int ac, char **av, const char **envp)
 		if (line[0] != '\0' || !line)
 			add_history(line);
 	}
-    // tokens = minishell(av[1], shell.env_list, &shell.status);
-    // clean_up_token_and_env_list(tokens, &shell.env_list);
+    //tokens = minishell(line, shell.env_list, &shell.status);
+    //clean_up_token_and_env_list(tokens, &shell.env_list);
 	ft_putstr_fd("exit\n", STDOUT_FILENO);
     return (shell.status);
 }

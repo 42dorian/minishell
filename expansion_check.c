@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion_check.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
+/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 12:53:31 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/09 14:44:02 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/09 15:44:07 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ char    *get_from_my_env_list(const char *expandable, t_envs env_list)
         next_one = env_list.next;
         env_list = *next_one;
     }
-    return (NULL);
+    return (ft_strdup(""));
 }
 
 int     how_many_digits(int *number)
@@ -178,9 +178,7 @@ int     get_len_of_real_env(const char *test_env, t_envs *env_list)
     char    *real_env;
     int     len;
 
-    real_env = getenv(test_env);
-    if (!real_env)
-        real_env = get_from_my_env_list(test_env, *env_list);
+    real_env = get_from_my_env_list(test_env, *env_list);
     if (!real_env)
         len = -1;
     else
@@ -195,13 +193,12 @@ int     get_len_of_current_expandable(const char *expandable, t_envs *env_list, 
     int     len;
 
     test_env = get_valid_expandable(expandable);
-    if (string_compare(test_env, "$"))
+    if (!test_env)
+        return (-1);
+    else if (string_compare(test_env, "$"))
         return (free(test_env), get_pid_len());
     else if (string_compare(test_env, "?"))
-    {
-        free(test_env);
-        return (how_many_digits(exit_code));
-    }
+        return (free(test_env), how_many_digits(exit_code));
     len = get_len_of_real_env(test_env, env_list);
     if (len == -1)
         return (free(test_env), -1);
@@ -363,7 +360,6 @@ char    *get_full_expandable_word(t_token curr_token, t_envs *env_list, int len,
             mock_expand = get_valid_expandable(curr_token.value + i + 1);
             make_expansion(fully_expanded, mock_expand, env_list, exit_code);
             i += (ft_strlen(mock_expand) + 1);
-            //free(mock_expand);
         }
         else
             cat_to_fully_expanded(fully_expanded, curr_token.value[i++]);

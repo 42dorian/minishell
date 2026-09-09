@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 12:53:31 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/09 13:08:49 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/09 14:44:02 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,9 +93,9 @@ int    handle_expansions(t_envs *env_list, t_token *tokens, int *exit_code)
 
 int     is_valid_after_dollar_sign(const char letter)
 {
-    if (!is_number(letter) && !is_upper_case(letter) && !is_lower_case(letter) && !is_underline(letter))
-        return (0);
-    return (1);
+    if (is_number(letter) || is_upper_case(letter) || is_lower_case(letter) || is_underline(letter))
+        return (1);
+    return (0);
 }
 
 int     get_len_of_valid_expandable(const char *expandable)

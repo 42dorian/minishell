@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizing.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
+/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 17:13:55 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/06 22:58:00 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/09 15:57:59 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,10 @@ int    create_token_struct(t_token *tokens, char **line)
         if (!tokens[i].value)
             return(clean_up_token_list(tokens, i));
         tokens[i].type = tokenizer(line[i]);
+        tokens[i].quoted = 0;
         i++;
     }
+    tokens[i].quoted = -1;
     tokens[i].value = NULL;
     tokens[i].type = -1;
     return (1);

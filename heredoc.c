@@ -1,8 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/09/09 22:59:23 by dabdulla          #+#    #+#             */
+/*   Updated: 2026/09/09 23:26:23 by dabdulla         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static void	fill_quoted_heredoc(int write_fd, char *eof, t_envs *env);
 static char	*expanded_line(char *line, t_envs *env);
 static int contains_quotes(char *str);
+static void  print_heredoc_warning(char *eof);
+
+
+static void  print_heredoc_warning(char *eof)
+{
+	ft_putstr_fd("minishell: warning: ", STDOUT_FILENO);
+	ft_putstr_fd("here-document delimited by end-of-file (wanted '",
+		STDOUT_FILENO);
+	ft_putstr_fd(eof, STDOUT_FILENO);
+	ft_putstr_fd("')\n", STDOUT_FILENO);
+}
 
 static char	*expanded_line(char *line, t_envs *env)
 {
@@ -31,18 +54,13 @@ static void	fill_quoted_heredoc(int write_fd, char *eof, t_envs *env)
 		line = readline("> ");
 		if (!line)
 		{
-			ft_putstr_fd("minishell: warning: ", STDOUT_FILENO);
-			ft_putstr_fd("here-document delimited by end-of-file (wanted '",
-				STDOUT_FILENO);
-			ft_putstr_fd(eof, STDOUT_FILENO);
-			ft_putstr_fd("')\n", STDOUT_FILENO);
+			print_heredoc_warning(eof);
 			return ;
 		}
-		if ((ft_strlen(line) == ft_strlen(eof) && ft_strncmp(line, eof,
-					ft_strlen(eof)) == 0))
+		if (ft_strncmp(line, eof, ft_strlen(eof) + 1) == 0)
 		{
 			free(line);
-			break ;
+			return ;
 		}
 
 			ft_putstr_fd(line, write_fd);
@@ -63,15 +81,10 @@ static void	fill_unqoted_heredoc(int write_fd, char *eof, t_envs *env)
 		line = readline("> ");
 		if (!line)
 		{
-			ft_putstr_fd("minishell: warning: ", STDOUT_FILENO);
-			ft_putstr_fd("here-document delimited by end-of-file (wanted '",
-				STDOUT_FILENO);
-			ft_putstr_fd(eof, STDOUT_FILENO);
-			ft_putstr_fd("')\n", STDOUT_FILENO);
+			print_heredoc_warning(eof);
 			return ;
 		}
-		if ((ft_strlen(line) == ft_strlen(eof) && ft_strncmp(line, eof,
-					ft_strlen(eof)) == 0))
+		if (ft_strncmp(line, eof, ft_strlen(eof)) == 0)
 		{
 			free(line);
 			break ;
@@ -92,7 +105,7 @@ int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env)
 	status = 0;
 	if (pipe(fd) == -1)
 		return (print_error(strerror(errno), "maybe *token[*i]", NULL,
-				STDERR_FILENO), 0);
+				STDERR_FILENO), 1);
 	pause_interactive_signals();
 	pid = fork();
 	if (pid == 0)
@@ -107,10 +120,8 @@ int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env)
 	close(fd[1]);
 	wait_single_pid(pid, &status, 1);
 	init_interactive_signals();
-	if (status == 130)
-		return (0);
 	if (curr->fd_in != 0)
 		close(curr->fd_in);
 	curr->fd_in = fd[0];
-	return (1);
+	return (status);
 }

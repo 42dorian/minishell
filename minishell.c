@@ -6,7 +6,7 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/09 16:39:58 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/09 23:24:44 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,7 +282,7 @@ int         empty_string_and_unclosed_quote_check(const char *read_line, int *st
 {
     int i;
     int quote_type;
-    
+
     i = 0;
     quote_type = 0;
     while (read_line[i])
@@ -337,7 +337,7 @@ int main(int ac, char **av, const char **envp)
 	t_token *tokens;
     (void)ac;
     (void)av;
-    
+
     // line = "$FJ";
     // const char *envp[] = {"BROWSER=/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/bin/helpers/browser.sh",
     // "PATH=/home/guthybarnakoppany/.local/funcheck/host:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/bin/remote-cli:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/opt/orbstack-guest/bin-hiprio:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/opt/orbstack-guest/bin:/opt/orbstack-guest/data/bin/cmdlinks:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin",
@@ -363,12 +363,9 @@ int main(int ac, char **av, const char **envp)
 		tokens = minishell(line, shell.env_list, &shell.status);
 		if (!tokens || shell.status == 2)
 			continue;
-		shell.cmds = build_cmds(tokens, shell.env_list);
+		shell.cmds = build_cmds(tokens, shell.env_list, &shell);
 		if (!shell.cmds)
-		{
-			shell.status = 1;
 			continue;
-		}
 		shell.status = execute_cmds(&shell);
 		if (line[0] != '\0' || !line)
 			add_history(line);

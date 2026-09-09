@@ -88,7 +88,7 @@ typedef struct s_cmds
 typedef struct s_token
 {
     const char		*value;
-	int				quoted;		
+	int				quoted;
     t_token_type    type;
 }                   t_token;
 
@@ -183,7 +183,7 @@ int		handle_pipe(t_cmds **head, t_cmds **curr);
 
 int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env);
 
-t_cmds	*build_cmds(t_token *tokens, t_envs *env);
+t_cmds	*build_cmds(t_token *tokens, t_envs *env, t_shell *shell);
 int find_path(char **envp);
 
 int	execute_cmds(t_shell *shell);

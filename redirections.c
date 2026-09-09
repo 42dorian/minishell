@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 10:32:32 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/08 10:28:44 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/09 23:49:20 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ int	handle_in(t_cmds *curr, t_token *tokens, int *i)
 	if (curr->fd_in == -1)
 	{
 		print_error(strerror(errno), tokens[*i + 1].value, NULL, 2);
-		return (0);
+		return (1);
 	}
-	return (1);
+	return (0);
 }
 
 int	handle_out(t_cmds *curr, t_token *token, int *i)
@@ -36,7 +36,7 @@ int	handle_out(t_cmds *curr, t_token *token, int *i)
 		if (curr->fd_out == -1)
 		{
 			print_error(strerror(errno), token[*i + 1].value, NULL, 2);
-			return (0);
+			return (1);
 		}
 	}
 	else if (token[*i].type == token_append)
@@ -46,10 +46,10 @@ int	handle_out(t_cmds *curr, t_token *token, int *i)
 		if (curr->fd_out == -1)
 		{
 			print_error(strerror(errno), token[*i + 1].value, NULL, 2);
-			return (0);
+			return (1);
 		}
 	}
-	return (1);
+	return (0);
 }
 
 int	handle_pipe(t_cmds **head, t_cmds **curr)
@@ -62,7 +62,7 @@ int	handle_pipe(t_cmds **head, t_cmds **curr)
 		return (0);
 	*head = add_cmd(*head, next);
 	if (!*head)
-		return (0);
+		return (1);
 	*curr = next;
-	return (1);
+	return (0);
 }

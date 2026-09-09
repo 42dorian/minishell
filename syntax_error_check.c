@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_error_check.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
+/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 16:08:24 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/09 12:58:47 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/09 16:56:15 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@ int     syntax_error_message_display(const char *token_value)
 {
     if (!token_value)
     {
-    	write(STDERR_FILENO, "minishell: syntax error near the token `newline'\n", 49);
+    	write(STDERR_FILENO, "minishell: syntax error near unexpected token `newline'\n", 56);
     }
     else
     {
-    	write(STDERR_FILENO, "minishell: syntax error near the token `", 40);
+    	write(STDERR_FILENO, "minishell: syntax error near unexpected token `", 47);
      	write(STDERR_FILENO, token_value, ft_strlen(token_value));
       	write(STDERR_FILENO, "'\n", 2);
     }

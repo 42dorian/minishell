@@ -6,7 +6,7 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/09 16:39:58 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/09 17:21:41 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,35 +273,53 @@ void        clean_up_tokens_and_split_line(t_token *tokens, char **split_line)
 
 int         display_unclosed_quote_error_message(int *status)
 {
-    write(2, "Unclosed quotes in input, make sure to match the unclosed quote!\n", 66);
+    write(STDERR_FILENO, "Unclosed quotes in input, make sure to match the unclosed quote!\n", 65);
     *status = 2;
-    return (0);
+    return (2);
 }
 
-int         empty_string_and_unclosed_quote_check(const char *read_line, int *status)
+int        loop_for_unclosed_quotes(const char *read_line, int *status)
 {
-    int i;
     int quote_type;
-    
+    int i;
+
     i = 0;
     quote_type = 0;
     while (read_line[i])
     {
         if (is_quote(read_line[i]) && quote_type == 0)
             quote_type = read_line[i++];
-        if (read_line[i] == quote_type)
+        if (quote_type == read_line[i])
         {
-            i++;
             quote_type = 0;
+            i++;
         }
         else
             i++;
     }
     if (quote_type != 0)
-        return (display_unclosed_quote_error_message(status));
-    else if (*read_line == 0)
+        return (1);
+    return (0);
+}
+
+int         is_empty_string(const char *read_line, int *status)
+{
+    if (*read_line == 0)
+    {
+        *status = 2;
+        return (1);
+    }
+    else
         return (0);
-    return (1);
+}
+
+int         empty_string_and_unclosed_quote_check(const char *read_line, int *status)
+{
+    if (is_empty_string(read_line, status))
+        return (1);
+    if (loop_for_unclosed_quotes(read_line, status));
+        return (display_unclosed_quote_error_message(status));
+    return (0);
 }
 
 t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
@@ -311,7 +329,7 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
     char    **split_line;
 
     i = 0;
-    if (!empty_string_and_unclosed_quote_check(read_line, status))
+    if (empty_string_and_unclosed_quote_check(read_line, status))
         return (NULL);
     split_line = split_read_line(read_line);
     if (!split_line)

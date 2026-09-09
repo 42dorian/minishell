@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 14:02:51 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/06 19:11:43 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/09 12:51:24 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,17 +51,6 @@ int     count_letters_till_next_quote(const char *read_line, int *i)
     return (letters + 1);
 }
 
-int     is_compatible_with_dollar_sign(const char letter)
-{
-    if (is_quote(letter))
-        return (0);
-    if (is_dollar_sign(letter))
-        return (0);
-    if (is_white_space_or_special_character(letter))
-        return (0);
-    return (1);
-}
-
 int     count_letters_for_dollar_sign(const char *read_line, int *i)
 {
     int letters;
@@ -76,7 +65,7 @@ int     count_letters_for_dollar_sign(const char *read_line, int *i)
             (*i)++;
             break ;
         }
-        if (is_compatible_with_dollar_sign(read_line[*i]))
+        if (is_valid_after_dollar_sign(read_line[*i]))
         {
             (*i)++;
             letters++;
@@ -95,17 +84,28 @@ int     count_letters_till_next_word(const char *read_line, int i)
     while (read_line[i])
     {
         if (is_dollar_sign(read_line[i]))
+        {
             letters += count_letters_for_dollar_sign(read_line, &i);
+            return (letters);
+        }
         if (is_quote(read_line[i]))
             letters+= count_letters_till_next_quote(read_line, &i);
         if (is_white_space(read_line[i]) || !read_line[i])
             return (letters);
-        if (is_special_character(read_line, i, &letters))
+        if (count_letters_on_special_character(read_line, i, &letters))
             return (letters);
         i++;
         letters++;
     }
     return (letters);
+}
+
+void    copy_after_dollar_sign(const char *read_line, int *i, char *new_word, int *local_index)
+{
+    (*i)++;
+    (*local_index)++;
+    while (is_valid_after_dollar_sign(read_line[*i]))
+        new_word[(*local_index)++] = read_line[(*i)++];
 }
 
 char    *copy_till_next_word(const char *read_line, int *i)
@@ -119,20 +119,8 @@ char    *copy_till_next_word(const char *read_line, int *i)
     new_word = malloc(sizeof(char) * (letters + 1));
     if (!new_word)
         return (NULL);
-    while (!is_white_space(read_line[*i]) && read_line[(*i)] && local_index < letters)
-    {
-        new_word[local_index] = read_line[(*i)];
-        if (is_quote(new_word[local_index]))
-            copy_till_next_quote(read_line, i, new_word, &local_index);
-        if ((is_heredoc_or_append(read_line[*i], read_line[(*i) + 1]) && local_index >= letters))
-             break ;
-         else if (local_index >= letters && is_redir_or_pipe(read_line[*i]) && (!is_redir_or_pipe(new_word[local_index - 1]) || is_redir_or_pipe(new_word[local_index - 1])))
-             break ;
-        if (!read_line[*i])
-            break ;
-        local_index++;
-        (*i)++;
-    }
+    while (local_index < letters)
+        new_word[local_index++] = read_line[(*i)++];
     new_word[local_index] = 0;
     return (new_word);
 }

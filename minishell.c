@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/08 14:37:33 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/09 13:10:32 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,17 +285,11 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
         return (split_clean_up(split_line, word_counter(read_line)), NULL);
     if (!create_token_struct(tokens, split_line))
         return (clean_up_tokens_and_split_line(tokens, split_line), NULL);
-    //printf("GEC2\n");
     split_clean_up(split_line, word_counter(read_line));
-    //printf("GEC3\n");
-    // printf("before expansion: %s\n", tokens[i].value);
     if (!handle_expansions(env_list, tokens, status))
         return (NULL);
-    //printf("GEC4\n");
-    // printf("after expansion: %s\n", tokens[i].value);
     if (!remove_quotes(tokens))
         return (clean_up_token_and_env_list(tokens, &env_list), NULL);
-    // printf("after expansion and removing quotes: %s\n", tokens[i].value);
     syntax_check(tokens, status);
     return (tokens);
 }
@@ -305,9 +299,13 @@ int main(int ac, char **av, const char **envp)
 	char *line;
 	t_shell shell;
 	t_token *tokens;
-	(void)ac;
-	(void)av;
-
+    (void)ac;
+    (void)av;
+    
+    // char *envp[] = {"BROWSER=/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/bin/helpers/browser.sh",
+    // "PATH=/home/guthybarnakoppany/.local/funcheck/host:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/bin/remote-cli:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/opt/orbstack-guest/bin-hiprio:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/opt/orbstack-guest/bin:/opt/orbstack-guest/data/bin/cmdlinks:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin",
+    // "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/501/bus"
+    // "TERM_PROGRAM=vscode", NULL};
 	ft_bzero(&shell, sizeof(shell));
 	if (!add_envp_to_list(&shell.env_list, envp))
         return (1);
@@ -338,6 +336,7 @@ int main(int ac, char **av, const char **envp)
 		if (line[0] != '\0' || !line)
 			add_history(line);
 	}
+    //tokens = minishell(line, shell.env_list, &shell.status);
 	ft_putstr_fd("exit\n", STDOUT_FILENO);
     return (shell.status);
 }

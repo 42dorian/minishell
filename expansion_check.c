@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 12:53:31 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/08 14:20:24 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/09 13:08:49 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ int     how_many_digits(int *number)
 
     digits = 0;
     local_num = *number;
-    if (number == 0)
+    if (*number == 0)
         return (1);
     if (number < 0)
         digits++;
@@ -198,7 +198,10 @@ int     get_len_of_current_expandable(const char *expandable, t_envs *env_list, 
     if (string_compare(test_env, "$"))
         return (free(test_env), get_pid_len());
     else if (string_compare(test_env, "?"))
-        return (free(test_env), how_many_digits(exit_code));
+    {
+        free(test_env);
+        return (how_many_digits(exit_code));
+    }
     len = get_len_of_real_env(test_env, env_list);
     if (len == -1)
         return (free(test_env), -1);
@@ -232,6 +235,34 @@ int     is_end(const char letter)
     return (0);
 }
 
+void     decide_quote(int *quote_flag, int *single_quote_counter, const char letter)
+{
+    if (is_single_quote(letter) && *quote_flag != 2)
+    {
+        (*single_quote_counter)++;
+    }
+    if (is_single_quote(letter) && *quote_flag == 0)
+    {
+        *quote_flag = 1;
+        return ;
+    }
+    if (is_double_quote(letter) && *quote_flag == 0)
+    {
+        *quote_flag = 2;
+        return ;
+    }
+    if (is_single_quote(letter) && *quote_flag == 1)
+    {
+        *quote_flag = 0;
+        return ;
+    }
+    if (is_double_quote(letter) && *quote_flag == 2)
+    {
+        *quote_flag = 0;
+        return ;
+    }
+}
+
 int     get_full_len_of_expandable(t_token curr_token, t_envs *env_list, t_token *tokens, int *exit_code)
 {
     int     i;
@@ -247,16 +278,7 @@ int     get_full_len_of_expandable(t_token curr_token, t_envs *env_list, t_token
     total_len = 0;
     while (curr_token.value[i])
     {
-        if (is_single_quote(curr_token.value[i]) && quote_flag != 2)
-            single_quote_counter++;
-        if (is_single_quote(curr_token.value[i]) && quote_flag == 0)
-            quote_flag = 1;
-        if (is_double_quote(curr_token.value[i]) && quote_flag == 0)
-            quote_flag = 2;
-        if (is_single_quote(curr_token.value[i]) && quote_flag == 1)
-            quote_flag = 0;
-        if (is_double_quote(curr_token.value[i]) && quote_flag == 2)
-            quote_flag = 0;
+        decide_quote(&quote_flag, &single_quote_counter, curr_token.value[i]);
         if (is_dollar_sign(curr_token.value[i]) && !is_end(curr_token.value[i + 1]) && single_quote_counter % 2 == 0)
         {
             curr_len = get_len_of_current_expandable(&curr_token.value[i + 1], env_list, exit_code);

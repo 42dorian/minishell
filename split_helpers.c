@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 21:09:28 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/06 19:10:16 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/09 12:51:02 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int word_counter(const char *read_line)
     return (words);
 }
 
-int     is_special_character(const char *read_line, int i, int *letters)
+int     count_letters_on_special_character(const char *read_line, int i, int *letters)
 {
     if (is_heredoc_or_append(read_line[i], read_line[(i) + 1]))
     {

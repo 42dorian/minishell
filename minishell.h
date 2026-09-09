@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 13:20:37 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/07 15:29:16 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/09 12:51:48 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # define REDIR_OUT 62
 # define PIPE 124
 # define QUESTION_MARK 63
+# define PATH_MAX 1024
 
 # include "./libft/libft.h"
 # include <errno.h>
@@ -121,8 +122,9 @@ int						dollar_sign_exception(const char *read_line, int *i,
 							int *words);
 int						is_heredoc_or_append(const char letter1,
 							const char letter2);
-int						is_special_character(const char *read_line, int i,
+int						count_letters_on_special_character(const char *read_line, int i,
 							int *letters);
+int						is_special_character(const char letter1, const char letter2);
 int						is_redir_or_pipe(const char letter);
 int						quote_in_word(const char *read_line, int *i,
 							int *words);

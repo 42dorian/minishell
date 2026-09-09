@@ -6,7 +6,7 @@
 /*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 14:02:51 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/09 12:51:24 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/09 14:45:22 by guthybarnak      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int     count_letters_for_dollar_sign(const char *read_line, int *i)
             (*i)++;
             break ;
         }
-        if (is_valid_after_dollar_sign(read_line[*i]))
+        if (is_valid_after_dollar_sign(read_line[*i]) || is_quote(read_line[*i]))
         {
             (*i)++;
             letters++;

@@ -355,11 +355,6 @@ int main(int ac, char **av, const char **envp)
 			g_signal = 0;
 		}
 
-		if (!ft_strncmp(line, "exitcode", 8))
-		{
-			printf("%d\n", shell.status);
-			continue;
-		}
 		tokens = minishell(line, shell.env_list, &shell.status);
 		if (!tokens || shell.status == 2)
 			continue;
@@ -372,6 +367,6 @@ int main(int ac, char **av, const char **envp)
 	}
     //tokens = minishell(line, shell.env_list, &shell.status);
     //clean_up_token_and_env_list(tokens, &shell.env_list);
-	ft_putstr_fd("exit\n", STDOUT_FILENO);
+	ft_putstr_fd("exit\n", STDERR_FILENO);
     return (shell.status);
 }

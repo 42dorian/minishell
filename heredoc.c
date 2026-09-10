@@ -104,7 +104,7 @@ int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env)
 
 	status = 0;
 	if (pipe(fd) == -1)
-		return (print_error(strerror(errno), "maybe *token[*i]", NULL,
+		return (print_error(strerror(errno), (char *)token[*i].value, NULL,
 				STDERR_FILENO), 1);
 	pause_interactive_signals();
 	pid = fork();

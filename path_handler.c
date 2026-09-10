@@ -26,7 +26,7 @@ char	*handling_path(char *cmd_name, char *path, int *exit_status)
 	if (ft_strncmp(cmd_name, "", 1) == 0)
 	{
 		print_error("command not found", cmd_name, NULL, STDERR_FILENO);
-		*exit_status = 1;
+		*exit_status = 127;
 		return (NULL);
 	}
 	if (ft_strchr(cmd_name, '/'))
@@ -82,8 +82,9 @@ static char	*format_path(char *cmd_name, char *path)
 	if (!tmp)
 		return (NULL);
 	cmd_path = ft_strjoin(tmp, cmd_name);
+	free(tmp);
 	if (!cmd_path)
-		return (free(tmp), NULL);
+		return (NULL);
 	return (cmd_path);
 }
 

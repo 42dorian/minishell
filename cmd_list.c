@@ -36,7 +36,8 @@ t_cmds	*build_cmds(t_token *tokens, t_envs *env, t_shell *shell)
 		if (process_token_val != 0)
 		{
 			shell->status = process_token_val;
-			return (free_cmd(head), NULL);
+			// return (free_cmd(head), NULL);
+			continue;
 		}
 		i++;
 	}

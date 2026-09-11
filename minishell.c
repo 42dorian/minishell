@@ -6,7 +6,7 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/09 17:21:41 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/11 13:56:12 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,12 +329,13 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
     char    **split_line;
 
     i = 0;
-    if (empty_string_and_unclosed_quote_check(read_line, status))
-        return (NULL);
+    // if (empty_string_and_unclosed_quote_check(read_line, status))
+    //     return (NULL);
     split_line = split_read_line(read_line);
     if (!split_line)
         return (NULL);
     tokens = malloc(sizeof(t_token) * (word_counter(read_line) + 1));
+    // printf("words: %i\n", word_counter(read_line));
     if (!tokens)
         return (split_clean_up(split_line, word_counter(read_line)), NULL);
     if (!create_token_struct(tokens, split_line))
@@ -353,10 +354,17 @@ int main(int ac, char **av, const char **envp)
 	const char *line;
 	t_shell shell;
 	t_token *tokens;
-    (void)ac;
-    (void)av;
+    // (void)ac;
+    // (void)av;
     
-    // line = "$FJ";
+    // line = malloc(7);
+    // line[0] = '"';
+    // line[1] = '"';
+    // line[2] = '$';
+    // line[3] = '?';
+    // line[4] = '"';
+    // line[5] = '"';
+    // line[6] = 0;
     // const char *envp[] = {"BROWSER=/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/bin/helpers/browser.sh",
     // "PATH=/home/guthybarnakoppany/.local/funcheck/host:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/bin/remote-cli:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/opt/orbstack-guest/bin-hiprio:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/opt/orbstack-guest/bin:/opt/orbstack-guest/data/bin/cmdlinks:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin",
     // "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/501/bus"

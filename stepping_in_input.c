@@ -6,7 +6,7 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 20:34:44 by bguhty            #+#    #+#             */
-/*   Updated: 2026/08/25 15:54:25 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/10 14:54:58 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,17 +59,27 @@ int     is_redir(const char letter)
     return (0);
 }
 
+int     is_delimeter(const char letter)
+{
+    if (is_redir_or_pipe(letter))
+        return (1);
+    else if (is_white_space(letter))
+        return (1);
+    else
+        return (0);
+}
+
 int     check_for_special_character(const char *read_line, int *i, int *words)
 {
-    if (is_pipe(read_line[*i]) && !is_redir_or_pipe(read_line[(*i) - 1]) && *i > 0)
+    if (*i > 0 && is_pipe(read_line[*i]) && !is_delimeter(read_line[(*i) - 1]))
         return ((*words) += 2, (*i)++, 1);
     else if (is_pipe(read_line[*i]))
         return ((*words)++, (*i)++, 1);
-    else if (is_heredoc_or_append(read_line[*i], read_line[(*i) + 1]) && !is_redir_or_pipe(read_line[(*i) - 1]) && *i > 0)
+    else if (*i > 0 && is_heredoc_or_append(read_line[*i], read_line[(*i) + 1]) && !is_delimeter(read_line[(*i) - 1]))
         return ((*words) += 2, (*i) += 2, 1);
     else if (is_heredoc_or_append(read_line[*i], read_line[(*i) + 1]))
         return ((*words)++, (*i) += 2, 1);
-    else if (is_redir(read_line[*i]) && !is_redir_or_pipe(read_line[(*i) - 1]) && *i > 0)
+    else if (*i > 0 && is_redir(read_line[*i]) && !is_delimeter(read_line[(*i) - 1]))
         return ((*words) += 2, (*i)++, 1);
     else if (is_redir(read_line[*i]))
         return ((*words)++, (*i)++, 1);
@@ -77,7 +87,7 @@ int     check_for_special_character(const char *read_line, int *i, int *words)
         return (0);
 }
 
-int     is_word_2(const char *read_line, int *i, int *words)
+int     is_word(const char *read_line, int *i, int *words)
 {
     while (!is_white_space(read_line[*i]) && read_line[*i])
     {

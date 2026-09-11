@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_helpers.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
+/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 21:09:28 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/09 12:51:02 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/10 14:55:09 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int word_counter(const char *read_line)
         skip_white_spaces(read_line, &i);
         quote_in_word(read_line, &i, &words);
         skip_white_spaces(read_line, &i);
-        if (read_line[i] && is_word_2(read_line, &i, &words))
+        if (read_line[i] && is_word(read_line, &i, &words))
             words++;
     }
     if (words == 0 && i > 0)

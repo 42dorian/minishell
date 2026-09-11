@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   word_count_helpers.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
+/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 17:46:11 by bguhty            #+#    #+#             */
-/*   Updated: 2026/07/09 10:33:01 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/10 14:54:35 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

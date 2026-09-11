@@ -6,7 +6,7 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 13:20:37 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/09 15:57:11 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/10 14:55:06 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ char					**split_read_line(const char *read_line);
 char					**allocating_double_pointer(const char *read_line);
 int						word_counter(const char *read_line);
 int    					add_envp_to_list(t_envs **my_list, const char **envp);
-int						is_word_2(const char *read_line, int *i, int *words);
+int						is_word(const char *read_line, int *i, int *words);
 int     				clean_up_token_and_env_list(t_token *tokens, t_envs **env_list);
 int						check_for_quote(const char letter, int *quote_type);
 void					skip_white_spaces(const char *read_line, int *i);

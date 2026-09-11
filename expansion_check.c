@@ -6,7 +6,7 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 12:53:31 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/09 15:44:07 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/10 15:08:21 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,19 +98,23 @@ int     is_valid_after_dollar_sign(const char letter)
     return (0);
 }
 
+int     double_dollar_or_question_mark_check(const char letter)
+{
+    if (is_dollar_sign(letter) || is_question_mark(letter))
+        return (1);
+    else
+        return (0);
+}
+
 int     get_len_of_valid_expandable(const char *expandable)
 {
     int len;
 
     len = 0;
+    if (double_dollar_or_question_mark_check(expandable[len]))
+        return (1);
     while (expandable[len])
     {
-
-        if (is_dollar_sign(expandable[len]) || is_question_mark(expandable[len]))
-        {
-            len++;
-            break ;
-        }
         if (!is_valid_after_dollar_sign(expandable[len]))
             break ;
         len++;
@@ -314,9 +318,15 @@ void    make_expansion(char *fully_expnaded, const char *mock_expand, t_envs *en
     expand_index = ft_strlen(fully_expnaded);
     test_env = get_from_my_env_list(mock_expand, *env_list);
     if (string_compare(mock_expand, "$"))
+    {
+        free(test_env);
         test_env = convert_pid_to_string();
+    }
     else if (string_compare(mock_expand, "?"))
+    {
+        free(test_env);
         test_env = ft_itoa(exit_code);
+    }
     if (test_env)
     {
         while (test_env[env_index])
@@ -327,6 +337,20 @@ void    make_expansion(char *fully_expnaded, const char *mock_expand, t_envs *en
         }
     }
     free(test_env);
+}
+
+void    set_quote_flag(int *quote_flag, int *single_quote_counter, const char letter)
+{
+    if (is_single_quote(letter) && *quote_flag != 2)
+        (*single_quote_counter)++;
+    if (is_single_quote(letter) && *quote_flag == 1)
+        *quote_flag = 0;
+    else if (is_single_quote(letter) && *quote_flag == 0)
+        *quote_flag = 1;
+    else if (is_double_quote(letter) && *quote_flag == 2)
+        *quote_flag = 0;
+    else if (is_double_quote(letter) && *quote_flag == 0)
+        *quote_flag = 2;
 }
 
 char    *get_full_expandable_word(t_token curr_token, t_envs *env_list, int len, int *exit_code)
@@ -345,16 +369,7 @@ char    *get_full_expandable_word(t_token curr_token, t_envs *env_list, int len,
         return (NULL);
     while (curr_token.value[i])
     {
-        if (is_single_quote(curr_token.value[i]) && quote_flag != 2)
-            single_quote_counter++;
-        if (is_single_quote(curr_token.value[i]) && quote_flag == 1)
-            quote_flag = 0;
-        if (is_single_quote(curr_token.value[i]) && quote_flag == 0)
-            quote_flag = 1;
-        if (is_double_quote(curr_token.value[i]) && quote_flag == 2)
-            quote_flag = 0;
-        if (is_double_quote(curr_token.value[i]) && quote_flag == 0)
-            quote_flag = 2;
+        set_quote_flag(&quote_flag, &single_quote_counter, curr_token.value[i]);
         if (is_dollar_sign(curr_token.value[i]) && !is_end(curr_token.value[i + 1]) && single_quote_counter % 2 == 0)
         {
             mock_expand = get_valid_expandable(curr_token.value + i + 1);

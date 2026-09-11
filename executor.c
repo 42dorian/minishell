@@ -27,7 +27,7 @@ int	execute_cmds(t_shell *shell)
 	if (!shell->envp)
 		return (0);
 	stored_input = -1;
-	ft_bzero(fd, 2);
+	ft_bzero(fd, sizeof(fd));
 	tmp = shell->cmds;
 	if (!shell->cmds->next)
 	{
@@ -39,7 +39,7 @@ int	execute_cmds(t_shell *shell)
 	while (shell->cmds)
 	{
 		if (!fork_pipe(shell->cmds, fd, &stored_input, shell))
-			return (0);
+			return (clean_parent(shell->cmds, fd, &stored_input), 0);
 		clean_parent(shell->cmds, fd, &stored_input);
 		shell->cmds = shell->cmds->next;
 	}
@@ -88,7 +88,7 @@ int	run_cmd(t_cmds *cmd, char **envp, int *status)
 		return (0);
 	cmd->pid = fork();
 	if (cmd->pid == -1)
-		return (print_error(strerror(errno), cmd->cmd[0], NULL, 2), 0);
+		return (free(path), print_error(strerror(errno), cmd->cmd[0], NULL, 2), 0);
 	if (cmd->pid == 0)
 	{
 		init_execution_signals();
@@ -109,7 +109,7 @@ int	run_cmd(t_cmds *cmd, char **envp, int *status)
 	pause_interactive_signals();
 	wait_single_pid(cmd->pid, status, 1);
 	init_interactive_signals();
-	return (1);
+	return (free(path), 1);
 }
 
 void wait_single_pid(pid_t pid, int *status, int last_pid)
@@ -152,6 +152,7 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 		exit(exit_status);
 	execve(path, cmds->cmd, shell->envp);
 	print_error(strerror(errno), cmds->cmd[0], NULL, 2);
+	free(path);
 	exit(1);
 }
 

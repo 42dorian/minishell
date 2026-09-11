@@ -6,7 +6,7 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/11 11:05:46 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/11 16:18:52 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@
 // #include "libft/ft_strdup.c"
 // #include "libft/ft_memcpy.c"
 
-volatile sig_atomic_t g_signal = 0;
+volatile sig_atomic_t	g_signal = 0;
 
-int     determine_quote_type(char letter, int quote_type)
+int	determine_quote_type(char letter, int quote_type)
 {
     if (quote_type == SINGLE_QUOTE && letter == SINGLE_QUOTE)
         quote_type = 0;
@@ -327,8 +327,8 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
     if (!remove_quotes(tokens))
         return (clean_up_token_and_env_list(tokens, &env_list), NULL);
     syntax_check(tokens, status);
-    if (*status == 2)
-    	clean_up_token_and_env_list(tokens, &env_list);
+    // if (*status == 2)
+    // 	clean_up_token_and_env_list(tokens, &env_list);
     return (tokens);
 }
 
@@ -356,9 +356,8 @@ int main(int ac, char **av, const char **envp)
 			shell.status = 128 + WTERMSIG(g_signal);
 			g_signal = 0;
 		}
-
 		tokens = minishell(line, shell.env_list, &shell.status);
-		if (!tokens && shell.status == 2)
+		if (!tokens || shell.status == 2)
 			continue;
 		shell.cmds = build_cmds(tokens, shell.env_list, &shell);
 		if (!shell.cmds)

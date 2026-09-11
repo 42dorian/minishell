@@ -35,8 +35,13 @@ t_cmds	*build_cmds(t_token *tokens, t_envs *env, t_shell *shell)
 		process_token_val = process_token(&head, &curr, tokens, &i, env);
 		if (process_token_val != 0)
 		{
+			if (process_token_val == 130)
+			{
+				shell->status = process_token_val;
+				break;
+			}
 			shell->status = process_token_val;
-			// return (free_cmd(head), NULL);
+			i++;
 			continue;
 		}
 		i++;

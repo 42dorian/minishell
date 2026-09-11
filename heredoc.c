@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/09 22:59:23 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/09 23:26:23 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/11 11:06:52 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static void	fill_unqoted_heredoc(int write_fd, char *eof, t_envs *env)
 			print_heredoc_warning(eof);
 			return ;
 		}
-		if (ft_strncmp(line, eof, ft_strlen(eof)) == 0)
+		if (ft_strncmp(line, eof, ft_strlen(eof) + 1) == 0)
 		{
 			free(line);
 			break ;

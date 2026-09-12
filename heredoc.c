@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/09 22:59:23 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/12 12:18:20 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/12 12:50:25 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,10 @@
 
 static void	fill_quoted_heredoc(int write_fd, char *eof, t_envs *env);
 static char	*expanded_line(char *line, t_envs *env);
-static int contains_quotes(char *str);
-static void  print_heredoc_warning(char *eof);
+static int	contains_quotes(char *str);
+static void	print_heredoc_warning(char *eof);
 
-
-static void  print_heredoc_warning(char *eof)
+static void	print_heredoc_warning(char *eof)
 {
 	ft_putstr_fd("minishell: warning: ", STDOUT_FILENO);
 	ft_putstr_fd("here-document delimited by end-of-file (wanted '",
@@ -35,7 +34,7 @@ static char	*expanded_line(char *line, t_envs *env)
 	char	*expanded;
 	int exit_code;
 
-	exit_code = 0;
+	*exit_code = 0;
 	token.value = line;
 	token.type = token_word;
 	array[0].type = 0;
@@ -62,10 +61,9 @@ static void	fill_quoted_heredoc(int write_fd, char *eof, t_envs *env)
 			free(line);
 			return ;
 		}
-
-			ft_putstr_fd(line, write_fd);
-			ft_putchar_fd('\n', write_fd);
-			free(line);
+		ft_putstr_fd(line, write_fd);
+		ft_putchar_fd('\n', write_fd);
+		free(line);
 	}
 }
 
@@ -93,6 +91,7 @@ static void	fill_unqoted_heredoc(int write_fd, char *eof, t_envs *env)
 		ft_putstr_fd(line_expanded, write_fd);
 		ft_putchar_fd('\n', write_fd);
 		free(line_expanded);
+		free(line);
 	}
 }
 
@@ -104,10 +103,15 @@ int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env)
 
 	status = 0;
 	if (pipe(fd) == -1)
-		return (print_error(strerror(errno), (char *)token[*i].value, NULL,
-				STDERR_FILENO), 1);
+		return (print_error(strerror(errno), "pipe", NULL, STDERR_FILENO), 1);
 	pause_interactive_signals();
 	pid = fork();
+	if (pid == -1)
+	{
+		close(fd[0]);
+		close(fd[1]);
+		return (print_error(strerror(errno), "fork", NULL, STDERR_FILENO), 1);
+	}
 	if (pid == 0)
 	{
 		close(fd[0]);
@@ -125,8 +129,8 @@ int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env)
 	close(fd[1]);
 	wait_single_pid(pid, &status, 1);
 	init_interactive_signals();
-	if (status == 130)
-		return (close(fd[0]), 130);
+	if (status != 0)
+		return (close(fd[0]), status);
 	if (curr->fd_in != 0)
 		close(curr->fd_in);
 	curr->fd_in = fd[0];

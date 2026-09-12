@@ -6,7 +6,7 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/12 12:44:43 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/12 12:49:40 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@
 // #include "libft/ft_strdup.c"
 // #include "libft/ft_memcpy.c"
 
-volatile sig_atomic_t g_signal = 0;
+volatile sig_atomic_t	g_signal = 0;
 
-int     determine_quote_type(char letter, int quote_type)
+int	determine_quote_type(char letter, int quote_type)
 {
     if (quote_type == SINGLE_QUOTE && letter == SINGLE_QUOTE)
         quote_type = 0;

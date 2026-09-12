@@ -20,3 +20,5 @@ https://www.youtube.com/watch?v=6xbLgZpOBi8
 https://www.youtube.com/watch?v=NkfIUo_Qq4c
 
 https://www.youtube.com/watch?v=5fnVr-zH-SE
+
+https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html

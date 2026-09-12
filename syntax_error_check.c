@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_error_check.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
+/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 16:08:24 by bguhty            #+#    #+#             */
 /*   Updated: 2026/09/12 12:35:17 by dabdulla         ###   ########.fr       */
@@ -16,12 +16,12 @@ int     syntax_error_message_display(const char *token_value)
 {
     if (!token_value)
     {
-    	ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", STDERR_FILENO);
+    	write(STDERR_FILENO, "minishell: syntax error near unexpected token `newline'\n", 56);
     }
     else
     {
-    	ft_putstr_fd("minishell: syntax error near unexpected token `", STDERR_FILENO);
-     	ft_putstr_fd((char *)token_value, STDERR_FILENO);
+    	write(STDERR_FILENO, "minishell: syntax error near unexpected token `", 47);
+     	write(STDERR_FILENO, token_value, ft_strlen(token_value));
       	write(STDERR_FILENO, "'\n", 2);
     }
 

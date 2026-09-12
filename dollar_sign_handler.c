@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dollar_sign_handler.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
+/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 17:33:26 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/02 15:21:06 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/10 14:55:30 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@ void    process_after_dollar_sign(const char *read_line, int *i, int *words)
 {
     while (read_line[*i] && !is_white_space(read_line[*i]))
     {
-        if (is_quote(read_line[*i]))
-        {
-            (*words)++;
-            return ;
-        }
-        else if (is_heredoc_or_append(read_line[*i], read_line[(*i) + 1]))
+        // if (is_quote(read_line[*i]))
+        // {
+        //     (*words)++;
+        //     return ;
+        // }
+        if (is_heredoc_or_append(read_line[*i], read_line[(*i) + 1]))
         {
             (*i) += 2;
             (*words) += 2;

@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/05 17:36:01 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/07 23:37:28 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/12 11:56:40 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ int	exit_bi(t_cmds *cmd, t_shell *shell)
 	exit_code = 0;
 	ft_putstr_fd("exit\n", STDOUT_FILENO);
 	if (!cmd->cmd[1])
-		exit(shell->status);
+		free_all_and_exit(shell, shell->status);
 	if (valid_long(cmd->cmd[1]))
 	{
 		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 		ft_putstr_fd(cmd->cmd[1], STDERR_FILENO);
 		ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
-		exit(2);
+		free_all_and_exit(shell, 2);
 	}
 	if (cmd->cmd[2])
 	{
@@ -38,7 +38,7 @@ int	exit_bi(t_cmds *cmd, t_shell *shell)
 		return (1);
 	}
 	exit_code = ft_atoll(cmd->cmd[1]);
-	exit((unsigned char)exit_code);
+	free_all_and_exit(shell, (unsigned char)exit_code);
 }
 
 static long long	ft_atoll(char *nptr)

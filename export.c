@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/05 17:45:55 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/07 23:28:02 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/12 12:21:38 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,12 @@ int	update_or_add(t_envs **env_list, char *value, char *key)
 	{
 		new = ft_calloc(1, sizeof(t_envs));
 		if (!new)
+		{
+			free(key);
+			if (value)
+				free(value);
 			return (1);
+		}
 		new->key = key;
 		new->value = value;
 		ft_lstadd_back(env_list, new);

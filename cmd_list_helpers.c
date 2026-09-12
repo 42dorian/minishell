@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 15:55:37 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/02 16:14:50 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/12 12:43:25 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	free_cmd(t_cmds *cmds)
 	{
 		next = curr->next;
 		free_split(curr->cmd);
+		curr->cmd = NULL;
 		free(curr);
 		curr = next;
 	}

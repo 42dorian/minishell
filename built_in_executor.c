@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 11:15:38 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/05 21:28:56 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/12 12:01:54 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,12 @@ int	change_io(t_cmds *cmds)
 		if (dup2(cmds->fd_in, STDIN_FILENO) == -1)
 		{
 			return_value = 1;
-			perror("minishell");
+			print_error(strerror(errno), "dup2", NULL, STDERR_FILENO);
+		}
+		else
+		{
+			close(cmds->fd_in);
+			cmds->fd_in = 0;
 		}
 	}
 	if (cmds->fd_out != 1)
@@ -72,7 +77,12 @@ int	change_io(t_cmds *cmds)
 		if (dup2(cmds->fd_out, STDOUT_FILENO) == -1)
 		{
 			return_value = 1;
-			perror("minishell");
+			print_error(strerror(errno), "dup2", NULL, STDERR_FILENO);
+		}
+		else
+		{
+			close(cmds->fd_out);
+			cmds->fd_out = 1;
 		}
 	}
 	return (return_value);

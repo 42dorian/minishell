@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/09 22:59:23 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/11 11:06:52 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/12 12:18:20 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ static char	*expanded_line(char *line, t_envs *env)
 	t_token	array[1];
 	int		len;
 	char	*expanded;
-	int *exit_code;
+	int exit_code;
 
 	exit_code = 0;
 	token.value = line;
 	token.type = token_word;
 	array[0].type = 0;
-	len = get_full_len_of_expandable(token, env, &token, exit_code);
+	len = get_full_len_of_expandable(token, env, &token, &exit_code);
 	expanded = get_full_expandable_word(token, env, len, 0);
 	return (expanded);
 }
@@ -110,16 +110,23 @@ int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env)
 	pid = fork();
 	if (pid == 0)
 	{
+		close(fd[0]);
 		init_heredoc_signals();
 		if (token[*i + 1].quoted)
 			fill_quoted_heredoc(fd[1], token[*i + 1].value, env);
 		else
 			fill_unqoted_heredoc(fd[1], token[*i + 1].value, env);
+		free_tokens(token);
+		free_cmd(curr);
+		ft_lstclear(&env, free);
+		close(fd[1]);
 		exit(0);
 	}
 	close(fd[1]);
 	wait_single_pid(pid, &status, 1);
 	init_interactive_signals();
+	if (status == 130)
+		return (close(fd[0]), 130);
 	if (curr->fd_in != 0)
 		close(curr->fd_in);
 	curr->fd_in = fd[0];

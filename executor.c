@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 09:57:52 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/08 10:26:40 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/12 12:43:25 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	fork_pipe(t_cmds *cmds, int *fd, int *stored_input, t_shell *shell);
 
 int	execute_cmds(t_shell *shell)
 {
-	t_cmds	*tmp;
+	t_cmds	*curr_cmd;
 	int		fd[2];
 	int		stored_input;
 
@@ -27,25 +27,29 @@ int	execute_cmds(t_shell *shell)
 	if (!shell->envp)
 		return (0);
 	stored_input = -1;
-	ft_bzero(fd, 2);
-	tmp = shell->cmds;
-	if (!shell->cmds->next)
+	ft_bzero(fd, sizeof(fd));
+	curr_cmd = shell->cmds;
+	if (!curr_cmd->next)
 	{
 		execute_single_cmd(shell);
-		clean_parent(shell->cmds, fd, &stored_input);
-		return (free_split(shell->envp), shell->status);
+		clean_parent(curr_cmd, fd, &stored_input);
+		free_split(shell->envp);
+		shell->envp = NULL;
+		return (shell->status);
 	}
 	pause_interactive_signals();
-	while (shell->cmds)
+	while (curr_cmd)
 	{
-		if (!fork_pipe(shell->cmds, fd, &stored_input, shell))
-			return (0);
-		clean_parent(shell->cmds, fd, &stored_input);
-		shell->cmds = shell->cmds->next;
+		if (!fork_pipe(curr_cmd, fd, &stored_input, shell))
+			break;
+		clean_parent(curr_cmd, fd, &stored_input);
+		curr_cmd = curr_cmd->next;
 	}
-	wait_pids(tmp, &shell->status);
+	wait_pids(shell->cmds, &shell->status);
 	init_interactive_signals();
-	return (free_split(shell->envp), shell->status);
+	free_split(shell->envp);
+	shell->envp = NULL;
+	return (shell->status);
 }
 
 int	execute_single_cmd(t_shell *shell)
@@ -54,15 +58,23 @@ int	execute_single_cmd(t_shell *shell)
 	int	saved_stdout;
 
 	if (!shell->cmds->cmd)
+	{
+		shell->status = 0;
 		return (1);
+	}
 	if (shell->cmds->fd_in == -1 || shell->cmds->fd_out == -1)
+	{
+		shell->status = 1;
 		return (1);
+	}
 	if (is_built_in(shell->cmds->cmd[0]))
 	{
 		saved_stdin = dup(STDIN_FILENO);
 		saved_stdout = dup(STDOUT_FILENO);
-		if (saved_stdin == -1 || saved_stdout == -1)
-			return (print_error(strerror(errno), shell->cmds->cmd[0], NULL, 2), 1);
+		if (saved_stdin == -1)
+			return (print_error(strerror(errno), "dup", NULL, 2), 1);
+		else if (saved_stdout == -1)
+			return (close(saved_stdin), print_error(strerror(errno), "dup", NULL, 2), 1);
 		if (change_io(shell->cmds))
 		{
 			restore_io(saved_stdin, saved_stdout);
@@ -72,12 +84,12 @@ int	execute_single_cmd(t_shell *shell)
 		restore_io(saved_stdin, saved_stdout);
 		return (1);
 	}
-	if (!run_cmd(shell->cmds, shell->envp, &shell->status))
+	if (!run_cmd(shell->cmds, shell->envp, &shell->status, shell))
 		return (0);
 	return (1);
 }
 
-int	run_cmd(t_cmds *cmd, char **envp, int *status)
+int	run_cmd(t_cmds *cmd, char **envp, int *status, t_shell *shell)
 {
 	char	*path;
 
@@ -88,7 +100,7 @@ int	run_cmd(t_cmds *cmd, char **envp, int *status)
 		return (0);
 	cmd->pid = fork();
 	if (cmd->pid == -1)
-		return (print_error(strerror(errno), cmd->cmd[0], NULL, 2), 0);
+		return (free(path), print_error(strerror(errno), cmd->cmd[0], NULL, 2), 0);
 	if (cmd->pid == 0)
 	{
 		init_execution_signals();
@@ -104,12 +116,12 @@ int	run_cmd(t_cmds *cmd, char **envp, int *status)
 		}
 		execve(path, cmd->cmd, envp);
 		print_error(strerror(errno), cmd->cmd[0], NULL, 2);
-		exit(1);
+		free_all_and_exit(shell, 1);
 	}
 	pause_interactive_signals();
 	wait_single_pid(cmd->pid, status, 1);
 	init_interactive_signals();
-	return (1);
+	return (free(path), 1);
 }
 
 void wait_single_pid(pid_t pid, int *status, int last_pid)
@@ -140,19 +152,22 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 
 	exit_status = 0;
 	if (!cmds->cmd || !cmds->cmd[0])
-		exit(0);
+		free_all_and_exit(shell, 0);
 	if (cmds->fd_in == -1 || cmds->fd_out == -1)
-		exit(1);
+		free_all_and_exit(shell, 1);
 	child_redirections(cmds, fd, stored_input);
 	close_inherited_fds(cmds);
 	if (is_built_in(cmds->cmd[0]))
-		exit(run_built_in(cmds, shell->env_list, shell));
+	{
+		exit_status = run_built_in(cmds, shell->env_list, shell);
+		free_all_and_exit(shell, exit_status);
+	}
 	path = handling_path(cmds->cmd[0], shell->envp[find_path(shell->envp)], &exit_status);
 	if (!path)
-		exit(exit_status);
+		free_all_and_exit(shell, exit_status);
 	execve(path, cmds->cmd, shell->envp);
 	print_error(strerror(errno), cmds->cmd[0], NULL, 2);
-	exit(1);
+	free_all_and_exit(shell, 1);
 }
 
 static int	fork_pipe(t_cmds *cmds, int *fd, int *stored_input, t_shell *shell)

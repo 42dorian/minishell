@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 11:22:08 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/09 23:58:19 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/11 20:13:53 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,9 @@ t_cmds	*build_cmds(t_token *tokens, t_envs *env, t_shell *shell)
 		process_token_val = process_token(&head, &curr, tokens, &i, env);
 		if (process_token_val != 0)
 		{
-			shell->status = process_token_val;
-			// return (free_cmd(head), NULL);
+			if (process_token_val == 130)
+				shell->status = process_token_val;
+			i++;
 			continue;
 		}
 		i++;

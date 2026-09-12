@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/07 22:57:48 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/07 23:14:51 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/12 12:44:43 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,33 @@ void	print_error(char *msg, char *cmd, char *arg, int fd)
 	ft_strlcat(buffer, "\n", len + 1);
 	write(fd, buffer, ft_strlen(buffer));
 	free(buffer);
+}
+
+void free_all_and_exit(t_shell *shell, int status)
+{
+	t_cmds *tmp_cmd;
+	t_envs *tmp_env;
+
+	tmp_env = shell->env_list;
+	tmp_cmd = shell->cmds;
+	if (shell->envp)
+	{
+		free_split(shell->envp);
+		shell->envp = NULL;
+	}
+	while (tmp_cmd)
+	{
+		if (tmp_cmd->cmd)
+		{
+			free_split(tmp_cmd->cmd);
+			tmp_cmd->cmd = NULL;
+		}
+		if (tmp_cmd->fd_in != -1)
+			close(tmp_cmd->fd_in);
+		if (tmp_cmd->fd_out != -1)
+			close(tmp_cmd->fd_in);
+		tmp_cmd = tmp_cmd->next;
+	}
+	ft_lstclear(&tmp_env, free);
+	exit(status);
 }

@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/29 09:49:38 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/07 23:10:32 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/12 12:25:05 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,9 @@ static int	update_pwd(char *old_pwd, char *pwd, t_envs **env_list)
 	if (!pwd_key_new)
 		return (free(old_path), free(new_path), free(pwd_key_old), 1);
 	if (update_or_add(env_list, old_path, pwd_key_old))
-		return (1);
+		return (free(new_path), free(pwd_key_new), 1);
 	if (update_or_add(env_list, new_path, pwd_key_new))
-		return (1);
+		return (free(new_path), free(pwd_key_new), 1);
 	return (0);
 }
 

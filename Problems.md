@@ -58,6 +58,7 @@ Problems, tests and TO-DOs
 things to do after everything is fixed
 
 - [ ] finish readme
+- [ ] remove .supp valgrind file
 - [ ] norminette
 - [ ] unused function check
 - [ ] unused headers check

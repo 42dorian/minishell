@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 09:57:52 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/12 12:50:25 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/12 14:38:10 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ int	execute_cmds(t_shell *shell)
 
 int	execute_single_cmd(t_shell *shell)
 {
-	int	saved_stdin;
-	int	saved_stdout;
 
 	if (!shell->cmds->cmd)
 	{
@@ -69,19 +67,21 @@ int	execute_single_cmd(t_shell *shell)
 	}
 	if (is_built_in(shell->cmds->cmd[0]))
 	{
-		saved_stdin = dup(STDIN_FILENO);
-		saved_stdout = dup(STDOUT_FILENO);
-		if (saved_stdin == -1)
+		shell->saved_stdin = dup(STDIN_FILENO);
+		shell->saved_stdout = dup(STDOUT_FILENO);
+		if (shell->saved_stdin == -1)
 			return (print_error(strerror(errno), "dup", NULL, 2), 1);
-		else if (saved_stdout == -1)
-			return (close(saved_stdin), print_error(strerror(errno), "dup", NULL, 2), 1);
+		else if (shell->saved_stdout == -1)
+			return (close(shell->saved_stdin), print_error(strerror(errno), "dup", NULL, 2), 1);
 		if (change_io(shell->cmds))
 		{
-			restore_io(saved_stdin, saved_stdout);
+			restore_io(shell->saved_stdin, shell->saved_stdout);
 			return (1);
 		}
 		shell->status = run_built_in(shell->cmds, shell->env_list, shell);
-		restore_io(saved_stdin, saved_stdout);
+		restore_io(shell->saved_stdin, shell->saved_stdout);
+		shell->saved_stdin = -1;
+		shell->saved_stdout = -1;
 		return (1);
 	}
 	if (!run_cmd(shell->cmds, shell->envp, &shell->status, shell))

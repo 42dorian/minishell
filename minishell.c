@@ -6,7 +6,7 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/12 12:49:40 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/12 14:40:32 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -432,5 +432,8 @@ int main(int ac, char **av, const char **envp)
     //tokens = minishell(line, shell.env_list, &shell.status);
     //clean_up_token_and_env_list(tokens, &shell.env_list);
 	ft_putstr_fd("exit\n", STDERR_FILENO);
+	close(0);
+	close(1);
+	close(2);
     free_all_and_exit(&shell, shell.status);
 }

@@ -54,6 +54,8 @@ typedef struct s_shell
 	t_envs *env_list;
 	char **envp;
 	int status;
+	int saved_stdin;
+	int saved_stdout;
 }t_shell;
 
 typedef struct s_cd

@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/09 22:59:23 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/12 12:50:25 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/12 12:52:57 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static char	*expanded_line(char *line, t_envs *env)
 	char	*expanded;
 	int exit_code;
 
-	*exit_code = 0;
+	exit_code = 0;
 	token.value = line;
 	token.type = token_word;
 	array[0].type = 0;

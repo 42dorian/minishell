@@ -1,22 +1,5 @@
 # Changes
 
-Added this to *minishell* function:
-```
-if (*read_line == '\0')
-	return (NULL);
-```
-
-This fixes a segfault, also it makes it possible when pressing enter, it just continues in new line.
-
-added this to string_compare:
-```
-if (string1[i] == '\0' && string2[i] == '\0')
-	return (1);
-```
-this fixed an issue where the > would only append >> so i added a check to see if its the correct size as well
-
-delete maini.c
-
 Problems, tests and TO-DOs
 
 - [x] echo with -n option
@@ -41,6 +24,7 @@ Problems, tests and TO-DOs
 - [ ] "echo hi >./outfiles/outfile01 | echo bye" < handle properly
 - [ ] | echo -n oui < handle this properly
 - [x] awk 'BEGIN{for(i=1;i<=10;i++){for(j=1;j<=10;j++){printf("%4d ",i*j)} printf("\n")}}' /dev/null | tail -n 10      < handle this properly
+- [ ] update SHLVL
 - [ ] valgrind/funcheck
 - [ ] run testers
 - [ ] cleanup the directories and check for leftover files

@@ -6,35 +6,35 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/14 11:36:37 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/14 16:00:49 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-// #include "env_assign_helpers.c"
-// #include "rest_helpers.c"
-// #include "split_helpers.c"
-// #include "split.c"
-// #include "stepping_in_input.c"
-// #include "syntax_error_check.c"
-// #include "expansion_check.c"
-// #include "environment_creation.c"
-// #include "skippers.c"
-// #include "tokenizing.c"
-// #include "dollar_sign_handler.c"
-// #include "is_special_character.c"
-// #include "special_characters_checkers.c"
-// #include "expansion_without_token_list.c"
-// #include "word_count_helpers.c"
-// #include "libft/ft_strlen.c"
-// #include "libft/list_general.c"
-// #include "libft/list_helpers.c"
-// #include "libft/ft_calloc.c"
-// #include "libft/ft_memset.c"
-// #include "libft/ft_bzero.c"
-// #include "libft/ft_itoa.c"
-// #include "libft/ft_strdup.c"
-// #include "libft/ft_memcpy.c"
+#include "env_assign_helpers.c"
+#include "rest_helpers.c"
+#include "split_helpers.c"
+#include "split.c"
+#include "stepping_in_input.c"
+#include "syntax_error_check.c"
+#include "expansion_check.c"
+#include "environment_creation.c"
+#include "skippers.c"
+#include "tokenizing.c"
+#include "dollar_sign_handler.c"
+#include "is_special_character.c"
+#include "special_characters_checkers.c"
+#include "expansion_without_token_list.c"
+#include "word_count_helpers.c"
+#include "libft/ft_strlen.c"
+#include "libft/list_general.c"
+#include "libft/list_helpers.c"
+#include "libft/ft_calloc.c"
+#include "libft/ft_memset.c"
+#include "libft/ft_bzero.c"
+#include "libft/ft_itoa.c"
+#include "libft/ft_strdup.c"
+#include "libft/ft_memcpy.c"
 
 volatile sig_atomic_t g_signal = 0;
 
@@ -363,15 +363,17 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
     if (!expanded_line)
         return (NULL);
     split_line = split_read_line(expanded_line);
+    while (split_line[i])
+        printf("(%s)\n", split_line[i++]);
     if (!split_line)
         return (NULL);
-    tokens = malloc(sizeof(t_token) * (word_counter(expanded_line) + 1));
+    tokens = malloc(sizeof(t_token) * (new_word_counter(expanded_line) + 1));
     //printf("words: %i\n", word_counter(read_line));
     if (!tokens)
-        return (split_clean_up(split_line, word_counter(expanded_line)), NULL);
+        return (split_clean_up(split_line, new_word_counter(expanded_line)), NULL);
     if (!create_token_struct(tokens, split_line))
         return (clean_up_tokens_and_split_line(tokens, split_line), NULL);
-    split_clean_up(split_line, word_counter(expanded_line));
+    split_clean_up(split_line, new_word_counter(expanded_line));
     // if (!handle_expansions(env_list, tokens, status))
     //     return (NULL);
     if (!remove_quotes(tokens))
@@ -388,27 +390,30 @@ int main(int ac, char **av, const char **envp)
     (void)ac;
     (void)av;
     
-    // line = malloc(20);
-    // line[0] = '"';
-    // line[1] = 'e';
-    // line[2] = 'x';
-    // line[3] = 'p';
-    // line[4] = 'o';
-    // line[5] = 'r';
-    // line[6] = 't';
-    // line[7] = 32;
-    // line[8] = '"';
-    // line[9] = 32;
+    line = malloc(5);
+    line[0] = '"';
+    line[1] = '$';
+    line[2] = '"';
+    line[3] = '$';
+    line[4] = 0;
+    // line[5] = '"';
+    // line[6] = 32;
+    // line[7] = '\'';
+    // line[8] = 32;
+    // line[9] = '\'';
     // line[10] = 32;
-    // line[11] = 32;
+    // line[11] = '"';
     // line[12] = 32;
-    // line[13] = 32;
+    // line[13] = '"';
     // line[14] = 32;
-    // line[15] = 32;
-    // line[16] = 'h';
-    // line[17] = 32;
-    // line[18] = '"';
-    // line[19] = 0;
+    // line[15] = '\'';
+    // line[16] = 32;
+    // line[17] = '\'';
+    // line[18] = 32;
+    // line[19] = '"';
+    // line[20] = 32;
+    // line[21] = '"';
+    // line[22] = 0;
     // line[0] = '"';
     // line[1] = '\'';
     // line[2] = '$';
@@ -417,41 +422,41 @@ int main(int ac, char **av, const char **envp)
     // line[5] = '"';
     // line[6] = 0;
     // line = "/bin/echo $USER'$USER'text oui oui     oui  oui $USER oui      $USER ''";
-    // const char *envp[] = {"BROWSER=/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/bin/helpers/browser.sh",
-    // "PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/bguhty/.local/funcheck/host:/home/bguhty/.vscode-server/extensions/vadimcn.vscode-lldb-1.12.2/bin:/home/bguhty/.vscode-server/bin/645f29cc3176500b4b5762ba887cf2a7f0ffdf2c/bin/remote-cli:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/bguhty/.local/funcheck/host:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Python314/Scripts/:/mnt/c/Python314/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files (x86)/Razer Chroma SDK/bin:/mnt/c/Program Files/Razer Chroma SDK/bin:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/system32/config/systemprofile/AppData/Local/Microsoft/WindowsApps:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/nodejs/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Users/Computer/AppData/Local/Programs/Python/Python311/Scripts/:/mnt/c/Users/Computer/AppData/Local/Programs/Python/Python311/:/mnt/c/Users/Computer/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Computer/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/Computer/AppData/Roaming/npm:/snap/bin",
-    // "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/501/bus"
-    // "TERM_PROGRAM=vscode", NULL};
+    const char *envp[] = {"BROWSER=/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/bin/helpers/browser.sh",
+    "PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/bguhty/.local/funcheck/host:/home/bguhty/.vscode-server/extensions/vadimcn.vscode-lldb-1.12.2/bin:/home/bguhty/.vscode-server/bin/645f29cc3176500b4b5762ba887cf2a7f0ffdf2c/bin/remote-cli:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/bguhty/.local/funcheck/host:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Python314/Scripts/:/mnt/c/Python314/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files (x86)/Razer Chroma SDK/bin:/mnt/c/Program Files/Razer Chroma SDK/bin:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/system32/config/systemprofile/AppData/Local/Microsoft/WindowsApps:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/nodejs/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Users/Computer/AppData/Local/Programs/Python/Python311/Scripts/:/mnt/c/Users/Computer/AppData/Local/Programs/Python/Python311/:/mnt/c/Users/Computer/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Computer/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/Computer/AppData/Roaming/npm:/snap/bin",
+    "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/501/bus"
+    "TERM_PROGRAM=vscode", NULL};
 	ft_bzero(&shell, sizeof(shell));
 	if (!add_envp_to_list(&shell.env_list, envp))
         return (1);
-	init_interactive_signals();
-	while ((line = readline("minishell$ ")))
-	{
-		if (WTERMSIG(g_signal) != 0)
-		{
-			shell.status = 128 + WTERMSIG(g_signal);
-			g_signal = 0;
-		}
+	// init_interactive_signals();
+	// while ((line = readline("minishell$ ")))
+	// {
+	// 	if (WTERMSIG(g_signal) != 0)
+	// 	{
+	// 		shell.status = 128 + WTERMSIG(g_signal);
+	// 		g_signal = 0;
+	// 	}
 
-		if (!ft_strncmp(line, "exitcode", 8))
-		{
-			printf("%d\n", shell.status);
-			continue;
-		}
-		tokens = minishell(line, shell.env_list, &shell.status);
-		if (!tokens || shell.status == 2)
-			continue;
-		shell.cmds = build_cmds(tokens, shell.env_list);
-		if (!shell.cmds)
-		{
-			shell.status = 1;
-			continue;
-		}
-		shell.status = execute_cmds(&shell);
-		if (line[0] != '\0' || !line)
-			add_history(line);
-	}
-    //tokens = minishell(line, shell.env_list, &shell.status);
+	// 	if (!ft_strncmp(line, "exitcode", 8))
+	// 	{
+	// 		printf("%d\n", shell.status);
+	// 		continue;
+	// 	}
+	// 	tokens = minishell(line, shell.env_list, &shell.status);
+	// 	if (!tokens || shell.status == 2)
+	// 		continue;
+	// 	shell.cmds = build_cmds(tokens, shell.env_list);
+	// 	if (!shell.cmds)
+	// 	{
+	// 		shell.status = 1;
+	// 		continue;
+	// 	}
+	// 	shell.status = execute_cmds(&shell);
+	// 	if (line[0] != '\0' || !line)
+	// 		add_history(line);
+	// }
+    tokens = minishell(line, shell.env_list, &shell.status);
     //clean_up_token_and_env_list(tokens, &shell.env_list);
 	ft_putstr_fd("exit\n", STDOUT_FILENO);
     return (shell.status);

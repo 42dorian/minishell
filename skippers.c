@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   skippers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
+/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 17:44:27 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/06 18:52:21 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/14 14:52:14 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void skip_to_next_quote(const char *read_line, int *i, char quote_type)
             break ;
         }
     }
-    skip_non_white_spaces(read_line, i);
+    //skip_non_white_spaces(read_line, i);
 }
 
 void     skip_non_white_spaces(const char *read_line, int *i)

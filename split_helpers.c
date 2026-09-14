@@ -6,7 +6,7 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 21:09:28 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/10 14:55:09 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/14 15:27:51 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,49 @@ int     letter_after_dollar_is_num_or_astrisk(const char letter)
     if (is_number(letter) || is_astrisk(letter))
         return (1);
     return (0);
+}
+
+void    skip_to_next_word(const char *read_line, int *i, int *words)
+{
+    if (check_for_special_character(read_line, i, words))
+        (*words)--;
+    skip_white_spaces(read_line, i);
+    (*words)++;
+}
+
+
+void    set_quote_flag(int *quote_flag, const char letter)
+{
+    if (is_single_quote(letter) && *quote_flag == 1)
+        *quote_flag = 0;
+    else if (is_single_quote(letter) && *quote_flag == 0)
+        *quote_flag = 1;
+    else if (is_double_quote(letter) && *quote_flag == 2)
+        *quote_flag = 0;
+    else if (is_double_quote(letter) && *quote_flag == 0)
+        *quote_flag = 2;
+}
+
+int     new_word_counter(const char *read_line)
+{
+    int words;
+    int i;
+    int quote_flag;
+
+    words = 0;
+    i = 0;
+    quote_flag = 0;
+    while (read_line[i])
+    {
+        set_quote_flag(&quote_flag, read_line[i]);
+        if (is_delimeter(read_line[i]) && quote_flag == 0)
+            skip_to_next_word(read_line, &i, &words);
+        else
+            i++;
+    }
+    if (!is_delimeter(read_line[i - 1]))
+        words++;
+    return (words);
 }
 
 int word_counter(const char *read_line)

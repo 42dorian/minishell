@@ -24,6 +24,7 @@ SOURCE =	split.c \
 			executor_helpers.c \
 			built_in_executor.c \
 			built_in_executor_helper.c \
+			expansion_without_token_list.c \
 			signals.c \
 			pwd.c \
 			echo.c \

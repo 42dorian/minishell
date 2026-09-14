@@ -6,7 +6,7 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 13:20:37 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/10 14:55:06 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/14 09:28:05 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,4 +228,18 @@ int exit_bi(t_cmds *cmd, t_shell *shell);
 int valid_identifier(char *key);
 int cd_bi(t_cmds *cmd, t_envs **env_list);
 int		update_or_add(t_envs **env_list, char *value, char *key);
+
+
+int     get_full_len_of_expandable_without_token_list(const char *read_line, t_envs *env_list, int *exit_code);
+char    *get_full_expandable_word_without_token_list(const char *read_line, t_envs *env_list, int len, int *exit_code);
+char    *handle_expansions_without_token_list(t_envs *env_list, const char *read_line, int *exit_code);
+int     dollar_in_word(const char *word);
+void    decide_quote(int *quote_flag, int *single_quote_counter, const char letter);
+int     count_valid_characters_after_dollar_sign(const char *curr_expandable);
+void    set_quote_flag(int *quote_flag, int *single_quote_counter, const char letter);
+char    *get_valid_expandable(const char *expandable);
+void    make_expansion(char *fully_expnaded, const char *mock_expand, t_envs *env_list, int *exit_code);
+void    cat_to_fully_expanded(char *fully_expanded, const char new_letter);
+int     clean_up_env_list(t_envs **env_list);
+
 #endif

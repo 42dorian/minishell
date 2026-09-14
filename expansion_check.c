@@ -6,7 +6,7 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 12:53:31 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/10 15:08:21 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/14 10:40:37 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,7 +231,7 @@ int     count_valid_characters_after_dollar_sign(const char *curr_expandable)
 
 int     is_end(const char letter)
 {
-    if (is_white_space(letter) || letter == 0)
+    if (is_white_space(letter) || is_terminator(letter))
         return (1);
     return (0);
 }

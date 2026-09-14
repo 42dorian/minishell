@@ -6,7 +6,7 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/13 20:32:29 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/14 15:49:57 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/14 16:31:50 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,14 @@ int     get_full_len_of_expandable_without_token_list(const char *read_line, t_e
     while (read_line[i])
     {
         set_quote_flag_and_count_single_quotes(&quote_flag, &single_quote_counter, read_line[i]);
-        if (is_dollar_sign(read_line[i]) && !is_end(read_line[i + 1] && single_quote_counter % 2 == 0) && !is_quote(read_line[i + 1]))
+        if (is_dollar_sign(read_line[i]) && !is_end(read_line[i + 1] && single_quote_counter % 2 == 0))// && !is_quote(read_line[i + 1]))
         {
             curr_len = get_len_of_current_expandable(&read_line[i + 1], env_list, exit_code);
+            if (curr_len == 0)
+            {
+                total_len++;
+                i++;
+            }
             if (curr_len == -1)
                 return (-1);
             else
@@ -73,7 +78,7 @@ char    *get_full_expandable_word_without_token_list(const char *read_line, t_en
     while (read_line[i])
     {
         set_quote_flag_and_count_single_quotes(&quote_flag, &single_quote_counter, read_line[i]);
-        if (is_dollar_sign(read_line[i]) && !is_end(read_line[i + 1]) && single_quote_counter % 2 == 0)
+        if (is_dollar_sign(read_line[i]) && !is_end(read_line[i + 1]) && single_quote_counter % 2 == 0)//&& !is_quote(read_line[i + 1]))
         {
             mock_expand = get_valid_expandable(read_line + i + 1);
             make_expansion(fully_expanded, mock_expand, env_list, exit_code);

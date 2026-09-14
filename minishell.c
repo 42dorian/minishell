@@ -6,7 +6,7 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/12 14:40:32 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/14 11:36:37 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 // #include "dollar_sign_handler.c"
 // #include "is_special_character.c"
 // #include "special_characters_checkers.c"
+// #include "expansion_without_token_list.c"
 // #include "word_count_helpers.c"
 // #include "libft/ft_strlen.c"
 // #include "libft/list_general.c"
@@ -50,6 +51,31 @@ int	determine_quote_type(char letter, int quote_type)
     return (quote_type);
 }
 
+int    set_quote_type(int *quote_type, const char letter)
+{
+    if (is_single_quote(letter) && *quote_type == 0)
+    {
+        *quote_type = SINGLE_QUOTE;
+        return (1);
+    }
+    if (is_double_quote(letter) && *quote_type == 0)
+    {
+        *quote_type = DOUBLE_QUOTE;
+        return (1);
+    }
+    if (is_single_quote(letter) && *quote_type == SINGLE_QUOTE)
+    {
+        *quote_type = 0;
+        return (1);
+    }
+    if (is_double_quote(letter) && *quote_type == DOUBLE_QUOTE)
+    {
+        *quote_type = 0;
+        return (1);
+    }
+    return (0);
+}
+
 int     count_valid_char(const char *quoted_word)
 {
     int i;
@@ -61,7 +87,8 @@ int     count_valid_char(const char *quoted_word)
     i = 0;
     while (quoted_word[i])
     {
-        get_real_quote_type(quoted_word, &quote_type, &i);
+        if (set_quote_type(&quote_type, quoted_word[i]))
+            i++;
         if (quoted_word[i] != quote_type)
         {
             counter++;
@@ -327,22 +354,26 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
     int     i;
     t_token *tokens;
     char    **split_line;
+    char    *expanded_line;
 
     i = 0;
     // if (empty_string_and_unclosed_quote_check(read_line, status))
     //     return (NULL);
-    split_line = split_read_line(read_line);
+    expanded_line = handle_expansions_without_token_list(env_list, read_line, status);
+    if (!expanded_line)
+        return (NULL);
+    split_line = split_read_line(expanded_line);
     if (!split_line)
         return (NULL);
-    tokens = malloc(sizeof(t_token) * (word_counter(read_line) + 1));
-    // printf("words: %i\n", word_counter(read_line));
+    tokens = malloc(sizeof(t_token) * (word_counter(expanded_line) + 1));
+    //printf("words: %i\n", word_counter(read_line));
     if (!tokens)
-        return (split_clean_up(split_line, word_counter(read_line)), NULL);
+        return (split_clean_up(split_line, word_counter(expanded_line)), NULL);
     if (!create_token_struct(tokens, split_line))
         return (clean_up_tokens_and_split_line(tokens, split_line), NULL);
-    split_clean_up(split_line, word_counter(read_line));
-    if (!handle_expansions(env_list, tokens, status))
-        return (NULL);
+    split_clean_up(split_line, word_counter(expanded_line));
+    // if (!handle_expansions(env_list, tokens, status))
+    //     return (NULL);
     if (!remove_quotes(tokens))
         return (clean_up_token_and_env_list(tokens, &env_list), NULL);
     syntax_check(tokens, status);
@@ -401,7 +432,7 @@ int main(int ac, char **av, const char **envp)
     }
     // line = "$FJ";
     // const char *envp[] = {"BROWSER=/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/bin/helpers/browser.sh",
-    // "PATH=/home/guthybarnakoppany/.local/funcheck/host:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/bin/remote-cli:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/opt/orbstack-guest/bin-hiprio:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/opt/orbstack-guest/bin:/opt/orbstack-guest/data/bin/cmdlinks:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin:/home/guthybarnakoppany/.local/bin",
+    // "PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/bguhty/.local/funcheck/host:/home/bguhty/.vscode-server/extensions/vadimcn.vscode-lldb-1.12.2/bin:/home/bguhty/.vscode-server/bin/645f29cc3176500b4b5762ba887cf2a7f0ffdf2c/bin/remote-cli:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/bguhty/.local/funcheck/host:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Python314/Scripts/:/mnt/c/Python314/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files (x86)/Razer Chroma SDK/bin:/mnt/c/Program Files/Razer Chroma SDK/bin:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/system32/config/systemprofile/AppData/Local/Microsoft/WindowsApps:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/nodejs/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Users/Computer/AppData/Local/Programs/Python/Python311/Scripts/:/mnt/c/Users/Computer/AppData/Local/Programs/Python/Python311/:/mnt/c/Users/Computer/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Computer/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/Computer/AppData/Roaming/npm:/snap/bin",
     // "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/501/bus"
     // "TERM_PROGRAM=vscode", NULL};
 	ft_bzero(&shell, sizeof(shell));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
+/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 14:02:51 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/09 14:45:22 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/10 13:09:56 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,13 @@ int     count_letters_for_dollar_sign(const char *read_line, int *i)
     *i += 1;
     while (read_line[*i])
     {
-        if (is_dollar_after_dollar(read_line[(*i)]) || is_question_mark(read_line[(*i)]))
+        if (is_dollar_sign(read_line[(*i)]) && (is_dollar_sign(read_line[(*i) + 1]) || is_question_mark(read_line[(*i)])))
         {
             letters++;
             (*i)++;
             break ;
         }
-        if (is_valid_after_dollar_sign(read_line[*i]) || is_quote(read_line[*i]))
+        if (is_valid_after_dollar_sign(read_line[*i]) || is_quote(read_line[*i]) || is_dollar_sign(read_line[*i]))
         {
             (*i)++;
             letters++;
@@ -84,10 +84,7 @@ int     count_letters_till_next_word(const char *read_line, int i)
     while (read_line[i])
     {
         if (is_dollar_sign(read_line[i]))
-        {
             letters += count_letters_for_dollar_sign(read_line, &i);
-            return (letters);
-        }
         if (is_quote(read_line[i]))
             letters+= count_letters_till_next_quote(read_line, &i);
         if (is_white_space(read_line[i]) || !read_line[i])

@@ -37,6 +37,8 @@ Problems, tests and TO-DOs
 - [ ] on CTRL+C cancel all  heredocs
 - [ ] expansion removes singe quotes
 - [ ] fd leaks
+- [ ] need to handle SHLVL
+- [ ] need to handle env -i, if ran by this just run getcwd and add SHLVL=1
 - [ ] handle heredoc separately and create expansions there
 
 ---

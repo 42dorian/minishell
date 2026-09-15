@@ -21,6 +21,8 @@ Problems, tests and TO-DOs
 - [x] finish built-ins
 - [x] handle $?
 - [x] handle ""
+- [ ] handle PATH="" this will try to run commands from current directory 
+- [ ] handle env -i 
 - [ ] "echo hi >./outfiles/outfile01 | echo bye" < handle properly
 - [ ] | echo -n oui < handle this properly
 - [x] awk 'BEGIN{for(i=1;i<=10;i++){for(j=1;j<=10;j++){printf("%4d ",i*j)} printf("\n")}}' /dev/null | tail -n 10      < handle this properly

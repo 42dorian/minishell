@@ -112,6 +112,7 @@ void syntax_check(t_token *tokens, int *status)
     int i;
 
     i = 0;
+    *status = 0;
     if (preliminary_check(tokens))
     {
         *status = 2;

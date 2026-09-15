@@ -43,7 +43,6 @@ t_cmds	*build_cmds(t_token *tokens, t_envs *env, t_shell *shell)
 		}
 		i++;
 	}
-
 	return (head);
 }
 

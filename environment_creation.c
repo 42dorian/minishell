@@ -44,7 +44,7 @@ int     clean_up_token_and_env_list(t_token *tokens, t_envs **env_list)
 
     i = 0;
     ft_lstclear(env_list, free);
-    printf("\n");
+    printf("\n");//what is this for?
     while (tokens[i].type != -1)
         free((void*)tokens[i++].value);
     free(tokens);

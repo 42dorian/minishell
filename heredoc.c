@@ -91,7 +91,6 @@ static void	fill_unqoted_heredoc(int write_fd, char *eof, t_envs *env)
 		ft_putstr_fd(line_expanded, write_fd);
 		ft_putchar_fd('\n', write_fd);
 		free(line_expanded);
-		free(line);
 	}
 }
 

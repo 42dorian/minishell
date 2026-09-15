@@ -6,7 +6,7 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/14 11:36:37 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/15 12:06:56 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -363,15 +363,17 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
     if (!expanded_line)
         return (NULL);
     split_line = split_read_line(expanded_line);
+    // while (split_line[i])
+    //     printf("(%s)\n", split_line[i++]);
     if (!split_line)
         return (NULL);
-    tokens = malloc(sizeof(t_token) * (word_counter(expanded_line) + 1));
+    tokens = malloc(sizeof(t_token) * (new_word_counter(expanded_line) + 1));
     //printf("words: %i\n", word_counter(read_line));
     if (!tokens)
-        return (split_clean_up(split_line, word_counter(expanded_line)), NULL);
+        return (split_clean_up(split_line, new_word_counter(expanded_line)), NULL);
     if (!create_token_struct(tokens, split_line))
         return (clean_up_tokens_and_split_line(tokens, split_line), NULL);
-    split_clean_up(split_line, word_counter(expanded_line));
+    split_clean_up(split_line, new_word_counter(expanded_line));
     // if (!handle_expansions(env_list, tokens, status))
     //     return (NULL);
     if (!remove_quotes(tokens))

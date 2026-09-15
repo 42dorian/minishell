@@ -6,7 +6,7 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 16:08:24 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/12 12:35:17 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/15 12:12:50 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,11 @@ int pipe_check(t_token *tokens, int i)
 {
     if (tokens[0].type == token_pipe)
         return (syntax_error_message_display(tokens[i].value));
-    if (tokens[i].type == token_pipe && (tokens[i + 1].type == token_pipe || tokens[i + 1].value == NULL))
+    else if (i > 0 && tokens[i].type == token_pipe && tokens[i - 1].type != token_word)
+        return (syntax_error_message_display(tokens[i].value));
+    else if (tokens[i].type == token_pipe && (tokens[i + 1].type == token_pipe || tokens[i + 1].value == NULL))
         return (syntax_error_message_display(tokens[i + 1].value));
-    if (tokens[i].type == token_pipe && tokens[i - 1].type != token_word)
+    else if (tokens[i].type == token_pipe && tokens[i - 1].type != token_word)
         return (syntax_error_message_display(tokens[i + 1].value));
     return (0);
 }
@@ -97,7 +99,7 @@ int preliminary_check(t_token *tokens)
     int token_list_size;
 
     token_list_size = get_list_size(tokens);
-    if (token_list_size == 1 && is_special_character(tokens[0].value[0], tokens[0].value[1]))
+    if (token_list_size == 1 && is_redir(tokens[0].value[0]))
     {
         syntax_error_message_display(NULL);
         return (1);
@@ -109,8 +111,7 @@ void syntax_check(t_token *tokens, int *status)
 {
     int i;
 
-    i = 1;
-    *status = 0;
+    i = 0;
     if (preliminary_check(tokens))
     {
         *status = 2;

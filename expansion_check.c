@@ -6,7 +6,7 @@
 /*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 12:53:31 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/14 10:40:37 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/14 15:17:55 by bguhty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -339,7 +339,7 @@ void    make_expansion(char *fully_expnaded, const char *mock_expand, t_envs *en
     free(test_env);
 }
 
-void    set_quote_flag(int *quote_flag, int *single_quote_counter, const char letter)
+void    set_quote_flag_and_count_single_quotes(int *quote_flag, int *single_quote_counter, const char letter)
 {
     if (is_single_quote(letter) && *quote_flag != 2)
         (*single_quote_counter)++;
@@ -369,7 +369,7 @@ char    *get_full_expandable_word(t_token curr_token, t_envs *env_list, int len,
         return (NULL);
     while (curr_token.value[i])
     {
-        set_quote_flag(&quote_flag, &single_quote_counter, curr_token.value[i]);
+        set_quote_flag_and_count_single_quotes(&quote_flag, &single_quote_counter, curr_token.value[i]);
         if (is_dollar_sign(curr_token.value[i]) && !is_end(curr_token.value[i + 1]) && single_quote_counter % 2 == 0)
         {
             mock_expand = get_valid_expandable(curr_token.value + i + 1);

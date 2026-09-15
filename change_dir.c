@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/29 09:49:38 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/07 23:10:32 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/12 12:25:05 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	cd_bi(t_cmds *cmd, t_envs **env_list)
 	ft_bzero(&cd_struct, sizeof(cd_struct));
 	if (cmd->cmd[1] != NULL && cmd->cmd[2] != NULL)
 		return (print_error("too many arguments", cmd->cmd[0], NULL,
-				STDERR_FILENO), 2);
+				STDERR_FILENO), 1);
 	else if (!cmd->cmd[1])
 	{
 		if (home_dir(&cd_struct, env_list))
@@ -48,10 +48,7 @@ int	cd_bi(t_cmds *cmd, t_envs **env_list)
 static int	change_dir(t_cd *cd, t_cmds *cmd, t_envs **env_list)
 {
 	if (!getcwd(cd->old_path, sizeof(cd->old_path)))
-	{
-		print_error(strerror(errno), cmd->cmd[0], NULL, STDERR_FILENO);
-		return (1);
-	}
+		cd->old_path[0] = '\0';
 	if (chdir(cd->target_path) != 0)
 	{
 		print_error(strerror(errno), cmd->cmd[0], cmd->cmd[1], STDERR_FILENO);
@@ -59,8 +56,9 @@ static int	change_dir(t_cd *cd, t_cmds *cmd, t_envs **env_list)
 	}
 	if (!getcwd(cd->new_path, sizeof(cd->new_path)))
 	{
-		print_error(strerror(errno), cmd->cmd[0], NULL, STDERR_FILENO);
-		return (1);
+		print_error("error retrieving current directory", cmd->cmd[0], "getcwd",
+			STDERR_FILENO);
+		cd->new_path[0] = '\0';
 	}
 	if (update_pwd(cd->old_path, cd->new_path, env_list))
 		return (1);
@@ -87,9 +85,9 @@ static int	update_pwd(char *old_pwd, char *pwd, t_envs **env_list)
 	if (!pwd_key_new)
 		return (free(old_path), free(new_path), free(pwd_key_old), 1);
 	if (update_or_add(env_list, old_path, pwd_key_old))
-		return (1);
+		return (free(new_path), free(pwd_key_new), 1);
 	if (update_or_add(env_list, new_path, pwd_key_new))
-		return (1);
+		return (free(new_path), free(pwd_key_new), 1);
 	return (0);
 }
 

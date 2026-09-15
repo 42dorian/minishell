@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/22 10:02:58 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/08/29 10:31:16 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/12 12:31:09 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,16 @@ void	clean_parent(t_cmds *cmds, int *fd, int *stored_input)
 {
 	if (*stored_input != -1)
 		close(*stored_input);
-	if (cmds->fd_in != 0)
+	if (cmds->fd_in != 0 && cmds->fd_in != -1)
+	{
 		close(cmds->fd_in);
-	if (cmds->fd_out != 1)
+		cmds->fd_in = 0;
+	}
+	if (cmds->fd_out != 1 && cmds->fd_out != -1)
+	{
 		close(cmds->fd_out);
+		cmds->fd_out = 1;
+	}
 	if (cmds->next)
 	{
 		close(fd[1]);

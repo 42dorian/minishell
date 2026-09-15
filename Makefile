@@ -20,6 +20,7 @@ SOURCE =	split.c \
 			cmd_list.c \
 			cmd_list_helpers.c \
 			redirections.c \
+			heredoc.c \
 			executor.c \
 			executor_helpers.c \
 			built_in_executor.c \

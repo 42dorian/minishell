@@ -54,6 +54,8 @@ typedef struct s_shell
 	t_envs *env_list;
 	char **envp;
 	int status;
+	int saved_stdin;
+	int saved_stdout;
 }t_shell;
 
 typedef struct s_cd
@@ -82,13 +84,12 @@ typedef struct s_cmds
 	int					exit_status;
 	t_cmds				*next;
 	pid_t				pid;
-	char				**envp;
 }						t_cmds;
 
 typedef struct s_token
 {
     const char		*value;
-	int				quoted;		
+	int				quoted;
     t_token_type    type;
 }                   t_token;
 
@@ -183,11 +184,11 @@ int		handle_pipe(t_cmds **head, t_cmds **curr);
 
 int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env);
 
-t_cmds	*build_cmds(t_token *tokens, t_envs *env);
+t_cmds	*build_cmds(t_token *tokens, t_envs *env, t_shell *shell);
 int find_path(char **envp);
 
 int	execute_cmds(t_shell *shell);
-int run_cmd(t_cmds *cmd, char **envp, int *status);
+int run_cmd(t_cmds *cmd, char **envp, int *status, t_shell *shell);
 int is_built_in(char *cmd);
 int	restore_io(int saved_stdin, int saved_stdout);
 
@@ -228,6 +229,9 @@ int exit_bi(t_cmds *cmd, t_shell *shell);
 int valid_identifier(char *key);
 int cd_bi(t_cmds *cmd, t_envs **env_list);
 int		update_or_add(t_envs **env_list, char *value, char *key);
+void free_tokens(t_token *token);
+void free_cmds(t_cmds **cmd);
+void free_all_and_exit(t_shell *shell, int status);
 
 
 int     get_full_len_of_expandable_without_token_list(const char *read_line, t_envs *env_list, int *exit_code);

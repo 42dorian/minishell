@@ -187,7 +187,7 @@ int     get_len_of_real_env(const char *test_env, t_envs *env_list)
         len = -1;
     else
         len = ft_strlen(real_env);
-    return (len);
+    return (free(real_env), len);
 }
 
 int     get_len_of_current_expandable(const char *expandable, t_envs *env_list, int *exit_code)
@@ -207,7 +207,7 @@ int     get_len_of_current_expandable(const char *expandable, t_envs *env_list, 
     if (len == -1)
         return (free(test_env), -1);
     else
-        return (len);
+        return (free(test_env), len);
 }
 
 int     count_valid_characters_after_dollar_sign(const char *curr_expandable)

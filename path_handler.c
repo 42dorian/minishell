@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/26 18:53:03 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/07 23:01:30 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/12 12:44:52 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,11 @@ char	*handling_path(char *cmd_name, char *path, int *exit_status)
 
 	status = 0;
 	if (ft_strncmp(cmd_name, "", 1) == 0)
+	{
+		print_error("command not found", cmd_name, NULL, STDERR_FILENO);
+		*exit_status = 127;
 		return (NULL);
+	}
 	if (ft_strchr(cmd_name, '/'))
 	{
 		status = check_access(cmd_name);
@@ -41,6 +45,7 @@ char	*handling_path(char *cmd_name, char *path, int *exit_status)
 		return (NULL);
 	cmd_path = find_cmd_path(cmd_name, split_path, &status);
 	free_split(split_path);
+	split_path = NULL;
 	if (!cmd_path)
 		return (print_status(status, cmd_name), assign_exit_status(status, exit_status), NULL);
 	return (cmd_path);
@@ -67,6 +72,7 @@ void	free_split(char **strs)
 		i++;
 	}
 	free(strs);
+	strs = NULL;
 }
 
 static char	*format_path(char *cmd_name, char *path)
@@ -78,8 +84,9 @@ static char	*format_path(char *cmd_name, char *path)
 	if (!tmp)
 		return (NULL);
 	cmd_path = ft_strjoin(tmp, cmd_name);
+	free(tmp);
 	if (!cmd_path)
-		return (free(tmp), NULL);
+		return (NULL);
 	return (cmd_path);
 }
 

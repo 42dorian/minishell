@@ -36,9 +36,9 @@
 // #include "libft/ft_strdup.c"
 // #include "libft/ft_memcpy.c"
 
-volatile sig_atomic_t g_signal = 0;
+volatile sig_atomic_t	g_signal = 0;
 
-int     determine_quote_type(char letter, int quote_type)
+int	determine_quote_type(char letter, int quote_type)
 {
     if (quote_type == SINGLE_QUOTE && letter == SINGLE_QUOTE)
         quote_type = 0;
@@ -379,7 +379,45 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
     if (!remove_quotes(tokens))
         return (clean_up_token_and_env_list(tokens, &env_list), NULL);
     syntax_check(tokens, status);
+    if (*status == 2)
+    	return (free_tokens(tokens), NULL);
+    // 	clean_up_token_and_env_list(tokens, &env_list);
     return (tokens);
+}
+
+
+void free_tokens(t_token *token)
+{
+	int i;
+
+	i = -1;
+	if (!token)
+		return ;
+	while (token[++i].value)
+		free((void*)token[i].value);
+	free(token);
+}
+
+void free_cmds(t_cmds **cmd)
+{
+	t_cmds *tmp;
+	t_cmds *next_cmd;
+	if (!cmd || !*cmd)
+		return ;
+	tmp = *cmd;
+	while (tmp)
+	{
+		next_cmd = tmp->next;
+		free_split(tmp->cmd);
+		tmp->cmd = NULL;
+		if (tmp->fd_in > 0)
+			close(tmp->fd_in);
+		if (tmp->fd_out > 1)
+			close(tmp->fd_out);
+		free(tmp);
+		tmp = next_cmd;
+	}
+	*cmd = NULL;
 }
 
 int main(int ac, char **av, const char **envp)
@@ -387,41 +425,14 @@ int main(int ac, char **av, const char **envp)
 	char *line;
 	t_shell shell;
 	t_token *tokens;
-    (void)ac;
     (void)av;
-    
-    // line = malloc(5);
-    // line[0] = '<';
-    // line[1] = '<';
-    // line[2] = 32;
-    // line[3] = '>';
-    // line[4] = 0;
-    // line[5] = '"';
-    // line[6] = 32;
-    // line[7] = '\'';
-    // line[8] = 32;
-    // line[9] = '\'';
-    // line[10] = 32;
-    // line[11] = '"';
-    // line[12] = 32;
-    // line[13] = '"';
-    // line[14] = 32;
-    // line[15] = '\'';
-    // line[16] = 32;
-    // line[17] = '\'';
-    // line[18] = 32;
-    // line[19] = '"';
-    // line[20] = 32;
-    // line[21] = '"';
-    // line[22] = 0;
-    // line[0] = '"';
-    // line[1] = '\'';
-    // line[2] = '$';
-    // line[3] = '?';
-    // line[4] = '\'';
-    // line[5] = '"';
-    // line[6] = 0;
-    // line = "/bin/echo $USER'$USER'text oui oui     oui  oui $USER oui      $USER ''";
+
+    if(ac != 1)
+    {
+    	ft_putstr_fd("minishell doesn't take arguments\n", STDERR_FILENO);
+     	return (1);
+    }
+    // line = "$FJ";
     // const char *envp[] = {"BROWSER=/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/bin/helpers/browser.sh",
     // "PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/bguhty/.local/funcheck/host:/home/bguhty/.vscode-server/extensions/vadimcn.vscode-lldb-1.12.2/bin:/home/bguhty/.vscode-server/bin/645f29cc3176500b4b5762ba887cf2a7f0ffdf2c/bin/remote-cli:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/bguhty/.local/funcheck/host:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Python314/Scripts/:/mnt/c/Python314/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files (x86)/Razer Chroma SDK/bin:/mnt/c/Program Files/Razer Chroma SDK/bin:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/system32/config/systemprofile/AppData/Local/Microsoft/WindowsApps:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/nodejs/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Users/Computer/AppData/Local/Programs/Python/Python311/Scripts/:/mnt/c/Users/Computer/AppData/Local/Programs/Python/Python311/:/mnt/c/Users/Computer/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Computer/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/Computer/AppData/Roaming/npm:/snap/bin",
     // "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/501/bus"
@@ -432,32 +443,30 @@ int main(int ac, char **av, const char **envp)
 	init_interactive_signals();
 	while ((line = readline("minishell$ ")))
 	{
+		if (line[0] != '\0' || !line)
+			add_history(line);
 		if (WTERMSIG(g_signal) != 0)
 		{
 			shell.status = 128 + WTERMSIG(g_signal);
 			g_signal = 0;
 		}
-
-		if (!ft_strncmp(line, "exitcode", 8))
-		{
-			printf("%d\n", shell.status);
-			continue;
-		}
 		tokens = minishell(line, shell.env_list, &shell.status);
-		if (!tokens || shell.status == 2)
+		free(line);
+		if (!tokens)
 			continue;
-		shell.cmds = build_cmds(tokens, shell.env_list);
+		shell.cmds = build_cmds(tokens, shell.env_list, &shell);
+		free_tokens(tokens);
 		if (!shell.cmds)
-		{
-			shell.status = 1;
 			continue;
-		}
 		shell.status = execute_cmds(&shell);
-		if (line[0] != '\0' || !line)
-			add_history(line);
+		free_cmds(&shell.cmds);
 	}
+	// rl_clear_history();
     //tokens = minishell(line, shell.env_list, &shell.status);
     //clean_up_token_and_env_list(tokens, &shell.env_list);
-	ft_putstr_fd("exit\n", STDOUT_FILENO);
-    return (shell.status);
+	ft_putstr_fd("exit\n", STDERR_FILENO);
+	close(0);
+	close(1);
+	close(2);
+    free_all_and_exit(&shell, shell.status);
 }

@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 17:13:55 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/16 16:09:11 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/16 16:41:23 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,24 +26,6 @@ int	tokenizer(char *input)
 		return (token_redirect_out);
 	else
 		return (token_word);
-}
-
-char	*normal_copy(const char *get_copied)
-{
-	int		i;
-	char	*new_word;
-
-	i = 0;
-	new_word = malloc(sizeof(char) * (ft_strlen(get_copied) + 1));
-	if (!new_word)
-		return (NULL);
-	while (i < ft_strlen(get_copied))
-	{
-		new_word[i] = get_copied[i];
-		i++;
-	}
-	new_word[i] = 0;
-	return (new_word);
 }
 
 int	create_token_struct(t_token *tokens, char **line)

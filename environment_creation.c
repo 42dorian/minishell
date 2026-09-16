@@ -3,51 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   environment_creation.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
+/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 11:41:39 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/08 13:57:07 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/16 16:15:55 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int     key_counter(const char *envp)
+int	key_counter(const char *envp)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (envp[i] != EQUAL_SIGN)
-        i++;
-    return (i);
+	i = 0;
+	while (envp[i] != EQUAL_SIGN)
+		i++;
+	return (i);
 }
 
-int     value_counter(const char *envp)
+int	value_counter(const char *envp)
 {
-    int i;
-    int final;
+	int	i;
+	int	final;
 
-    i = 0;
-    while (envp[i] != EQUAL_SIGN)
-        i++;
-    i++;
-    final = i;
-    while (envp[i])
-        i++;
-    return (i - final);
-
+	i = 0;
+	while (envp[i] != EQUAL_SIGN)
+		i++;
+	i++;
+	final = i;
+	while (envp[i])
+		i++;
+	return (i - final);
 }
 
-int     clean_up_token_and_env_list(t_token *tokens, t_envs **env_list)
+int	clean_up_token_and_env_list(t_token *tokens, t_envs **env_list)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    ft_lstclear(env_list, free);
-    printf("\n");
-    while (tokens[i].type != -1)
-        free((void*)tokens[i++].value);
-    free(tokens);
-    tokens = NULL;
-    return (0);
+	i = 0;
+	ft_lstclear(env_list, free);
+	printf("\n");
+	while (tokens[i].type != -1)
+		free((void *)tokens[i++].value);
+	free(tokens);
+	tokens = NULL;
+	return (0);
 }

@@ -6,98 +6,79 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 21:09:28 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/16 14:28:12 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/16 16:35:19 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int check_for_quote(const char letter, int *quote_type)
+void	skip_to_next_word(const char *read_line, int *i, int *words)
 {
-    if (letter == SINGLE_QUOTE)
-        return (*quote_type = SINGLE_QUOTE, 1);
-    else if (letter == DOUBLE_QUOTE)
-        return (*quote_type = DOUBLE_QUOTE, 1);
-    else
-        return (0);
+	if (check_for_special_character(read_line, i, words))
+		(*words)--;
+	skip_white_spaces(read_line, i);
+	(*words)++;
 }
 
-int     letter_after_dollar_is_num_or_astrisk(const char letter)
+void	set_quote_flag(int *quote_flag, const char letter)
 {
-    if (is_number(letter) || is_astrisk(letter))
-        return (1);
-    return (0);
+	if (is_single_quote(letter) && *quote_flag == 1)
+		*quote_flag = 0;
+	else if (is_single_quote(letter) && *quote_flag == 0)
+		*quote_flag = 1;
+	else if (is_double_quote(letter) && *quote_flag == 2)
+		*quote_flag = 0;
+	else if (is_double_quote(letter) && *quote_flag == 0)
+		*quote_flag = 2;
 }
 
-void    skip_to_next_word(const char *read_line, int *i, int *words)
+int	word_counter(const char *read_line)
 {
-    if (check_for_special_character(read_line, i, words))
-        (*words)--;
-    skip_white_spaces(read_line, i);
-    (*words)++;
+	int	words;
+	int	i;
+	int	quote_flag;
+
+	words = 0;
+	i = 0;
+	quote_flag = 0;
+	while (read_line[i])
+	{
+		set_quote_flag(&quote_flag, read_line[i]);
+		if (is_delimeter(read_line[i]) && quote_flag == 0)
+			skip_to_next_word(read_line, &i, &words);
+		else
+			i++;
+	}
+	if (!is_delimeter(read_line[i - 1]))
+		words++;
+	return (words);
 }
 
-
-void    set_quote_flag(int *quote_flag, const char letter)
+int	count_letters_on_special_character(const char *read_line, int i,
+		int *letters)
 {
-    if (is_single_quote(letter) && *quote_flag == 1)
-        *quote_flag = 0;
-    else if (is_single_quote(letter) && *quote_flag == 0)
-        *quote_flag = 1;
-    else if (is_double_quote(letter) && *quote_flag == 2)
-        *quote_flag = 0;
-    else if (is_double_quote(letter) && *quote_flag == 0)
-        *quote_flag = 2;
+	if (is_heredoc_or_append(read_line[i], read_line[(i) + 1]))
+	{
+		if (*letters == 0)
+			(*letters) += 2;
+		return (1);
+	}
+	else if (is_redir_or_pipe(read_line[i]))
+	{
+		if (*letters == 0)
+			(*letters)++;
+		return (1);
+	}
+	return (0);
 }
 
-int     word_counter(const char *read_line)
+void	split_clean_up(char **split_line, int i)
 {
-    int words;
-    int i;
-    int quote_flag;
+	int	j;
 
-    words = 0;
-    i = 0;
-    quote_flag = 0;
-    while (read_line[i])
-    {
-        set_quote_flag(&quote_flag, read_line[i]);
-        if (is_delimeter(read_line[i]) && quote_flag == 0)
-            skip_to_next_word(read_line, &i, &words);
-        else
-            i++;
-    }
-    if (!is_delimeter(read_line[i - 1]))
-        words++;
-    return (words);
-}
-
-
-int     count_letters_on_special_character(const char *read_line, int i, int *letters)
-{
-    if (is_heredoc_or_append(read_line[i], read_line[(i) + 1]))
-    {
-        if (*letters == 0)
-            (*letters) += 2;
-        return (1);
-    }
-    else if (is_redir_or_pipe(read_line[i]))
-    {
-        if (*letters == 0)
-            (*letters)++;
-        return (1);
-    }
-    return (0);
-}
-
-
-void    split_clean_up(char **split_line, int i)
-{
-    int j;
-
-    j = 0;
-    while (j < i)
-        free(split_line[j++]);
-    free(split_line);
-    split_line = NULL;
+	j = 0;
+	while (j < i)
+		free(split_line[j++]);
+	free(split_line);
+	split_line = NULL;
 }

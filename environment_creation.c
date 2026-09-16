@@ -3,51 +3,83 @@
 /*                                                        :::      ::::::::   */
 /*   environment_creation.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
+/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 11:41:39 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/08 13:57:07 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/16 17:48:43 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int     key_counter(const char *envp)
+int	get_env_len(const char **envp)
 {
-    int i;
+	int	len;
 
-    i = 0;
-    while (envp[i] != EQUAL_SIGN)
-        i++;
-    return (i);
+	len = 0;
+	while (envp[len])
+		len++;
+	return (len);
 }
 
-int     value_counter(const char *envp)
+int	add_envp_to_list(t_envs **my_list, const char **envp)
 {
-    int i;
-    int final;
+	t_envs	*new_node;
+	int		i;
+	int		envp_len;
 
-    i = 0;
-    while (envp[i] != EQUAL_SIGN)
-        i++;
-    i++;
-    final = i;
-    while (envp[i])
-        i++;
-    return (i - final);
-
+	i = 0;
+	envp_len = get_env_len(envp);
+	while (i < envp_len)
+	{
+		new_node = copy_from_envp_to_own_env_list(envp, i);
+		if (!new_node)
+			return (clean_up_env_list(my_list));
+		else
+			ft_lstadd_back(my_list, new_node);
+		i++;
+	}
+	return (1);
 }
 
-int     clean_up_token_and_env_list(t_token *tokens, t_envs **env_list)
+t_envs	*copy_from_envp_to_own_env_list(const char **envp, int i)
 {
-    int i;
+	t_envs	*new_node;
 
-    i = 0;
-    ft_lstclear(env_list, free);
-    printf("\n");//what is this for?
-    while (tokens[i].type != -1)
-        free((void*)tokens[i++].value);
-    free(tokens);
-    tokens = NULL;
-    return (0);
+	new_node = malloc(sizeof(t_envs));
+	if (!new_node)
+		return (NULL);
+	new_node->key = get_key(envp[i]);
+	if (!new_node->key)
+		return (free(new_node), NULL);
+	new_node->value = get_value(envp[i]);
+	if (!new_node->value)
+		return (free(new_node->key), free(new_node), NULL);
+	new_node->next = NULL;
+	return (new_node);
+}
+
+int	key_counter(const char *envp)
+{
+	int	i;
+
+	i = 0;
+	while (envp[i] != EQUAL_SIGN)
+		i++;
+	return (i);
+}
+
+int	value_counter(const char *envp)
+{
+	int	i;
+	int	final;
+
+	i = 0;
+	while (envp[i] != EQUAL_SIGN)
+		i++;
+	i++;
+	final = i;
+	while (envp[i])
+		i++;
+	return (i - final);
 }

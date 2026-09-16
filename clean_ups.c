@@ -1,41 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_assign_helpers.c                               :+:      :+:    :+:   */
+/*   clean_ups.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/20 17:00:28 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/16 16:15:44 by bguthy           ###   ########.fr       */
+/*   Created: 2026/09/16 17:46:21 by bguthy            #+#    #+#             */
+/*   Updated: 2026/09/16 17:48:19 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_lower_case(char letter)
+int	clean_up_env_list(t_envs **env_list)
 {
-	if (letter >= LOWER_CASE_A && letter <= LOWER_CASE_Z)
-		return (1);
+	ft_lstclear(env_list, free);
 	return (0);
 }
 
-int	is_upper_case(char letter)
+void	clean_up_tokens_and_split_line(t_token *tokens, char **split_line)
 {
-	if (letter >= A && letter <= Z)
-		return (1);
-	return (0);
-}
+	int	i;
 
-int	is_number(char letter)
-{
-	if (letter >= '0' && letter <= '9')
-		return (1);
-	return (0);
-}
-
-int	is_underline(char letter)
-{
-	if (letter == '_')
-		return (1);
-	return (0);
+	i = 0;
+	while (tokens[i].type != -1)
+		free((void *)tokens[i++].value);
+	i = 0;
+	while (split_line[i])
+		free(split_line[i++]);
+	free(split_line);
+	free(tokens);
 }

@@ -4,17 +4,19 @@ SOURCE =	split.c \
 			minishell.c \
 			split_helpers.c \
 			rest_helpers.c \
-			expansion_check.c \
 			stepping_in_input.c \
 			env_assign_helpers.c \
 			syntax_error_check.c \
 			environment_creation.c \
 			dollar_sign_handler.c \
-			is_special_character.c \
 			skippers.c \
+			is_quoted.c \
+			quote_removal.c \
 			special_characters_checkers.c \
 			tokenizing.c \
+			key_value_extraction.c \
 			word_count_helpers.c \
+			copying.c \
 			path_handler.c \
 			path_handler_helpers.c \
 			cmd_list.c \
@@ -25,7 +27,16 @@ SOURCE =	split.c \
 			executor_helpers.c \
 			built_in_executor.c \
 			built_in_executor_helper.c \
-			expansion_without_token_list.c \
+			handling_expansions.c \
+			expansion_helpers_1.c \
+			expansion_helpers_2.c \
+			expansion_helpers_3.c \
+			expansion_helpers_4.c \
+			count_letters.c \
+			letter_checkers_1.c \
+			letter_checkers_2.c \
+			letter_checkers_3.c \
+			preliminary_checkers.c \
 			signals.c \
 			pwd.c \
 			echo.c \
@@ -34,6 +45,7 @@ SOURCE =	split.c \
 			export.c \
 			unset.c \
 			exit.c \
+			clean_ups.c \
 			change_dir.c \
 			general_helpers.c
 

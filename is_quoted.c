@@ -1,41 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_assign_helpers.c                               :+:      :+:    :+:   */
+/*   is_quoted.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/20 17:00:28 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/16 16:15:44 by bguthy           ###   ########.fr       */
+/*   Created: 2026/09/16 16:36:03 by bguthy            #+#    #+#             */
+/*   Updated: 2026/09/16 16:40:21 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_lower_case(char letter)
+int	is_single_quote(const char letter)
 {
-	if (letter >= LOWER_CASE_A && letter <= LOWER_CASE_Z)
+	if (letter == SINGLE_QUOTE)
 		return (1);
 	return (0);
 }
 
-int	is_upper_case(char letter)
+int	is_double_quote(const char letter)
 {
-	if (letter >= A && letter <= Z)
+	if (letter == DOUBLE_QUOTE)
 		return (1);
 	return (0);
 }
 
-int	is_number(char letter)
+int	is_quote(const char letter)
 {
-	if (letter >= '0' && letter <= '9')
+	if (is_single_quote(letter) || is_double_quote(letter))
 		return (1);
 	return (0);
 }
 
-int	is_underline(char letter)
+int	check_for_quote(const char letter, int *quote_type)
 {
-	if (letter == '_')
-		return (1);
-	return (0);
+	if (letter == SINGLE_QUOTE)
+		return (*quote_type = SINGLE_QUOTE, 1);
+	else if (letter == DOUBLE_QUOTE)
+		return (*quote_type = DOUBLE_QUOTE, 1);
+	else
+		return (0);
 }

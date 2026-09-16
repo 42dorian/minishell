@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/09 22:59:23 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/16 12:57:13 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/16 18:12:04 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ static char	*expanded_line(char *line, t_envs *env)
 	token.value = line;
 	token.type = token_word;
 	array[0].type = 0;
-	len = get_full_len_of_expandable(token, env, &token, &exit_code);
-	expanded = get_full_expandable_word(token, env, len, 0);
+	len = get_full_len_of_expandable(line, env, &exit_code);
+	expanded = get_full_expandable_word(line, env, len, 0);
 	return (expanded);
 }
 

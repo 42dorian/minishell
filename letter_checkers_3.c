@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 17:35:58 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/16 17:34:23 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/16 18:33:13 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,14 @@ int	is_delimeter(const char letter)
 		return (1);
 	else
 		return (0);
+}
+
+int	token_list_size(t_token *tokens)
+{
+	int	size;
+
+	size = 0;
+	while (tokens[size].type != -1)
+		size++;
+	return (size);
 }

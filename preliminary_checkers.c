@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 17:50:02 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/16 17:53:30 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/16 18:32:54 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,10 @@ int	empty_string_and_unclosed_quote_check(const char *read_line, int *status)
 
 int	preliminary_check(t_token *tokens)
 {
-	int	token_list_size;
+	int	size;
 
-	token_list_size = ft_lstsize(tokens);
-	if (token_list_size == 1 && is_redir(tokens[0].value[0]))
+	size = token_list_size(tokens);
+	if (size == 1 && is_redir(tokens[0].value[0]))
 	{
 		syntax_error_message_display(NULL);
 		return (1);

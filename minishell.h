@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 13:20:37 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/16 14:28:09 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/16 18:13:31 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ char					**split_read_line(const char *read_line);
 char					**allocating_double_pointer(const char *read_line);
 int    					add_envp_to_list(t_envs **my_list, const char **envp);
 int						is_word(const char *read_line, int *i, int *words);
-int     				clean_up_token_and_env_list(t_token *tokens, t_envs **env_list);
 int						check_for_quote(const char letter, int *quote_type);
 void					skip_white_spaces(const char *read_line, int *i);
 int						is_white_space(const char letter);
@@ -114,11 +113,7 @@ void					skip_to_next_quote(const char *read_line, int *i,
 							char quote_type);
 void					skip_non_white_spaces(const char *read_line, int *i);
 void					split_clean_up(char **split_line, int i);
-int						env_assign_check(char *string);
-void					get_real_quote_type(const char *word, int *quote_type,
-							int *i);
 char    				*normal_copy(const char *get_copied);
-t_envs					*env_list_addition(t_token *tokens, t_envs *env_list);
 int						dollar_sign_exception(const char *read_line, int *i,
 							int *words);
 int						is_heredoc_or_append(const char letter1,
@@ -145,21 +140,16 @@ int						check_for_pipe(const char *read_line, int *i);
 int						dollar_is_standing_alone(const char letter);
 void					process_after_dollar_sign(const char *read_line, int *i,
 							int *words);
-int						is_dollar_after_dollar(const char letter);
 int						is_redir(const char letter);
 int						is_redir_in(const char letter);
 int						is_redir_out(const char letter);
-int						handle_expansions(t_envs *env_list, t_token *tokens, int *exit_code);
 int						is_astrisk(const char letter);
 int						is_terminator(const char letter);
 int						letter_after_dollar_is_num_or_astrisk(const char letter);
 int						is_underline(char letter);
 int						is_white_space_or_special_character(const char letter);
 int						key_counter(const char *envp);
-char    				*get_full_expandable_word(t_token curr_token, t_envs *env_list, int len, int *exit_code);
-int     				get_full_len_of_expandable(t_token curr_token, t_envs *env_list, t_token *tokens, int *exit_code);
 int     				get_len_of_current_expandable(const char *expandable, t_envs *env_list, int *exit_code);
-int						digit_counter(pid_t pid);
 char					*find_cmd_path(char *cmd_name, char **split_path,
 							int *status);
 void					free_split(char **strs);
@@ -233,13 +223,13 @@ void free_cmds(t_cmds **cmd);
 void free_all_and_exit(t_shell *shell, int status);
 
 
-int     get_full_len_of_expandable_without_token_list(const char *read_line, t_envs *env_list, int *exit_code);
-char    *get_full_expandable_word_without_token_list(const char *read_line, t_envs *env_list, int len, int *exit_code);
-char    *handle_expansions_without_token_list(t_envs *env_list, const char *read_line, int *exit_code);
+int     get_full_len_of_expandable(const char *read_line, t_envs *env_list, int *exit_code);
+char    *get_full_expandable_word(const char *read_line, t_envs *env_list, int len, int *exit_code);
+char    *handle_expansions(t_envs *env_list, const char *read_line, int *exit_code);
 int     dollar_in_word(const char *word);
-void    decide_quote(int *quote_flag, int *single_quote_counter, const char letter);
+//void    decide_quote(int *quote_flag, int *single_quote_counter, const char letter);
 int     count_valid_characters_after_dollar_sign(const char *curr_expandable);
-void    set_quote_flag_and_count_single_quotes(int *quote_flag, int *single_quote_counter, const char letter);
+void    set_quote_flag(int *quote_flag, const char letter);
 char    *get_valid_expandable(const char *expandable);
 void    make_expansion(char *fully_expnaded, const char *mock_expand, t_envs *env_list, int *exit_code);
 void    cat_to_fully_expanded(char *fully_expanded, const char new_letter);
@@ -248,6 +238,28 @@ int     is_delimeter(const char letter);
 int     word_counter(const char *read_line);
 int     check_for_special_character(const char *read_line, int *i, int *words);
 void    move_index_and_set_curr_len_to_zero(const char *read_line, int *i, int *curr_len);
-void    set_quote_flag_i_and_single_quote_counter_to_zero(int *quote_flag, int *i, int *single_quote_counter);
+void    set_quote_flag_and_index_to_zero(int *quote_flag, int *i);
+int		double_dollar_or_question_mark_check(const char letter);
+int		get_len_of_real_env(const char *test_env, t_envs *env_list);
+int		get_len_of_valid_expandable(const char *expandable);
+char	*get_value(const char *envp);
+char	*get_key(const char *envp);
+void	set_curr_and_total_len_to_zero(int *curr_len, int *total_len);
+int		eligible_for_expansion(const char *read_line, int i, int quote_flag);
+int		check_res_of_curr_len_and_increment_accordingly(int *curr_len, int *total_len, int *i, const char *read_line);
+char	*get_from_my_env_list(const char *expandable, t_envs env_list);
+char	*convert_pid_to_string(void);
+int    	set_quote_type(int *quote_type, const char letter);
+char	*copy_till_next_word(const char *read_line, int *i);
+int		empty_string_and_unclosed_quote_check(const char *read_line, int *status);
+void	clean_up_tokens_and_split_line(t_token *tokens, char **split_line);
+int		remove_quotes(t_token *tokens);
+int		solo_standing_special_character(const char *read_line, int *i);
+int		preliminary_check(t_token *tokens);
+int		count_valid_char(const char *quoted_word);
+int		count_letters_till_next_word(const char *read_line, int i);
+void	increment_total_len_and_index_by_one(int *total_len, int *i);
+int		get_pid_len(void);
+int		how_many_digits(int *number);
 
 #endif

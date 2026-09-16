@@ -210,6 +210,8 @@ void init_interactive_signals(void);
 void init_execution_signals(void);
 void pause_interactive_signals(void);
 void init_heredoc_signals(void);
+void	print_heredoc_warning(char *eof);
+char	*expanded_line(char *line, t_envs *env);
 char **create_envp(t_envs *env_list);
 int env(t_envs *env_list);
 int export_bi(t_cmds *cmd, t_envs **env_list);
@@ -261,5 +263,6 @@ int		count_letters_till_next_word(const char *read_line, int i);
 void	increment_total_len_and_index_by_one(int *total_len, int *i);
 int		get_pid_len(void);
 int		how_many_digits(int *number);
+int create_env(char *key, char *value, t_envs **env_list);
 
 #endif

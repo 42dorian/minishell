@@ -40,7 +40,7 @@ int	ft_atoi(const char *nptr)
 	return (value * sign);
 }
 /*#include <stdio.h>
-int main(void)
+int	main(void)
 {
 	char *s = "-123y";
 	printf("ft_atoi: %i\n", ft_atoi(s));

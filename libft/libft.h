@@ -17,10 +17,10 @@
 
 typedef struct s_envs
 {
-    char                *key;
-    char                *value;
-    struct s_envs       *next;
-}						t_envs;
+	char			*key;
+	char			*value;
+	struct s_envs	*next;
+}					t_envs;
 
 int					ft_isalpha(int c);
 int					ft_isalnum(int c);

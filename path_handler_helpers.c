@@ -46,8 +46,6 @@ int	check_access(char *cmd)
 	return (status);
 }
 
-
-
 int	is_dir(char *cmd, struct stat *path_stat)
 {
 	if (stat(cmd, path_stat) == 0)
@@ -56,4 +54,12 @@ int	is_dir(char *cmd, struct stat *path_stat)
 			return (1);
 	}
 	return (0);
+}
+
+void	assign_exit_status(int status, int *exit_status)
+{
+	if (status == 1 || status == 2)
+		*exit_status = 126;
+	else
+		*exit_status = 127;
 }

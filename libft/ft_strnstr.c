@@ -37,13 +37,13 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 }
 
 /*#include <stdio.h>
-int main(void)
+int	main(void)
 {
-    const char *big = "Hello, World!";
-    const char *little = "World";
+	const char *big = "Hello, World!";
+	const char *little = "World";
 
-    char *res = ft_strnstr(big, little, ft_strlen(big));
-    printf("Test 1: %s", res);
+	char *res = ft_strnstr(big, little, ft_strlen(big));
+	printf("Test 1: %s", res);
 
-    return 0;
+	return (0);
 }*/

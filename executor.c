@@ -12,8 +12,8 @@
 
 #include "minishell.h"
 
-// static int	fork_pipe(t_cmds *cmds, int *fd, int *stored_input, char **envp);
 static int	fork_pipe(t_cmds *cmds, int *fd, int *stored_input, t_shell *shell);
+static int execute_single_built_in(t_shell *shell);
 
 int	execute_cmds(t_shell *shell)
 {
@@ -41,7 +41,7 @@ int	execute_cmds(t_shell *shell)
 	while (curr_cmd)
 	{
 		if (!fork_pipe(curr_cmd, fd, &stored_input, shell))
-			break;
+			break ;
 		clean_parent(curr_cmd, fd, &stored_input);
 		curr_cmd = curr_cmd->next;
 	}
@@ -54,7 +54,6 @@ int	execute_cmds(t_shell *shell)
 
 int	execute_single_cmd(t_shell *shell)
 {
-
 	if (!shell->cmds->cmd)
 	{
 		shell->status = 0;
@@ -66,26 +65,30 @@ int	execute_single_cmd(t_shell *shell)
 		return (1);
 	}
 	if (is_built_in(shell->cmds->cmd[0]))
-	{
-		shell->saved_stdin = dup(STDIN_FILENO);
-		shell->saved_stdout = dup(STDOUT_FILENO);
-		if (shell->saved_stdin == -1)
-			return (print_error(strerror(errno), "dup", NULL, 2), 1);
-		else if (shell->saved_stdout == -1)
-			return (close(shell->saved_stdin), print_error(strerror(errno), "dup", NULL, 2), 1);
-		if (change_io(shell->cmds))
-		{
-			restore_io(shell->saved_stdin, shell->saved_stdout);
-			return (1);
-		}
-		shell->status = run_built_in(shell->cmds, shell->env_list, shell);
-		restore_io(shell->saved_stdin, shell->saved_stdout);
-		shell->saved_stdin = -1;
-		shell->saved_stdout = -1;
-		return (1);
-	}
+		return (execute_single_built_in(shell));
 	if (!run_cmd(shell->cmds, shell->envp, &shell->status, shell))
 		return (0);
+	return (1);
+}
+
+int execute_single_built_in(t_shell *shell)
+{
+	shell->saved_stdin = dup(STDIN_FILENO);
+	shell->saved_stdout = dup(STDOUT_FILENO);
+	if (shell->saved_stdin == -1)
+		return (print_error(strerror(errno), "dup", NULL, 2), 1);
+	else if (shell->saved_stdout == -1)
+		return (close(shell->saved_stdin), print_error(strerror(errno),
+				"dup", NULL, 2), 1);
+	if (change_io(shell->cmds))
+	{
+		restore_io(shell->saved_stdin, shell->saved_stdout);
+		return (1);
+	}
+	shell->status = run_built_in(shell->cmds, shell->env_list, shell);
+	restore_io(shell->saved_stdin, shell->saved_stdout);
+	shell->saved_stdin = -1;
+	shell->saved_stdout = -1;
 	return (1);
 }
 
@@ -100,7 +103,8 @@ int	run_cmd(t_cmds *cmd, char **envp, int *status, t_shell *shell)
 		return (0);
 	cmd->pid = fork();
 	if (cmd->pid == -1)
-		return (free(path), print_error(strerror(errno), cmd->cmd[0], NULL, 2), 0);
+		return (free(path), print_error(strerror(errno), cmd->cmd[0], NULL, 2),
+			0);
 	if (cmd->pid == 0)
 	{
 		init_execution_signals();
@@ -124,9 +128,9 @@ int	run_cmd(t_cmds *cmd, char **envp, int *status, t_shell *shell)
 	return (free(path), 1);
 }
 
-void wait_single_pid(pid_t pid, int *status, int last_pid)
+void	wait_single_pid(pid_t pid, int *status, int last_pid)
 {
-	int raw_status;
+	int	raw_status;
 
 	if (pid > 0)
 	{
@@ -134,11 +138,11 @@ void wait_single_pid(pid_t pid, int *status, int last_pid)
 			return ;
 		if (WIFEXITED(raw_status))
 			*status = WEXITSTATUS(raw_status);
-		else if(WIFSIGNALED(raw_status))
+		else if (WIFSIGNALED(raw_status))
 		{
 			if (WTERMSIG(raw_status) == SIGQUIT && last_pid)
 				write(STDERR_FILENO, "Quit: (core dumped)\n", 20);
-			else if(WTERMSIG(raw_status) == SIGINT && last_pid)
+			else if (WTERMSIG(raw_status) == SIGINT && last_pid)
 				write(STDERR_FILENO, "\n", 1);
 			*status = 128 + WTERMSIG(raw_status);
 		}
@@ -148,7 +152,7 @@ void wait_single_pid(pid_t pid, int *status, int last_pid)
 void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 {
 	char	*path;
-	int exit_status;
+	int		exit_status;
 
 	exit_status = 0;
 	if (!cmds->cmd || !cmds->cmd[0])
@@ -162,7 +166,8 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 		exit_status = run_built_in(cmds, shell->env_list, shell);
 		free_all_and_exit(shell, exit_status);
 	}
-	path = handling_path(cmds->cmd[0], shell->envp[find_path(shell->envp)], &exit_status);
+	path = handling_path(cmds->cmd[0], shell->envp[find_path(shell->envp)],
+			&exit_status);
 	if (!path)
 		free_all_and_exit(shell, exit_status);
 	execve(path, cmds->cmd, shell->envp);

@@ -27,13 +27,13 @@ void	ft_striteri(char *s, void (*f)(unsigned int, char *))
 }
 /*void upper(unsigned int i, char *c)
 {
-    *c = *c - 32;
+	*c = *c - 32;
 }
 
-int main(void)
+int	main(void)
 {
-    char s[] = "hello";
-    ft_striteri(s, upper);
-    printf("Final s: %s\n", s);
-    return 0;
+	char s[] = "hello";
+	ft_striteri(s, upper);
+	printf("Final s: %s\n", s);
+	return (0);
 }*/

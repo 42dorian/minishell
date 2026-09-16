@@ -74,7 +74,6 @@ static int	add_new_list(char *cmd, t_envs **env_list)
 int	update_or_add(t_envs **env_list, char *value, char *key)
 {
 	t_envs	*head;
-	t_envs	*new;
 
 	head = key_exists(key, *env_list);
 	if (head)
@@ -88,17 +87,13 @@ int	update_or_add(t_envs **env_list, char *value, char *key)
 	}
 	else
 	{
-		new = ft_calloc(1, sizeof(t_envs));
-		if (!new)
+		if (create_env(key, value, env_list))
 		{
 			free(key);
 			if (value)
 				free(value);
 			return (1);
 		}
-		new->key = key;
-		new->value = value;
-		ft_lstadd_back(env_list, new);
 	}
 	return (0);
 }
@@ -121,7 +116,7 @@ static int	print_envs(t_envs *env_list)
 	tmp = env_list;
 	while (tmp)
 	{
-		ft_putstr_fd("declare -x ", STDOUT_FILENO);
+		ft_putstr_fd("export ", STDOUT_FILENO);
 		ft_putstr_fd(tmp->key, STDOUT_FILENO);
 		if (tmp->value != NULL)
 		{

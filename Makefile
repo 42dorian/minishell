@@ -23,6 +23,7 @@ SOURCE =	split.c \
 			cmd_list_helpers.c \
 			redirections.c \
 			heredoc.c \
+			heredoc_helpers.c\
 			executor.c \
 			executor_helpers.c \
 			built_in_executor.c \
@@ -43,6 +44,7 @@ SOURCE =	split.c \
 			envp.c \
 			env.c \
 			export.c \
+			export_helpers.c \
 			unset.c \
 			exit.c \
 			clean_ups.c \

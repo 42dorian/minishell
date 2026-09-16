@@ -1,7 +1,7 @@
 **This project has been created as part of the 42 curriculum by dabdulla, bguthy.**
 
 
-
+if path unset we dont execute from current directory
 
 
 

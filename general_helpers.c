@@ -14,8 +14,8 @@
 
 void	print_error(char *msg, char *cmd, char *arg, int fd)
 {
-	int len;
-	char *buffer;
+	int		len;
+	char	*buffer;
 
 	len = ft_strlen("minishell: ") + ft_strlen(cmd) + ft_strlen(msg) + 3;
 	if (arg)
@@ -40,10 +40,10 @@ void	print_error(char *msg, char *cmd, char *arg, int fd)
 	free(buffer);
 }
 
-void free_all_and_exit(t_shell *shell, int status)
+void	free_all_and_exit(t_shell *shell, int status)
 {
-	t_cmds *tmp_cmd;
-	t_envs *tmp_env;
+	t_cmds	*tmp_cmd;
+	t_envs	*tmp_env;
 
 	tmp_env = shell->env_list;
 	tmp_cmd = shell->cmds;
@@ -59,4 +59,20 @@ void free_all_and_exit(t_shell *shell, int status)
 	free_cmds(&shell->cmds);
 	ft_lstclear(&tmp_env, free);
 	exit(status);
+}
+
+void	free_split(char **strs)
+{
+	int	i;
+
+	if (!strs)
+		return ;
+	i = 0;
+	while (strs[i])
+	{
+		free(strs[i]);
+		i++;
+	}
+	free(strs);
+	strs = NULL;
 }

@@ -23,6 +23,7 @@ t_envs	*ft_lstnew(void *value)
 	list->next = NULL;
 	return (list);
 }
+
 void	ft_lstadd_front(t_envs **lst, t_envs *new_list)
 {
 	if (!lst || !new_list)

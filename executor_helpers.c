@@ -16,7 +16,7 @@ void	safe_dup2(int oldfd, int newfd)
 {
 	if (dup2(oldfd, newfd) == -1)
 	{
-		perror("minishell");
+		print_error(strerror(errno), "dup2", NULL, STDERR_FILENO);
 		exit(1);
 	}
 }
@@ -44,7 +44,7 @@ void	clean_parent(t_cmds *cmds, int *fd, int *stored_input)
 
 void	wait_pids(t_cmds *cmds, int *status)
 {
-	int last_pid;
+	int	last_pid;
 
 	last_pid = 0;
 	while (cmds)
@@ -82,7 +82,7 @@ void	child_redirections(t_cmds *cmds, int *fd, int stored_input)
 	}
 }
 
-void close_inherited_fds(t_cmds *cmds)
+void	close_inherited_fds(t_cmds *cmds)
 {
 	cmds = cmds->next;
 	while (cmds)

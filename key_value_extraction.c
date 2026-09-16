@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 17:43:29 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/16 17:43:51 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/16 17:45:51 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	copy_key(const char *envp, char *new_key)
 	new_key[i] = 0;
 }
 
-char	*insert_key(const char *envp)
+char	*get_key(const char *envp)
 {
 	char	*new_key;
 
@@ -51,7 +51,7 @@ void	copy_value(const char *envp, char *new_value)
 	new_value[j] = 0;
 }
 
-char	*insert_value(const char *envp)
+char	*get_value(const char *envp)
 {
 	char	*new_value;
 

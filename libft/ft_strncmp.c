@@ -35,7 +35,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 }
 
 /*#include <stdio.h>
-int main(void)
+int	main(void)
 {
 	char *s1 = "asd";
 	char *s2 = "asf";

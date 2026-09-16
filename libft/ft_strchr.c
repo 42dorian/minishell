@@ -26,10 +26,11 @@ char	*ft_strchr(const char *s, int c)
 
 /*#include <stdio.h>
 #include <string.h>
+
 int	main(void)
 {
 	const char *str = "Hello, World!";
-    char *res1 = ft_strchr(str, 'H');
-    char *std1 = strchr(str, 'H');
-    printf("Test 1: %s | %s\n", res1, std1);
+	char *res1 = ft_strchr(str, 'H');
+	char *std1 = strchr(str, 'H');
+	printf("Test 1: %s | %s\n", res1, std1);
 }*/

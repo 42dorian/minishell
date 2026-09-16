@@ -16,7 +16,7 @@ static long long	ft_atoll(char *nptr);
 static int			check_long(int is_negative, long long v, int d);
 static int			valid_long(char *str);
 
-//free evth here before exit
+// free evth here before exit
 int	exit_bi(t_cmds *cmd, t_shell *shell)
 {
 	long long	exit_code;

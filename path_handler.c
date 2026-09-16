@@ -14,11 +14,11 @@
 
 static void	print_status(int status, char *cmd);
 static char	*format_path(char *cmd_name, char *path);
-static void assign_exit_status(int status, int *exit_status);
+static void	assign_exit_status(int status, int *exit_status);
+static char	*search_in_path(int *s, char *cmd_name, char *path, int *e_status);
 
 char	*handling_path(char *cmd_name, char *path, int *exit_status)
 {
-	char	**split_path;
 	char	*cmd_path;
 	int		status;
 
@@ -40,39 +40,29 @@ char	*handling_path(char *cmd_name, char *path, int *exit_status)
 		assign_exit_status(status, exit_status);
 		return (print_status(status, cmd_name), free(cmd_path), NULL);
 	}
-	split_path = ft_split(path, ':');
-	if (!split_path)
-		return (NULL);
-	cmd_path = find_cmd_path(cmd_name, split_path, &status);
-	free_split(split_path);
-	split_path = NULL;
+	cmd_path = search_in_path(&status, cmd_name, path, exit_status);
 	if (!cmd_path)
-		return (print_status(status, cmd_name), assign_exit_status(status, exit_status), NULL);
+		return (NULL);
 	return (cmd_path);
 }
 
-void assign_exit_status(int status, int *exit_status)
+static char	*search_in_path(int *s, char *cmd_name, char *path, int *e_status)
 {
-	if (status == 1 || status == 2)
-		*exit_status = 126;
-	else
-		*exit_status = 127;
-}
+	char	**split_path;
+	char	*cmd_path;
 
-void	free_split(char **strs)
-{
-	int	i;
-
-	if (!strs)
-		return ;
-	i = 0;
-	while (strs[i])
+	split_path = ft_split(path, ':');
+	if (!split_path)
+		return (NULL);
+	cmd_path = find_cmd_path(cmd_name, split_path, s);
+	free_split(split_path);
+	if (!cmd_path)
 	{
-		free(strs[i]);
-		i++;
+		assign_exit_status(*s, e_status);
+		print_status(*s, cmd_name);
+		return (NULL);
 	}
-	free(strs);
-	strs = NULL;
+	return (cmd_path);
 }
 
 static char	*format_path(char *cmd_name, char *path)

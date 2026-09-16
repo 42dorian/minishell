@@ -12,6 +12,18 @@
 
 #include "minishell.h"
 
+static int	handle_dup2(int oldfd, int newfd);
+
+static int	handle_dup2(int oldfd, int newfd)
+{
+	if (dup2(oldfd, newfd) == -1)
+	{
+		print_error(strerror(errno), "dup2", NULL, STDERR_FILENO);
+		return (1);
+	}
+	return (0);
+}
+
 int	is_built_in(char *cmd)
 {
 	int		i;
@@ -44,7 +56,7 @@ int	run_built_in(t_cmds *cmd, t_envs *env_list, t_shell *shell)
 	if (cmd_len == 3 && ft_strncmp(cmd->cmd[0], "env", 3) == 0)
 		return (env(env_list));
 	if (cmd_len == 6 && ft_strncmp(cmd->cmd[0], "export", 6) == 0)
-			return (export_bi(cmd, &shell->env_list));
+		return (export_bi(cmd, &shell->env_list));
 	if (cmd_len == 5 && ft_strncmp(cmd->cmd[0], "unset", 5) == 0)
 		return (unset(cmd, &shell->env_list));
 	if (cmd_len == 4 && ft_strncmp(cmd->cmd[0], "exit", 4) == 0)
@@ -61,25 +73,17 @@ int	change_io(t_cmds *cmds)
 	return_value = 0;
 	if (cmds->fd_in != 0)
 	{
-		if (dup2(cmds->fd_in, STDIN_FILENO) == -1)
-		{
-			return_value = 1;
-			print_error(strerror(errno), "dup2", NULL, STDERR_FILENO);
-		}
-		else
+		return_value = handle_dup2(cmds->fd_in, STDIN_FILENO);
+		if (return_value == 0)
 		{
 			close(cmds->fd_in);
 			cmds->fd_in = 0;
 		}
 	}
-	if (cmds->fd_out != 1)
+	if (cmds->fd_out != 1 && return_value == 0)
 	{
-		if (dup2(cmds->fd_out, STDOUT_FILENO) == -1)
-		{
-			return_value = 1;
-			print_error(strerror(errno), "dup2", NULL, STDERR_FILENO);
-		}
-		else
+		return_value = handle_dup2(cmds->fd_out, STDOUT_FILENO);
+		if (return_value == 0)
 		{
 			close(cmds->fd_out);
 			cmds->fd_out = 1;

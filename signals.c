@@ -12,11 +12,11 @@
 
 #include "minishell.h"
 
-static void sh_new_line(void);
-static void handle_sigint(int sig);
-static void handle_sigquit(int sig);
+static void	sh_new_line(void);
+static void	handle_sigint(int sig);
+static void	handle_sigquit(int sig);
 
-void handle_sigint(int sig)
+void	handle_sigint(int sig)
 {
 	g_signal = sig;
 	write(1, "\n", 1);
@@ -25,22 +25,21 @@ void handle_sigint(int sig)
 	rl_redisplay();
 }
 
-void init_interactive_signals(void)
+void	init_interactive_signals(void)
 {
-	struct sigaction sa;
+	struct sigaction	sa;
 
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;
 	sa.sa_handler = handle_sigint;
 	sigaction(SIGINT, &sa, NULL);
-
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa, NULL);
 }
 
-void pause_interactive_signals(void)
+void	pause_interactive_signals(void)
 {
-	struct sigaction sa;
+	struct sigaction	sa;
 
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;
@@ -49,9 +48,9 @@ void pause_interactive_signals(void)
 	sigaction(SIGQUIT, &sa, NULL);
 }
 
-void init_execution_signals(void)
+void	init_execution_signals(void)
 {
-	struct sigaction sa;
+	struct sigaction	sa;
 
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;
@@ -60,9 +59,9 @@ void init_execution_signals(void)
 	sigaction(SIGQUIT, &sa, NULL);
 }
 
-void init_heredoc_signals(void)
+void	init_heredoc_signals(void)
 {
-	struct sigaction sa;
+	struct sigaction	sa;
 
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;

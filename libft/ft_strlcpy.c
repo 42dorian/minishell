@@ -31,11 +31,12 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 
 /*#include <stdio.h>
 #include <bsd/string.h>
-int main(void)
+
+int	main(void)
 {
 	char d1[20]; char d1_std[20];
-    size_t r1 = ft_strlcpy(d1, "Hello, World!", sizeof(d1));
-    size_t r1_std = strlcpy(d1_std, "Hello, World!", sizeof(d1_std));
-    printf("Test 1: %s (%zu) | %s (%zu)\n", d1, r1, d1_std, r1_std);
+	size_t r1 = ft_strlcpy(d1, "Hello, World!", sizeof(d1));
+	size_t r1_std = strlcpy(d1_std, "Hello, World!", sizeof(d1_std));
+	printf("Test 1: %s (%zu) | %s (%zu)\n", d1, r1, d1_std, r1_std);
 
 }*/

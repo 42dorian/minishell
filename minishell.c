@@ -3,38 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/15 12:06:56 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/16 14:28:30 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-// #include "env_assign_helpers.c"
-// #include "rest_helpers.c"
-// #include "split_helpers.c"
-// #include "split.c"
-// #include "stepping_in_input.c"
-// #include "syntax_error_check.c"
-// #include "expansion_check.c"
-// #include "environment_creation.c"
-// #include "skippers.c"
-// #include "tokenizing.c"
-// #include "dollar_sign_handler.c"
-// #include "is_special_character.c"
-// #include "special_characters_checkers.c"
-// #include "expansion_without_token_list.c"
-// #include "word_count_helpers.c"
-// #include "libft/ft_strlen.c"
-// #include "libft/list_general.c"
-// #include "libft/list_helpers.c"
-// #include "libft/ft_calloc.c"
-// #include "libft/ft_memset.c"
-// #include "libft/ft_bzero.c"
-// #include "libft/ft_itoa.c"
-// #include "libft/ft_strdup.c"
-// #include "libft/ft_memcpy.c"
+#include "env_assign_helpers.c"
+#include "rest_helpers.c"
+#include "split_helpers.c"
+#include "split.c"
+#include "stepping_in_input.c"
+#include "syntax_error_check.c"
+#include "expansion_check.c"
+#include "environment_creation.c"
+#include "skippers.c"
+#include "tokenizing.c"
+#include "dollar_sign_handler.c"
+#include "is_special_character.c"
+#include "special_characters_checkers.c"
+#include "expansion_without_token_list.c"
+#include "word_count_helpers.c"
+#include "libft/ft_strlen.c"
+#include "libft/list_general.c"
+#include "libft/list_helpers.c"
+#include "libft/ft_calloc.c"
+#include "libft/ft_memset.c"
+#include "libft/ft_bzero.c"
+#include "libft/ft_itoa.c"
+#include "libft/ft_strdup.c"
+#include "libft/ft_memcpy.c"
 
 volatile sig_atomic_t	g_signal = 0;
 
@@ -331,7 +331,7 @@ int        loop_for_unclosed_quotes(const char *read_line, int *status)
 
 int         is_empty_string(const char *read_line, int *status)
 {
-    if (*read_line == 0)
+    if (!*read_line)
     {
         *status = 2;
         return (1);
@@ -344,7 +344,7 @@ int         empty_string_and_unclosed_quote_check(const char *read_line, int *st
 {
     if (is_empty_string(read_line, status))
         return (1);
-    if (loop_for_unclosed_quotes(read_line, status));
+    if (loop_for_unclosed_quotes(read_line, status))
         return (display_unclosed_quote_error_message(status));
     return (0);
 }
@@ -357,31 +357,24 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
     char    *expanded_line;
 
     i = 0;
-    // if (empty_string_and_unclosed_quote_check(read_line, status))
-    //     return (NULL);
+    if (empty_string_and_unclosed_quote_check(read_line, status))
+        return (NULL);
     expanded_line = handle_expansions_without_token_list(env_list, read_line, status);
     if (!expanded_line)
         return (NULL);
     split_line = split_read_line(expanded_line);
-    // while (split_line[i])
-    //     printf("(%s)\n", split_line[i++]);
     if (!split_line)
-        return (NULL);
-    tokens = malloc(sizeof(t_token) * (new_word_counter(expanded_line) + 1));
-    //printf("words: %i\n", word_counter(read_line));
+        return (free(expanded_line), NULL);
+    tokens = malloc(sizeof(t_token) * (word_counter(expanded_line) + 1));
     if (!tokens)
-        return (split_clean_up(split_line, new_word_counter(expanded_line)), NULL);
+        return (split_clean_up(split_line, word_counter(expanded_line)), free(expanded_line), NULL);
     if (!create_token_struct(tokens, split_line))
-        return (clean_up_tokens_and_split_line(tokens, split_line), NULL);
-    split_clean_up(split_line, new_word_counter(expanded_line));
-    // if (!handle_expansions(env_list, tokens, status))
-    //     return (NULL);
+        return (clean_up_tokens_and_split_line(tokens, split_line), free(expanded_line), NULL);
+    split_clean_up(split_line, word_counter(expanded_line));
+    free(expanded_line);
     if (!remove_quotes(tokens))
         return (clean_up_token_and_env_list(tokens, &env_list), NULL);
     syntax_check(tokens, status);
-    if (*status == 2)
-    	return (free_tokens(tokens), NULL);
-    // 	clean_up_token_and_env_list(tokens, &env_list);
     return (tokens);
 }
 
@@ -408,7 +401,7 @@ void free_cmds(t_cmds **cmd)
 	while (tmp)
 	{
 		next_cmd = tmp->next;
-		free_split(tmp->cmd);
+		//free_split(tmp->cmd);
 		tmp->cmd = NULL;
 		if (tmp->fd_in > 0)
 			close(tmp->fd_in);
@@ -420,53 +413,53 @@ void free_cmds(t_cmds **cmd)
 	*cmd = NULL;
 }
 
-int main(int ac, char **av, const char **envp)
+int main()//int ac, char **av, const char **envp)
 {
 	char *line;
 	t_shell shell;
 	t_token *tokens;
-    (void)av;
+    //(void)av;
 
-    if(ac != 1)
-    {
-    	ft_putstr_fd("minishell doesn't take arguments\n", STDERR_FILENO);
-     	return (1);
-    }
-    // line = "$FJ";
-    // const char *envp[] = {"BROWSER=/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/bin/helpers/browser.sh",
-    // "PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/bguhty/.local/funcheck/host:/home/bguhty/.vscode-server/extensions/vadimcn.vscode-lldb-1.12.2/bin:/home/bguhty/.vscode-server/bin/645f29cc3176500b4b5762ba887cf2a7f0ffdf2c/bin/remote-cli:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/bguhty/.local/funcheck/host:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Python314/Scripts/:/mnt/c/Python314/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files (x86)/Razer Chroma SDK/bin:/mnt/c/Program Files/Razer Chroma SDK/bin:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/system32/config/systemprofile/AppData/Local/Microsoft/WindowsApps:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/nodejs/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Users/Computer/AppData/Local/Programs/Python/Python311/Scripts/:/mnt/c/Users/Computer/AppData/Local/Programs/Python/Python311/:/mnt/c/Users/Computer/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Computer/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/Computer/AppData/Roaming/npm:/snap/bin",
-    // "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/501/bus"
-    // "TERM_PROGRAM=vscode", NULL};
+    // if(ac != 1)
+    // {
+    // 	ft_putstr_fd("minishell doesn't take arguments\n", STDERR_FILENO);
+    //  	return (1);
+    // }
+    line = "\" \"\" \" \' \' \" \" \' \' \" \"";
+    const char *envp[] = {"BROWSER=/home/guthybarnakoppany/.vscode-server/cli/servers/Stable-618725e67565b290ba4da6fe2d29f8fa1d4e3622/server/bin/helpers/browser.sh",
+    "PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/bguhty/.local/funcheck/host:/home/bguhty/.vscode-server/extensions/vadimcn.vscode-lldb-1.12.2/bin:/home/bguhty/.vscode-server/bin/645f29cc3176500b4b5762ba887cf2a7f0ffdf2c/bin/remote-cli:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/bguhty/.local/funcheck/host:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Python314/Scripts/:/mnt/c/Python314/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files (x86)/Razer Chroma SDK/bin:/mnt/c/Program Files/Razer Chroma SDK/bin:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/system32/config/systemprofile/AppData/Local/Microsoft/WindowsApps:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/nodejs/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Users/Computer/AppData/Local/Programs/Python/Python311/Scripts/:/mnt/c/Users/Computer/AppData/Local/Programs/Python/Python311/:/mnt/c/Users/Computer/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Computer/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/Computer/AppData/Roaming/npm:/snap/bin",
+    "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/501/bus"
+    "TERM_PROGRAM=vscode", NULL};
 	ft_bzero(&shell, sizeof(shell));
 	if (!add_envp_to_list(&shell.env_list, envp))
         return (1);
-	init_interactive_signals();
-	while ((line = readline("minishell$ ")))
-	{
-		if (line[0] != '\0' || !line)
-			add_history(line);
-		if (WTERMSIG(g_signal) != 0)
-		{
-			shell.status = 128 + WTERMSIG(g_signal);
-			g_signal = 0;
-		}
-		tokens = minishell(line, shell.env_list, &shell.status);
-		free(line);
-		if (!tokens)
-			continue;
-		shell.cmds = build_cmds(tokens, shell.env_list, &shell);
-		free_tokens(tokens);
-		if (!shell.cmds)
-			continue;
-		shell.status = execute_cmds(&shell);
-		free_cmds(&shell.cmds);
-	}
+	// init_interactive_signals();
+	// while ((line = readline("minishell$ ")))
+	// {
+	// 	if (line[0] != '\0' || !line)
+	// 		add_history(line);
+	// 	if (WTERMSIG(g_signal) != 0)
+	// 	{
+	// 		shell.status = 128 + WTERMSIG(g_signal);
+	// 		g_signal = 0;
+	// 	}
+	// 	tokens = minishell(line, shell.env_list, &shell.status);
+	// 	free(line);
+	// 	if (!tokens)
+	// 		continue;
+	// 	shell.cmds = build_cmds(tokens, shell.env_list, &shell);
+	// 	free_tokens(tokens);
+	// 	if (!shell.cmds)
+	// 		continue;
+	// 	shell.status = execute_cmds(&shell);
+	// 	free_cmds(&shell.cmds);
+	// }
 	// rl_clear_history();
-    //tokens = minishell(line, shell.env_list, &shell.status);
+    tokens = minishell(line, shell.env_list, &shell.status);
     //clean_up_token_and_env_list(tokens, &shell.env_list);
-	ft_putstr_fd("exit\n", STDERR_FILENO);
-	close(0);
-	close(1);
-	close(2);
-    free_all_and_exit(&shell, shell.status);
+	// ft_putstr_fd("exit\n", STDERR_FILENO);
+	// close(0);
+	// close(1);
+	// close(2);
+    // free_all_and_exit(&shell, shell.status);
 }

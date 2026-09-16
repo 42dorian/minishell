@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_helpers.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 21:09:28 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/14 15:27:51 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/16 14:28:12 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void    set_quote_flag(int *quote_flag, const char letter)
         *quote_flag = 2;
 }
 
-int     new_word_counter(const char *read_line)
+int     word_counter(const char *read_line)
 {
     int words;
     int i;
@@ -72,25 +72,6 @@ int     new_word_counter(const char *read_line)
     return (words);
 }
 
-int word_counter(const char *read_line)
-{
-    int i;
-    int words;
-
-    words = 0;
-    i = 0;
-    while (read_line[i])
-    {
-        skip_white_spaces(read_line, &i);
-        quote_in_word(read_line, &i, &words);
-        skip_white_spaces(read_line, &i);
-        if (read_line[i] && is_word(read_line, &i, &words))
-            words++;
-    }
-    if (words == 0 && i > 0)
-        words++;
-    return (words);
-}
 
 int     count_letters_on_special_character(const char *read_line, int i, int *letters)
 {

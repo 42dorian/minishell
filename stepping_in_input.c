@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   stepping_in_input.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 20:34:44 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/14 14:50:16 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/16 14:12:52 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,6 @@ int     quote_in_word(const char *read_line, int *i, int *words)
         return (1);
     }
     return (0);
-    // if (check_for_quote(read_line[*i], &quote_type))
-    // {
-    //     skip_to_next_quote(read_line, i, quote_type);
-    //     skip_white_spaces(read_line, i);
-    //     (*words)++;
-    //     return (1);
-    // }
-    // return (0);
 }
 
 int     is_white_space_or_special_character(const char letter)

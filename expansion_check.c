@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion_check.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 12:53:31 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/14 15:17:55 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/16 14:08:22 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,15 +307,27 @@ void    cat_to_fully_expanded(char *fully_expanded, const char new_letter)
     fully_expanded[index] = new_letter;
 }
 
+void    cat_test_env_to_fully_expanded(char *test_env, char *fully_expanded)
+{
+    int env_index;
+    int expand_index;
+    
+    env_index = 0;
+    expand_index = ft_strlen(fully_expanded);
+    while (test_env[env_index])
+        fully_expanded[expand_index++] = test_env[env_index++];
+    free(test_env); 
+}
+
 void    make_expansion(char *fully_expnaded, const char *mock_expand, t_envs *env_list, int *exit_code)
 {
-    int     expand_index;
+    //int     expand_index;
     char    *test_env;
     int     env_index;
 
     env_index = 0;
     test_env = NULL;
-    expand_index = ft_strlen(fully_expnaded);
+    //expand_index = ft_strlen(fully_expnaded);
     test_env = get_from_my_env_list(mock_expand, *env_list);
     if (string_compare(mock_expand, "$"))
     {
@@ -328,15 +340,13 @@ void    make_expansion(char *fully_expnaded, const char *mock_expand, t_envs *en
         test_env = ft_itoa(exit_code);
     }
     if (test_env)
-    {
-        while (test_env[env_index])
-        {
-            fully_expnaded[expand_index] = test_env[env_index];
-            expand_index++;
-            env_index++;
-        }
-    }
-    free(test_env);
+        cat_test_env_to_fully_expanded(test_env, fully_expnaded);
+        // while (test_env[env_index])
+        // {
+        //     fully_expnaded[expand_index] = test_env[env_index];
+        //     expand_index++;
+        //     env_index++;
+        // }
 }
 
 void    set_quote_flag_and_count_single_quotes(int *quote_flag, int *single_quote_counter, const char letter)
@@ -353,6 +363,13 @@ void    set_quote_flag_and_count_single_quotes(int *quote_flag, int *single_quot
         *quote_flag = 2;
 }
 
+void    set_quote_flag_i_and_single_quote_counter_to_zero(int *quote_flag, int *i, int *single_quote_counter)
+{
+    *quote_flag = 0;
+    *i = 0;
+    *single_quote_counter = 0;
+}
+
 char    *get_full_expandable_word(t_token curr_token, t_envs *env_list, int len, int *exit_code)
 {
     char    *fully_expanded;
@@ -361,9 +378,10 @@ char    *get_full_expandable_word(t_token curr_token, t_envs *env_list, int len,
     int     i;
     int     quote_flag;
 
-    quote_flag = 0;
-    i = 0;
-    single_quote_counter = 0;
+    set_quote_flag_i_and_single_quote_counter_to_zero(&quote_flag, &i, &single_quote_counter);
+    // quote_flag = 0;
+    // i = 0;
+    // single_quote_counter = 0;
     fully_expanded = ft_calloc(sizeof(char), (len + 1));
     if (!fully_expanded)
         return (NULL);

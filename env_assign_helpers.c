@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_assign_helpers.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 17:00:28 by bguhty            #+#    #+#             */
-/*   Updated: 2026/06/03 19:13:38 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/16 14:17:38 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int     is_lower_case(char letter)
 {
-    if (letter >= a && letter <= z)
+    if (letter >= LOWER_CASE_A && letter <= LOWER_CASE_Z)
         return (1);
     return (0);
 }

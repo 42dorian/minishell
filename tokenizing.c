@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizing.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 17:13:55 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/09 15:57:59 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/16 14:29:38 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int    create_token_struct(t_token *tokens, char **line)
     while (line[i])
     {
         tokens[i].value = normal_copy(line[i]);
+        printf("(%s)\n", tokens[i].value);
         if (!tokens[i].value)
             return(clean_up_token_list(tokens, i));
         tokens[i].type = tokenizer(line[i]);

@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bguhty <bguhty@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 13:20:37 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/14 15:22:06 by bguhty           ###   ########.fr       */
+/*   Updated: 2026/09/16 14:28:09 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-# define a 97
+# define LOWER_CASE_A 97
 # define A 65
-# define z 122
+# define LOWER_CASE_Z 122
 # define Z 90
 # define SPACE 32
 # define HORIZONTAL_TAB 9
@@ -104,7 +104,6 @@ int						fill_up_double_pointer(char **split_line,
 							const char *read_line);
 char					**split_read_line(const char *read_line);
 char					**allocating_double_pointer(const char *read_line);
-int						word_counter(const char *read_line);
 int    					add_envp_to_list(t_envs **my_list, const char **envp);
 int						is_word(const char *read_line, int *i, int *words);
 int     				clean_up_token_and_env_list(t_token *tokens, t_envs **env_list);
@@ -246,7 +245,9 @@ void    make_expansion(char *fully_expnaded, const char *mock_expand, t_envs *en
 void    cat_to_fully_expanded(char *fully_expanded, const char new_letter);
 int     clean_up_env_list(t_envs **env_list);
 int     is_delimeter(const char letter);
-int     new_word_counter(const char *read_line);
+int     word_counter(const char *read_line);
 int     check_for_special_character(const char *read_line, int *i, int *words);
+void    move_index_and_set_curr_len_to_zero(const char *read_line, int *i, int *curr_len);
+void    set_quote_flag_i_and_single_quote_counter_to_zero(int *quote_flag, int *i, int *single_quote_counter);
 
 #endif

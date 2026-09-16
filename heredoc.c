@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
+/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/09 22:59:23 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/12 12:52:57 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/16 12:57:13 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ static void	fill_unqoted_heredoc(int write_fd, char *eof, t_envs *env)
 		ft_putstr_fd(line_expanded, write_fd);
 		ft_putchar_fd('\n', write_fd);
 		free(line_expanded);
-		free(line);
 	}
 }
 

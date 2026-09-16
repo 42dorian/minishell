@@ -69,24 +69,24 @@ int	special_character_syntax_checker(t_token *tokens, int i)
 		return (0);
 }
 
-void	syntax_check(t_token *tokens, int *status)
+int	syntax_check(t_token *tokens, int *status)
 {
 	int	i;
 
 	i = 0;
-	*status = 0;
 	if (preliminary_check(tokens))
 	{
 		*status = 2;
-		return ;
+		return (1);
 	}
 	while (tokens[i].value)
 	{
 		if (special_character_syntax_checker(tokens, i))
 		{
 			*status = 2;
-			break ;
+			return (1);
 		}
 		i++;
 	}
+	return (0);
 }

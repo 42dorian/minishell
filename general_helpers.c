@@ -58,6 +58,9 @@ void	free_all_and_exit(t_shell *shell, int status)
 		close(shell->saved_stdout);
 	free_cmds(&shell->cmds);
 	ft_lstclear(&tmp_env, free);
+	close(0);
+	close(1);
+	close(2);
 	exit(status);
 }
 

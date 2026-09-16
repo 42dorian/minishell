@@ -90,6 +90,7 @@ typedef struct s_token
 {
     const char		*value;
 	int				quoted;
+	int				export_flag;
     t_token_type    type;
 }                   t_token;
 
@@ -129,7 +130,7 @@ int						is_dollar_sign(const char letter);
 int						is_pipe(const char letter);
 int     				is_single_quote(const char letter);
 int						is_double_quote(const char letter);
-void					syntax_check(t_token *tokens, int *status);
+int					syntax_check(t_token *tokens, int *status);
 int						tokenizer(char *input);
 int						create_token_struct(t_token *tokens, char **line);
 int						check_for_redirect_out_and_append(const char *read_line,

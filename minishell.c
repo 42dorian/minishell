@@ -113,8 +113,7 @@ t_token     *minishell(const char *read_line, t_envs *env_list, int *status)
     free(expanded_line);
     if (!remove_quotes(tokens))
         return (free_tokens(tokens), NULL);
-    syntax_check(tokens, status);
-    if (*status == 2)
+    if ((syntax_check(tokens, status)) == 1 && *status == 2)
         return (free_tokens(tokens), NULL);
     return (tokens);
 }
@@ -199,8 +198,5 @@ int main(int ac, char **av, const char **envp)
     // if (tokens)
     //     clean_up_token_and_env_list(tokens, &shell.env_list);
 	ft_putstr_fd("exit\n", STDERR_FILENO);
-	close(0);
-	close(1);
-	close(2);
     free_all_and_exit(&shell, shell.status);
 }

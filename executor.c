@@ -156,9 +156,17 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 
 	exit_status = 0;
 	if (!cmds->cmd || !cmds->cmd[0])
+	{
+		close(fd[0]);
+		close(fd[1]);
 		free_all_and_exit(shell, 0);
+	}
 	if (cmds->fd_in == -1 || cmds->fd_out == -1)
+	{
+		close(fd[0]);
+		close(fd[1]);
 		free_all_and_exit(shell, 1);
+	}
 	child_redirections(cmds, fd, stored_input);
 	close_inherited_fds(cmds);
 	if (is_built_in(cmds->cmd[0]))

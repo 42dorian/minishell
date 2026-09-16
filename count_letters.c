@@ -111,13 +111,13 @@ int	count_valid_char(const char *quoted_word)
 	{
 		if (set_quote_type(&quote_type, quoted_word[i]))
 			i++;
-		if (set_quote_type(&quote_type, quoted_word[i]))
-			i++;
 		if (quoted_word[i] != quote_type)
 		{
 			counter++;
 			i++;
 		}
+		if (set_quote_type(&quote_type, quoted_word[i]))
+			i++;
 	}
 	return (counter);
 }

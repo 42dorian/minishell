@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:36:59 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/16 17:02:06 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/16 17:41:52 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,4 +96,28 @@ int	count_valid_characters_after_dollar_sign(const char *curr_expandable)
 		i++;
 	}
 	return (i);
+}
+
+int	count_valid_char(const char *quoted_word)
+{
+	int	i;
+	int	counter;
+	int	quote_type;
+
+	quote_type = 0;
+	counter = 0;
+	i = 0;
+	while (quoted_word[i])
+	{
+		if (set_quote_type(&quote_type, quoted_word[i]))
+			i++;
+		if (set_quote_type(&quote_type, quoted_word[i]))
+			i++;
+		if (quoted_word[i] != quote_type)
+		{
+			counter++;
+			i++;
+		}
+	}
+	return (counter);
 }

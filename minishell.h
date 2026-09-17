@@ -36,13 +36,8 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
 # include <sys/stat.h>
-# include <sys/types.h>
 # include <sys/wait.h>
-# include <unistd.h>
 
 extern volatile sig_atomic_t	g_signal;
 typedef struct s_cmds			t_cmds;
@@ -73,7 +68,8 @@ typedef enum e_token_type
 	token_redirect_out,
 	token_append,
 	token_heredoc,
-	token_env_assign
+	token_env_assign,
+	token_invalid = -1
 }								t_token_type;
 
 typedef struct s_cmds
@@ -155,6 +151,7 @@ void							free_split(char **strs);
 char							*handling_path(char *cmd_name, char *path,
 									int *exit_status);
 
+ void	assign_exit_status(int status, int *exit_status);
 int								check_access(char *cmd);
 int								check_cmd(char *cmd);
 void							print_error(char *msg, char *cmd, char *arg,

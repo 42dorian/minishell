@@ -106,9 +106,9 @@ static int	check_long(int is_negative, long long v, int d)
 	}
 	else
 	{
-		if (v > (unsigned long long)-(LLONG_MIN / 10)
-			|| (v == (unsigned long long)-(LLONG_MIN / 10) && d > -(LLONG_MIN
-					% 10)))
+		if ((unsigned long long)v > (unsigned long long)-(LLONG_MIN / 10)
+			|| ((unsigned long long)v == (unsigned long long)-(LLONG_MIN / 10)
+				&& d > -(LLONG_MIN % 10)))
 			return (2);
 	}
 	return (0);

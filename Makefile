@@ -59,7 +59,6 @@ SOURCE =	split.c \
 CFLAGS = -Wall -Wextra -Werror
 READLINE_FLAG = -lreadline
 
-
 CC = cc
 
 LIBFT_DIR = libft

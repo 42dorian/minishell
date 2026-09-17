@@ -34,7 +34,7 @@ int	token_list_size(t_token *tokens)
 	int	size;
 
 	size = 0;
-	while (tokens[size].type != -1)
+	while (tokens[size].type == token_invalid)
 		size++;
 	return (size);
 }

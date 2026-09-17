@@ -94,12 +94,12 @@ void	main_loop(t_shell *shell, t_token *tokens)
 
 int	main(int ac, char **av, const char **envp)
 {
-	//char	*line;
 	t_shell	shell;
 	t_token	*tokens;
 
 	tokens = NULL;
 	(void)av;
+	tokens = NULL;
 	if (ac != 1)
 	{
 		ft_putstr_fd("minishell doesn't take arguments\n", STDERR_FILENO);

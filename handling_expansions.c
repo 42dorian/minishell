@@ -18,7 +18,6 @@ int	get_full_len_of_expandable(const char *read_line, t_envs *env_list,
 	int	i;
 	int	total_len;
 	int	curr_len;
-	int	single_quote_counter;
 	int	quote_flag;
 
 	set_quote_flag_and_index_to_zero(&quote_flag, &i);

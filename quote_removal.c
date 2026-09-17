@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 17:42:49 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/17 22:52:18 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 23:18:38 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ char	*get_rid_of_them_quotes(t_token *tokens, int i)
 	quote_type = 0;
 	j = 0;
 	local_index = 0;
-	if (!malloc_for_new_word(&new_word, count_chars_without_quotes(tokens[i].value)))
+	if (!malloc_for_new_word(&new_word,
+			count_chars_without_quotes(tokens[i].value)))
 		return (free((void *)tokens[i].value), NULL);
 	while (tokens[i].value[j])
 	{
@@ -46,8 +47,7 @@ char	*get_rid_of_them_quotes(t_token *tokens, int i)
 			new_word[local_index++] = tokens[i].value[j++];
 	}
 	new_word[local_index] = 0;
-	free((void *)tokens[i].value);
-	return (new_word);
+	return (free(tokens[i].value), new_word);
 }
 
 int	remove_quotes(t_token *tokens)

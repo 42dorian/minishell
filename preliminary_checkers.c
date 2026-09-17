@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 17:50:02 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/16 18:32:54 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 18:10:46 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,48 +22,15 @@ int	display_unclosed_quote_error_message(int *status)
 	return (2);
 }
 
-int	loop_for_unclosed_quotes(const char *read_line, int *status)
+int	is_redir_token(int token_type)
 {
-	int	quote_type;
-	int	i;
-
-	i = 0;
-	quote_type = 0;
-	while (read_line[i])
-	{
-		if (is_quote(read_line[i]) && quote_type == 0)
-			quote_type = read_line[i++];
-		if (quote_type == read_line[i])
-		{
-			quote_type = 0;
-			i++;
-		}
-		else
-			i++;
-	}
-	if (quote_type != 0)
+	if (token_type == token_append || token_type == token_heredoc)
 		return (1);
-	return (0);
-}
-
-int	is_empty_string(const char *read_line, int *status)
-{
-	if (!*read_line)
-	{
-		*status = 2;
+	else if (token_type == token_redirect_in
+		|| token_type == token_redirect_out)
 		return (1);
-	}
 	else
 		return (0);
-}
-
-int	empty_string_and_unclosed_quote_check(const char *read_line, int *status)
-{
-	if (is_empty_string(read_line, status))
-		return (1);
-	if (loop_for_unclosed_quotes(read_line, status))
-		return (display_unclosed_quote_error_message(status));
-	return (0);
 }
 
 int	preliminary_check(t_token *tokens)
@@ -71,7 +38,7 @@ int	preliminary_check(t_token *tokens)
 	int	size;
 
 	size = token_list_size(tokens);
-	if (size == 1 && is_redir(tokens[0].value[0]))
+	if (size == 1 && is_redir_token(tokens[0].type))
 	{
 		syntax_error_message_display(NULL);
 		return (1);

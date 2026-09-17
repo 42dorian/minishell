@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 11:41:39 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/16 17:48:43 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 20:10:31 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ int	add_envp_to_list(t_envs **my_list, const char **envp)
 			ft_lstadd_back(my_list, new_node);
 		i++;
 	}
+	if (!put_shlvl_in_env_list(my_list))
+		return (0);
 	return (1);
 }
 

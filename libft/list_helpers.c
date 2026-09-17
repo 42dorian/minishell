@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_helpers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
+/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 13:08:42 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/03 11:11:57 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/17 18:09:38 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 21:09:28 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/16 16:35:19 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 17:56:18 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,16 @@ int	count_letters_on_special_character(const char *read_line, int i,
 	return (0);
 }
 
-void	split_clean_up(char **split_line, int i)
+void	split_clean_up(char **split_line)
 {
-	int	j;
+	int	i;
 
-	j = 0;
-	while (j < i)
-		free(split_line[j++]);
+	i = 0;
+	while (split_line[i])
+	{
+		free(split_line[i]);
+		i++;
+	}
 	free(split_line);
 	split_line = NULL;
 }

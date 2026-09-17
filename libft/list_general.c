@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_general.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
+/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 13:18:12 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/02 11:05:56 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/17 15:19:44 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

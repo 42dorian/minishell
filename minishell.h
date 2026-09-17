@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 13:20:37 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/16 18:13:31 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 20:07:41 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int								is_upper_case(char letter);
 int								is_lower_case(char letter);
 int								fill_up_double_pointer(char **split_line,
 									const char *read_line);
-char							**split_read_line(const char *read_line);
+char							**split_read_line(char *read_line);
 char							**allocating_double_pointer(const char *read_line);
 int								add_envp_to_list(t_envs **my_list,
 									const char **envp);
@@ -118,7 +118,7 @@ void							skip_to_next_quote(const char *read_line,
 									int *i, char quote_type);
 void							skip_non_white_spaces(const char *read_line,
 									int *i);
-void							split_clean_up(char **split_line, int i);
+void							split_clean_up(char **split_line);
 char							*normal_copy(const char *get_copied);
 int								dollar_sign_exception(const char *read_line,
 									int *i, int *words);
@@ -218,7 +218,6 @@ void							run_child(t_cmds *cmds, int *fd,
 void							clean_parent(t_cmds *cmds, int *fd,
 									int *stored_input);
 void							wait_pids(t_cmds *cmds, int *status);
-// int	run_built_in(t_cmds *cmd, t_envs *env_list);
 int								run_built_in(t_cmds *cmd, t_envs *env_list,
 									t_shell *shell);
 int								echo(t_cmds *cmd);
@@ -232,7 +231,6 @@ int								is_quote(const char letter);
 t_envs							*copy_from_envp_to_own_env_list(const char **envp,
 									int i);
 
-// added these
 int								is_valid_after_dollar_sign(const char letter);
 void							copy_till_next_quote(const char *read_line,
 									int *i, char *new_word, int *new_index);
@@ -264,8 +262,6 @@ char							*get_full_expandable_word(const char *read_line,
 char							*handle_expansions(t_envs *env_list,
 									const char *read_line, int *exit_code);
 int								dollar_in_word(const char *word);
-// // void    decide_quote(int *quote_flag, int *single_quote_counter,
-// 	const char letter);
 int								count_valid_characters_after_dollar_sign(const char *curr_expandable);
 void							set_quote_flag(int *quote_flag,
 									const char letter);
@@ -300,7 +296,7 @@ int								check_res_of_curr_len_and_increment_accordingly(int *curr_len,
 char							*get_from_my_env_list(const char *expandable,
 									t_envs env_list);
 char							*convert_pid_to_string(void);
-int								set_quote_type(int *quote_type,
+void							set_quote_type(int *quote_type,
 									const char letter);
 char							*copy_till_next_word(const char *read_line,
 									int *i);
@@ -321,5 +317,15 @@ int								get_pid_len(void);
 int								how_many_digits(int *number);
 int								create_env(char *key, char *value,
 									t_envs **env_list);
+int								token_list_size(t_token *tokens);
+int								len_of_split_line(char **read_line);
+int								loop_for_unclosed_quotes(const char *read_line,
+									int *status);
+int								display_unclosed_quote_error_message(int *status);
+int								put_shlvl_in_env_list(t_envs **my_list);
+char							*extract_value_from_env_list(t_envs **my_list,
+									const char *missing_key);
+int								in_env_list(t_envs **my_list,
+									char *missing_key);
 
 #endif

@@ -100,6 +100,8 @@ void	free_cmds(t_cmds **cmd)
 	if (!cmd || !*cmd)
 		return ;
 	tmp = *cmd;
+	while (tmp->prev)
+		tmp = tmp->prev;
 	while (tmp)
 	{
 		next_cmd = tmp->next;

@@ -36,7 +36,7 @@ int	check_for_redirect_in_and_heredoc(const char *read_line, int *i)
 		&& is_end(read_line[(*i) + 1]))
 		return ((*i)++, 1);
 	else if (*i != 0 && is_white_space(read_line[(*i) - 1]) && read_line[(*i)
-			+ 1] == REDIR_IN && is_end(read_line[(*i) + 2]))
+		+ 1] == REDIR_IN && is_end(read_line[(*i) + 2]))
 		return ((*i) += 2, 1);
 	return (0);
 }
@@ -51,7 +51,7 @@ int	check_for_redirect_out_and_append(const char *read_line, int *i)
 		&& is_white_space(read_line[(*i) + 1]))
 		return ((*i)++, 1);
 	else if (*i != 0 && is_white_space(read_line[(*i) - 1]) && read_line[(*i)
-			+ 1] == REDIR_OUT && is_end(read_line[(*i) + 2]))
+		+ 1] == REDIR_OUT && is_end(read_line[(*i) + 2]))
 		return ((*i) += 2, 1);
 	return (0);
 }

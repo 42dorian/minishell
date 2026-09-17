@@ -19,7 +19,6 @@ t_cmds	*build_cmds(t_token *t, t_envs *env, t_shell *shell)
 	t_cmds	*head;
 	t_cmds	*curr;
 	int		i;
-	int		process_token_val;
 	int		ign;
 
 	ign = 0;
@@ -34,7 +33,7 @@ t_cmds	*build_cmds(t_token *t, t_envs *env, t_shell *shell)
 		{
 			ign = 0;
 			if (t[i].type == token_word && !add_arg_to_cmd(curr, t[i].value))
-				return (free_cmd(curr), NULL);
+				return (free_cmds(&head), NULL);
 			if (err_check(process_token(&curr, t, &i, env), shell, &ign))
 				return (free_cmds(&head), NULL);
 		}

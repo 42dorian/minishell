@@ -85,8 +85,8 @@ int	count_valid_characters_after_dollar_sign(const char *curr_expandable)
 	i = 1;
 	while (curr_expandable[i])
 	{
-		if (is_dollar_sign(curr_expandable[i])
-			|| is_question_mark(curr_expandable[i]))
+		if ((is_dollar_sign(curr_expandable[i])
+				|| is_question_mark(curr_expandable[i])) && i == 0)
 		{
 			i++;
 			break ;

@@ -83,6 +83,7 @@ typedef struct s_cmds
 	int							fd_out;
 	int							exit_status;
 	t_cmds						*next;
+	t_cmds						*prev;
 	pid_t						pid;
 }								t_cmds;
 
@@ -199,7 +200,7 @@ int								is_built_in(char *cmd);
 void							exec_child_process(t_cmds *cmd, char *path,
 									char **envp, t_shell *shell);
 int								restore_io(int saved_stdin, int saved_stdout);
-void							check_child_fds(t_cmds *cmds, int *fd,
+void							check_child_fds(t_cmds *cmds, int *fd, int stored_input,
 									t_shell *shell);
 int								fork_pipe(t_cmds *cmds, int *fd,
 									int *stored_input, t_shell *shell);
@@ -209,7 +210,7 @@ int								change_io(t_cmds *cmds);
 void							child_redirections(t_cmds *cmds, int *fd,
 									int stored_input);
 void							close_inherited_fds(t_cmds *cmds);
-void							safe_dup2(int oldfd, int newfd);
+void							safe_dup2(t_cmds *cmd, int oldfd, int newfd);
 // void run_child(t_cmds *cmds, int *fd, int stored_input, char **envp);
 void							run_child(t_cmds *cmds, int *fd,
 									int stored_input, t_shell *shell);

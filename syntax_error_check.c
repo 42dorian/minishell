@@ -34,7 +34,7 @@ int	pipe_check(t_token *tokens, int i)
 	if (tokens[0].type == token_pipe)
 		return (syntax_error_message_display(tokens[i].value));
 	else if (i > 0 && tokens[i].type == token_pipe && tokens[i
-			- 1].type != token_word)
+		- 1].type != token_word)
 		return (syntax_error_message_display(tokens[i].value));
 	else if (tokens[i].type == token_pipe && (tokens[i + 1].type == token_pipe
 			|| tokens[i + 1].value == NULL))
@@ -49,13 +49,13 @@ int	redir_check(t_token *tokens, int i)
 	if (tokens[i].type == token_append && tokens[i + 1].type != token_word)
 		return (syntax_error_message_display(tokens[i + 1].value));
 	else if (tokens[i].type == token_redirect_in && tokens[i
-			+ 1].type != token_word)
+		+ 1].type != token_word)
 		return (syntax_error_message_display(tokens[i + 1].value));
 	else if (tokens[i].type == token_redirect_out && tokens[i
-			+ 1].type != token_word)
+		+ 1].type != token_word)
 		return (syntax_error_message_display(tokens[i + 1].value));
 	else if (tokens[i].type == token_heredoc && tokens[i
-			+ 1].type != token_word)
+		+ 1].type != token_word)
 		return (syntax_error_message_display(tokens[i + 1].value));
 	else
 		return (0);

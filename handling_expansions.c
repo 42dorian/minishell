@@ -12,8 +12,8 @@
 
 #include "minishell.h"
 
-int	get_full_len_of_expandable(const char *read_line,
-		t_envs *env_list, int *exit_code)
+int	get_full_len_of_expandable(const char *read_line, t_envs *env_list,
+		int *exit_code)
 {
 	int	i;
 	int	total_len;
@@ -40,8 +40,8 @@ int	get_full_len_of_expandable(const char *read_line,
 	return (total_len);
 }
 
-char	*get_full_expandable_word(const char *read_line,
-		t_envs *env_list, int len, int *exit_code)
+char	*get_full_expandable_word(const char *read_line, t_envs *env_list,
+		int len, int *exit_code)
 {
 	char	*fully_expanded;
 	char	*valid_expandable;
@@ -70,8 +70,8 @@ char	*get_full_expandable_word(const char *read_line,
 	return (fully_expanded);
 }
 
-char	*handle_expansions(t_envs *env_list,
-		const char *read_line, int *exit_code)
+char	*handle_expansions(t_envs *env_list, const char *read_line,
+		int *exit_code)
 {
 	int		i;
 	int		len;
@@ -80,15 +80,13 @@ char	*handle_expansions(t_envs *env_list,
 	i = 0;
 	if (!dollar_in_word(read_line))
 		return (normal_copy(read_line));
-	len = get_full_len_of_expandable(read_line, env_list,
-			exit_code);
+	len = get_full_len_of_expandable(read_line, env_list, exit_code);
 	if (len == -1)
 	{
 		clean_up_env_list(&env_list);
 		return (NULL);
 	}
-	new_word = get_full_expandable_word(read_line, env_list,
-			len, exit_code);
+	new_word = get_full_expandable_word(read_line, env_list, len, exit_code);
 	if (!new_word)
 		return (NULL);
 	else

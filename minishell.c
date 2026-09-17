@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/17 14:17:33 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 14:48:46 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ int     handle_expansions_linked_list(t_new_token *tokens, int *status)
         split_again = split_read_line(expanded_line);
         if (!split_again)
             return (0);
-        if (!insert_into_linked_list(tokens, (const char *)split_again))
+        if (!insert_into_linked_list(tokens, (const char **)split_again))
             return (0);
         tokens = tokens->next;
     }
@@ -185,19 +185,22 @@ t_new_token *new_minishell(const char *read_line, t_envs *env_list, int *status)
     t_new_token *tokens;
 
     i = 0;
-    tokens = NULL;//ft_calloc(1, sizeof(t_new_token));
-  //  ft_bzero(tokens, sizeof(t_new_token));
+    tokens = NULL;
     if (empty_string_and_unclosed_quote_check(read_line, status))
         return (NULL);
     split_line =  split_read_line(read_line);
     if (!split_line)
         return (NULL);
-    if (!create_linked_token_struct(&tokens, (const char *)split_line, env_list))
+    if (!create_linked_token_struct(&tokens, (const char **)split_line, env_list))
         return (split_clean_up(split_line, word_counter(read_line)), NULL);
+    split_clean_up(split_line, word_counter(read_line));
     if (!handle_expansions_linked_list(tokens, status))
-        return (NULL);
+        return (ft_lstclear_linked_list(&tokens, free), NULL);
     if (remove_quotes_linked_list(tokens));
+        return (ft_lstclear_linked_list(&tokens, free), NULL);
     syntax_check_linked_list(tokens, status);
+    if (*status == 2)
+        return (ft_lstclear_linked_list(&tokens, free), NULL);
     return (tokens);
 }
 

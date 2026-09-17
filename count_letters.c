@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:36:59 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/16 17:41:52 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 01:46:57 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,15 +109,14 @@ int	count_valid_char(const char *quoted_word)
 	i = 0;
 	while (quoted_word[i])
 	{
-		if (set_quote_type(&quote_type, quoted_word[i]))
-			i++;
-		if (set_quote_type(&quote_type, quoted_word[i]))
-			i++;
-		if (quoted_word[i] != quote_type)
+		set_quote_type(&quote_type, quoted_word[i]);
+		if (quote_type != quoted_word[i])
 		{
 			counter++;
 			i++;
 		}
+		else
+			i++;
 	}
 	return (counter);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_general.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
+/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 13:18:12 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/02 11:05:56 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/17 12:50:56 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,15 @@ int	ft_lstsize(t_envs *lst)
 }
 
 t_envs	*ft_lstlast(t_envs *lst)
+{
+	if (!lst)
+		return (NULL);
+	while (lst->next)
+		lst = lst->next;
+	return (lst);
+}
+
+t_new_token	*ft_lstlast_token(t_new_token *lst)
 {
 	if (!lst)
 		return (NULL);

@@ -60,7 +60,7 @@ int	put_shlvl_in_env_list(t_envs **my_list)
 		if (!string_value)
 			return (free(literal_shlvl), free(one), 0);
 		if (!update_or_add(my_list, string_value, literal_shlvl))
-			return (1);
+			return (free(one), 1);
 	}
 	else if (!update_or_add(my_list, one, literal_shlvl))
 		return (1);

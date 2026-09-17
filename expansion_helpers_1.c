@@ -59,7 +59,6 @@ int	get_len_of_current_expandable(const char *expandable, t_envs *env_list,
 		int *exit_code)
 {
 	char	*test_env;
-	char	*real_env;
 	int		len;
 
 	test_env = get_valid_expandable(expandable);

@@ -14,7 +14,6 @@
 
 static void	fill_quoted_heredoc(int write_fd, const char *eof);
 static void	fill_unqoted_heredoc(int write_fd, const char *eof, t_envs *env);
-static int	contains_quotes(char *str);
 static int	handle_heredoc_parent(int fd[2], t_cmds *curr, pid_t pid);
 
 static void	fill_quoted_heredoc(int write_fd, const char *eof)

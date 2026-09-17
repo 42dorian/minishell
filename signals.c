@@ -13,7 +13,6 @@
 #include "minishell.h"
 
 static void	handle_sigint(int sig);
-static void	handle_sigquit(int sig);
 
 void	handle_sigint(int sig)
 {

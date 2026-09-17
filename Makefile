@@ -56,10 +56,8 @@ SOURCE =	split.c \
 			general_helpers.c
 
 
-# CFLAGS = -Wall -Wextra -Werror -g
-CFLAGS = -I/opt/homebrew/opt/readline/include -g
-READLINE_FLAG = -L/opt/homebrew/opt/readline/lib -lreadline
-
+CFLAGS = -Wall -Wextra -Werror
+READLINE_FLAG = -lreadline
 
 CC = cc
 

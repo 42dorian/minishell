@@ -80,22 +80,23 @@ void	free_split(char **strs)
 	strs = NULL;
 }
 
-void free_tokens(t_token *token)
+void	free_tokens(t_token *token)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	if (!token)
 		return ;
 	while (token[++i].value)
-		free((void*)token[i].value);
+		free((void *)token[i].value);
 	free(token);
 }
 
-void free_cmds(t_cmds **cmd)
+void	free_cmds(t_cmds **cmd)
 {
-	t_cmds *tmp;
-	t_cmds *next_cmd;
+	t_cmds	*tmp;
+	t_cmds	*next_cmd;
+
 	if (!cmd || !*cmd)
 		return ;
 	tmp = *cmd;

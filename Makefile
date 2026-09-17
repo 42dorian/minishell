@@ -26,6 +26,7 @@ SOURCE =	split.c \
 			heredoc_helpers.c\
 			executor.c \
 			executor_helpers.c \
+			executor_utils.c \
 			built_in_executor.c \
 			built_in_executor_helper.c \
 			handling_expansions.c \

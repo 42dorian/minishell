@@ -12,8 +12,7 @@
 
 #include "minishell.h"
 
-static int	fork_pipe(t_cmds *cmds, int *fd, int *stored_input, t_shell *shell);
-static int execute_single_built_in(t_shell *shell);
+static int	execute_single_built_in(t_shell *shell);
 
 int	execute_cmds(t_shell *shell)
 {
@@ -37,16 +36,8 @@ int	execute_cmds(t_shell *shell)
 		shell->envp = NULL;
 		return (shell->status);
 	}
-	pause_interactive_signals();
-	while (curr_cmd)
-	{
-		if (!fork_pipe(curr_cmd, fd, &stored_input, shell))
-			break ;
-		clean_parent(curr_cmd, fd, &stored_input);
-		curr_cmd = curr_cmd->next;
-	}
-	wait_pids(shell->cmds, &shell->status);
-	init_interactive_signals();
+	else
+		execute_pipeline(shell, curr_cmd, fd, &stored_input);
 	free_split(shell->envp);
 	shell->envp = NULL;
 	return (shell->status);
@@ -71,15 +62,15 @@ int	execute_single_cmd(t_shell *shell)
 	return (1);
 }
 
-int execute_single_built_in(t_shell *shell)
+int	execute_single_built_in(t_shell *shell)
 {
 	shell->saved_stdin = dup(STDIN_FILENO);
 	shell->saved_stdout = dup(STDOUT_FILENO);
 	if (shell->saved_stdin == -1)
 		return (print_error(strerror(errno), "dup", NULL, 2), 1);
 	else if (shell->saved_stdout == -1)
-		return (close(shell->saved_stdin), print_error(strerror(errno),
-				"dup", NULL, 2), 1);
+		return (close(shell->saved_stdin), print_error(strerror(errno), "dup",
+				NULL, 2), 1);
 	if (change_io(shell->cmds))
 	{
 		restore_io(shell->saved_stdin, shell->saved_stdout);
@@ -106,47 +97,11 @@ int	run_cmd(t_cmds *cmd, char **envp, int *status, t_shell *shell)
 		return (free(path), print_error(strerror(errno), cmd->cmd[0], NULL, 2),
 			0);
 	if (cmd->pid == 0)
-	{
-		init_execution_signals();
-		if (cmd->fd_in != 0)
-		{
-			safe_dup2(cmd->fd_in, STDIN_FILENO);
-			close(cmd->fd_in);
-		}
-		if (cmd->fd_out != 1)
-		{
-			safe_dup2(cmd->fd_out, STDOUT_FILENO);
-			close(cmd->fd_out);
-		}
-		execve(path, cmd->cmd, envp);
-		print_error(strerror(errno), cmd->cmd[0], NULL, 2);
-		free_all_and_exit(shell, 1);
-	}
+		exec_child_process(cmd, path, envp, shell);
 	pause_interactive_signals();
 	wait_single_pid(cmd->pid, status, 1);
 	init_interactive_signals();
 	return (free(path), 1);
-}
-
-void	wait_single_pid(pid_t pid, int *status, int last_pid)
-{
-	int	raw_status;
-
-	if (pid > 0)
-	{
-		if (waitpid(pid, &raw_status, 0) == -1)
-			return ;
-		if (WIFEXITED(raw_status))
-			*status = WEXITSTATUS(raw_status);
-		else if (WIFSIGNALED(raw_status))
-		{
-			if (WTERMSIG(raw_status) == SIGQUIT && last_pid)
-				write(STDERR_FILENO, "Quit: (core dumped)\n", 20);
-			else if (WTERMSIG(raw_status) == SIGINT && last_pid)
-				write(STDERR_FILENO, "\n", 1);
-			*status = 128 + WTERMSIG(raw_status);
-		}
-	}
 }
 
 void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
@@ -155,18 +110,7 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 	int		exit_status;
 
 	exit_status = 0;
-	if (!cmds->cmd || !cmds->cmd[0])
-	{
-		close(fd[0]);
-		close(fd[1]);
-		free_all_and_exit(shell, 0);
-	}
-	if (cmds->fd_in == -1 || cmds->fd_out == -1)
-	{
-		close(fd[0]);
-		close(fd[1]);
-		free_all_and_exit(shell, 1);
-	}
+	check_child_fds(cmds, fd, shell);
 	child_redirections(cmds, fd, stored_input);
 	close_inherited_fds(cmds);
 	if (is_built_in(cmds->cmd[0]))
@@ -181,30 +125,4 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 	execve(path, cmds->cmd, shell->envp);
 	print_error(strerror(errno), cmds->cmd[0], NULL, 2);
 	free_all_and_exit(shell, 1);
-}
-
-static int	fork_pipe(t_cmds *cmds, int *fd, int *stored_input, t_shell *shell)
-{
-	if (cmds->next)
-	{
-		if (pipe(fd) == -1)
-			return (0);
-	}
-	cmds->pid = fork();
-	if (cmds->pid == -1)
-	{
-		if (cmds->next)
-		{
-			close(fd[0]);
-			close(fd[1]);
-		}
-		print_error(strerror(errno), "fork", NULL, STDERR_FILENO);
-		return (0);
-	}
-	if (cmds->pid == 0)
-	{
-		init_execution_signals();
-		run_child(cmds, fd, *stored_input, shell);
-	}
-	return (1);
 }

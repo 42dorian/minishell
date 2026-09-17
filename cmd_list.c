@@ -24,10 +24,10 @@ t_cmds	*build_cmds(t_token *t, t_envs *env, t_shell *shell)
 
 	ign = 0;
 	i = -1;
-	head = new_cmd();
-	if (!head)
+	curr = new_cmd();
+	if (!curr)
 		return (NULL);
-	curr = head;
+	head = curr;
 	while (t[++i].value != NULL)
 	{
 		if (!ign || t[i].type == token_pipe)

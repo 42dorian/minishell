@@ -21,8 +21,8 @@ Problems, tests and TO-DOs
 - [x] finish built-ins
 - [x] handle $?
 - [x] handle ""
-- [ ] handle PATH="" this will try to run commands from current directory 
-- [ ] handle env -i 
+- [x] handle PATH="" this will try to run commands from current directory 
+- [x] handle env -i 
 - [x] "echo hi >./outfiles/outfile01 | echo bye" < handle properly
 - [x] | echo -n oui < handle this properly
 - [x] awk 'BEGIN{for(i=1;i<=10;i++){for(j=1;j<=10;j++){printf("%4d ",i*j)} printf("\n")}}' /dev/null | tail -n 10      < handle this properly
@@ -33,13 +33,13 @@ Problems, tests and TO-DOs
 - [x] when clicking CTRL+C in "interactive" mode, the exit code updates
 - [x] don't use printf to print errors or in general, we need to use ft_putstr_fd so we put errors in fd=2 for errors and fd=1 for normal standard output
 - [x] using ARG=1 shouldnt add to the ENV
-- [ ] handle when path is NULL or empty run executable from curr directory
+- [x] handle when path is NULL or empty run executable from curr directory
 - [x] on CTRL+C cancel all  heredocs
 - [ ] expansion removes singe quotes
-- [ ] fd leaks
+- [x] fd leaks
 - [ ] need to handle SHLVL
-- [ ] need to handle env -i, if ran by this just run getcwd and add SHLVL=1
-- [ ] on error stop at first error
+- [x] need to handle env -i, if ran by this just run getcwd and add SHLVL=1
+- [x] on error stop at first error
 - [x] handle heredoc separately and create expansions there
 
 ---

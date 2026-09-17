@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:31:11 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/17 20:06:03 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 21:50:32 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,7 @@ void	make_expansion(char *fully_expnaded, const char *mock_expand,
 	env_index = 0;
 	test_env = NULL;
 	test_env = get_from_my_env_list(mock_expand, *env_list);
-	if (string_compare(mock_expand, "$"))
-	{
-		free(test_env);
-		test_env = convert_pid_to_string();
-	}
-	else if (string_compare(mock_expand, "?"))
+	if (string_compare(mock_expand, "?"))
 	{
 		free(test_env);
 		test_env = ft_itoa(exit_code);

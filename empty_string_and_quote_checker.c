@@ -6,13 +6,13 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 17:02:03 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/17 17:02:19 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 22:02:05 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	loop_for_unclosed_quotes(const char *read_line, int *status)
+int	loop_for_unclosed_quotes(const char *read_line)
 {
 	int	quote_type;
 	int	i;
@@ -51,7 +51,7 @@ int	empty_string_and_unclosed_quote_check(const char *read_line, int *status)
 {
 	if (is_empty_string(read_line, status))
 		return (1);
-	if (loop_for_unclosed_quotes(read_line, status))
+	if (loop_for_unclosed_quotes(read_line))
 		return (display_unclosed_quote_error_message(status));
 	return (0);
 }

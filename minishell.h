@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 13:20:37 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/17 20:07:41 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 22:01:52 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ typedef struct s_cmds
 
 typedef struct s_token
 {
-	const char					*value;
+	char						*value;
 	int							quoted;
 	int							export_flag;
 	t_token_type				type;
@@ -313,14 +313,12 @@ int								count_letters_till_next_word(const char *read_line,
 									int i);
 void							increment_total_len_and_index_by_one(int *total_len,
 									int *i);
-int								get_pid_len(void);
 int								how_many_digits(int *number);
 int								create_env(char *key, char *value,
 									t_envs **env_list);
 int								token_list_size(t_token *tokens);
 int								len_of_split_line(char **read_line);
-int								loop_for_unclosed_quotes(const char *read_line,
-									int *status);
+int								loop_for_unclosed_quotes(const char *read_line);
 int								display_unclosed_quote_error_message(int *status);
 int								put_shlvl_in_env_list(t_envs **my_list);
 char							*extract_value_from_env_list(t_envs **my_list,

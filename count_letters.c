@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:36:59 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/17 19:48:37 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 22:03:42 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,33 +30,6 @@ int	count_letters_till_next_quote(const char *read_line, int *i)
 	return (letters + 1);
 }
 
-int	count_letters_for_dollar_sign(const char *read_line, int *i)
-{
-	int	letters;
-
-	letters = 1;
-	*i += 1;
-	while (read_line[*i])
-	{
-		if (is_dollar_sign(read_line[(*i)])
-			&& double_dollar_or_question_mark_check(read_line[(*i) + 1]))
-		{
-			letters++;
-			(*i)++;
-			break ;
-		}
-		if (is_valid_after_dollar_sign(read_line[*i]) || is_quote(read_line[*i])
-			|| is_dollar_sign(read_line[*i]))
-		{
-			(*i)++;
-			letters++;
-		}
-		else
-			break ;
-	}
-	return (letters);
-}
-
 int	count_letters_till_next_word(const char *read_line, int i)
 {
 	int	letters;
@@ -64,8 +37,6 @@ int	count_letters_till_next_word(const char *read_line, int i)
 	letters = 0;
 	while (read_line[i])
 	{
-		if (is_dollar_sign(read_line[i]))
-			letters += count_letters_for_dollar_sign(read_line, &i);
 		if (is_quote(read_line[i]))
 			letters += count_letters_till_next_quote(read_line, &i);
 		if (is_white_space(read_line[i]) || !read_line[i])

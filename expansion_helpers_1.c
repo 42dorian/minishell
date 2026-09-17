@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 12:53:31 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/16 17:57:10 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 21:49:45 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,6 @@ int	get_len_of_current_expandable(const char *expandable, t_envs *env_list,
 	test_env = get_valid_expandable(expandable);
 	if (!test_env)
 		return (-1);
-	else if (string_compare(test_env, "$"))
-		return (free(test_env), get_pid_len());
 	else if (string_compare(test_env, "?"))
 		return (free(test_env), how_many_digits(exit_code));
 	len = get_len_of_real_env(test_env, env_list);

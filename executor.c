@@ -110,9 +110,13 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 	int		exit_status;
 
 	exit_status = 0;
-	check_child_fds(cmds, fd, shell);
+	check_child_fds(cmds, fd, stored_input, shell);
 	child_redirections(cmds, fd, stored_input);
 	close_inherited_fds(cmds);
+	if (cmds->fd_in == -1 || cmds->fd_out == -1)
+		free_all_and_exit(shell, 1);
+	if (!cmds->cmd || !cmds->cmd[0])
+		free_all_and_exit(shell, shell->status);
 	if (is_built_in(cmds->cmd[0]))
 	{
 		exit_status = run_built_in(cmds, shell->env_list, shell);
@@ -122,6 +126,7 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 			&exit_status);
 	if (!path)
 		free_all_and_exit(shell, exit_status);
+	signal(SIGPIPE, SIG_DFL);
 	execve(path, cmds->cmd, shell->envp);
 	print_error(strerror(errno), cmds->cmd[0], NULL, 2);
 	free_all_and_exit(shell, 1);

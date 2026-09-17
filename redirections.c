@@ -59,6 +59,7 @@ int	handle_pipe(t_cmds **curr)
 	next = new_cmd();
 	if (!next)
 		return (1);
+	next->prev = *curr;
 	(*curr)->next = next;
 	*curr = next;
 	return (0);

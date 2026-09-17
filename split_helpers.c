@@ -49,7 +49,7 @@ int	word_counter(const char *read_line)
 		else
 			i++;
 	}
-	if (!is_delimeter(read_line[i - 1]))
+	if (i > 0 && !is_delimeter(read_line[i - 1]))
 		words++;
 	return (words);
 }

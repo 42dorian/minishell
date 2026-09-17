@@ -88,10 +88,13 @@ int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env)
 		fill_quoted_heredoc(fd[1], token[*i + 1].value);
 	else
 		fill_unqoted_heredoc(fd[1], token[*i + 1].value, env);
-	free_cmd(curr);
+	free_cmds(&curr);
 	free_tokens(token);
 	ft_lstclear(&env, free);
 	close(fd[1]);
+	close(0);
+	close(1);
+	close(2);
 	if (g_signal == 130)
 		exit(130);
 	exit(0);

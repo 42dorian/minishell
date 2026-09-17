@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
+/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 11:27:11 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/08 12:26:03 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/17 20:06:14 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ static int	int_len(int n)
 
 char	*ft_itoa(int *n)
 {
-	char	*str;
-	int		len;
-	long	long_n;
+	char		*str;
+	int			len;
+	long long	long_n;
 
 	len = int_len(*n);
 	str = malloc(len + 1);

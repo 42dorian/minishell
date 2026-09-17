@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 13:20:37 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/17 18:21:16 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 20:07:41 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,7 @@ int								is_lower_case(char letter);
 int								fill_up_double_pointer(char **split_line,
 									const char *read_line);
 char							**split_read_line(char *read_line);
-char							**allocating_double_pointer(
-									const char *read_line);
+char							**allocating_double_pointer(const char *read_line);
 int								add_envp_to_list(t_envs **my_list,
 									const char **envp);
 int								is_word(const char *read_line, int *i,
@@ -124,16 +123,14 @@ int								dollar_sign_exception(const char *read_line,
 									int *i, int *words);
 int								is_heredoc_or_append(const char letter1,
 									const char letter2);
-int								count_letters_on_special_character(
-									const char *read_line,
+int								count_letters_on_special_character(const char *read_line,
 									int i, int *letters);
 int								is_special_character(const char letter1,
 									const char letter2);
 int								is_redir_or_pipe(const char letter);
 int								quote_in_word(const char *read_line, int *i,
 									int *words);
-int								syntax_error_message_display(
-									const char *token_value);
+int								syntax_error_message_display(const char *token_value);
 int								is_dollar_sign(const char letter);
 int								is_pipe(const char letter);
 int								is_single_quote(const char letter);
@@ -142,10 +139,10 @@ int								syntax_check(t_token *tokens, int *status);
 int								tokenizer(char *input);
 int								create_token_struct(t_token *tokens,
 									char **line);
-int								check_for_redirect_out_and_append(
-									const char *read_line, int *i);
-int								check_for_redirect_in_and_heredoc(
-									const char *read_line, int *i);
+int								check_for_redirect_out_and_append(const char *read_line,
+									int *i);
+int								check_for_redirect_in_and_heredoc(const char *read_line,
+									int *i);
 int								check_for_pipe(const char *read_line, int *i);
 int								dollar_is_standing_alone(const char letter);
 void							process_after_dollar_sign(const char *read_line,
@@ -155,14 +152,11 @@ int								is_redir_in(const char letter);
 int								is_redir_out(const char letter);
 int								is_astrisk(const char letter);
 int								is_terminator(const char letter);
-int								letter_after_dollar_is_num_or_astrisk(
-									const char letter);
+int								letter_after_dollar_is_num_or_astrisk(const char letter);
 int								is_underline(char letter);
-int								is_white_space_or_special_character(
-									const char letter);
+int								is_white_space_or_special_character(const char letter);
 int								key_counter(const char *envp);
-int								get_len_of_current_expandable(
-									const char *expandable,
+int								get_len_of_current_expandable(const char *expandable,
 									t_envs *env_list, int *exit_code);
 char							*find_cmd_path(char *cmd_name,
 									char **split_path, int *status);
@@ -232,8 +226,8 @@ int								is_question_mark(const char letter);
 int								value_counter(const char *envp);
 int								is_quote(const char letter);
 
-t_envs							*copy_from_envp_to_own_env_list(
-									const char **envp, int i);
+t_envs							*copy_from_envp_to_own_env_list(const char **envp,
+									int i);
 
 int								is_valid_after_dollar_sign(const char letter);
 void							copy_till_next_quote(const char *read_line,
@@ -259,16 +253,14 @@ void							free_tokens(t_token *token);
 void							free_cmds(t_cmds **cmd);
 void							free_all_and_exit(t_shell *shell, int status);
 
-int								get_full_len_of_expandable(
-									const char *read_line,
+int								get_full_len_of_expandable(const char *read_line,
 									t_envs *env_list, int *exit_code);
 char							*get_full_expandable_word(const char *read_line,
 									t_envs *env_list, int len, int *exit_code);
 char							*handle_expansions(t_envs *env_list,
 									const char *read_line, int *exit_code);
 int								dollar_in_word(const char *word);
-int								count_valid_characters_after_dollar_sign(
-									const char *curr_expandable);
+int								count_valid_characters_after_dollar_sign(const char *curr_expandable);
 void							set_quote_flag(int *quote_flag,
 									const char letter);
 char							*get_valid_expandable(const char *expandable);
@@ -280,28 +272,24 @@ void							cat_to_fully_expanded(char *fully_expanded,
 int								clean_up_env_list(t_envs **env_list);
 int								is_delimeter(const char letter);
 int								word_counter(const char *read_line);
-int								check_for_special_character(
-									const char *read_line,
+int								check_for_special_character(const char *read_line,
 									int *i, int *words);
-void							move_index_and_set_curr_len_to_zero(
-									const char *read_line,
+void							move_index_and_set_curr_len_to_zero(const char *read_line,
 									int *i, int *curr_len);
-void							set_quote_flag_and_index_to_zero(
-									int *quote_flag, int *i);
-int								double_dollar_or_question_mark_check(
-									const char letter);
+void							set_quote_flag_and_index_to_zero(int *quote_flag,
+									int *i);
+int								double_dollar_or_question_mark_check(const char letter);
 int								get_len_of_real_env(const char *test_env,
 									t_envs *env_list);
-int								get_len_of_valid_expandable(
-									const char *expandable);
+int								get_len_of_valid_expandable(const char *expandable);
 char							*get_value(const char *envp);
 char							*get_key(const char *envp);
 void							set_curr_and_total_len_to_zero(int *curr_len,
 									int *total_len);
 int								eligible_for_expansion(const char *read_line,
 									int i, int quote_flag);
-int								check_res_of_curr_len_and_increment_accordingly(
-									int *curr_len, int *total_len, int *i,
+int								check_res_of_curr_len_and_increment_accordingly(int *curr_len,
+									int *total_len, int *i,
 									const char *read_line);
 char							*get_from_my_env_list(const char *expandable,
 									t_envs env_list);
@@ -310,19 +298,19 @@ void							set_quote_type(int *quote_type,
 									const char letter);
 char							*copy_till_next_word(const char *read_line,
 									int *i);
-int								empty_string_and_unclosed_quote_check(
-									const char *read_line, int *status);
+int								empty_string_and_unclosed_quote_check(const char *read_line,
+									int *status);
 void							clean_up_tokens_and_split_line(t_token *tokens,
 									char **split_line);
 int								remove_quotes(t_token *tokens);
-int								solo_standing_special_character(
-									const char *read_line, int *i);
+int								solo_standing_special_character(const char *read_line,
+									int *i);
 int								preliminary_check(t_token *tokens);
 int								count_valid_char(const char *quoted_word);
-int								count_letters_till_next_word(
-									const char *read_line, int i);
-void							increment_total_len_and_index_by_one(
-									int *total_len, int *i);
+int								count_letters_till_next_word(const char *read_line,
+									int i);
+void							increment_total_len_and_index_by_one(int *total_len,
+									int *i);
 int								get_pid_len(void);
 int								how_many_digits(int *number);
 int								create_env(char *key, char *value,
@@ -331,5 +319,11 @@ int								token_list_size(t_token *tokens);
 int								len_of_split_line(char **read_line);
 int								loop_for_unclosed_quotes(const char *read_line,
 									int *status);
+int								display_unclosed_quote_error_message(int *status);
+int								put_shlvl_in_env_list(t_envs **my_list);
+char							*extract_value_from_env_list(t_envs **my_list,
+									const char *missing_key);
+int								in_env_list(t_envs **my_list,
+									char *missing_key);
 
 #endif

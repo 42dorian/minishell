@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
+/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/05 17:36:01 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/12 11:56:40 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/17 20:07:04 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ static long long	ft_atoll(char *nptr);
 static int			check_long(int is_negative, long long v, int d);
 static int			valid_long(char *str);
 
-// free evth here before exit
 int	exit_bi(t_cmds *cmd, t_shell *shell)
 {
 	long long	exit_code;

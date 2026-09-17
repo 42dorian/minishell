@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:36:59 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/17 01:46:57 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 19:48:37 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ int	count_valid_characters_after_dollar_sign(const char *curr_expandable)
 	i = 1;
 	while (curr_expandable[i])
 	{
-		if (is_dollar_sign(curr_expandable[i])
-			|| is_question_mark(curr_expandable[i]))
+		if ((is_dollar_sign(curr_expandable[i])
+				|| is_question_mark(curr_expandable[i])) && i == 1)
 		{
 			i++;
 			break ;

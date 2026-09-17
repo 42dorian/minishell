@@ -41,6 +41,7 @@ SOURCE =	split.c \
 			preliminary_checkers.c \
 			empty_string_and_quote_checker.c \
 			signals.c \
+			shlvl.c \
 			signal_helpers.c \
 			pwd.c \
 			echo.c \

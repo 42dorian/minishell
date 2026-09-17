@@ -6,30 +6,11 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 20:34:44 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/16 17:34:46 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 22:42:45 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	quote_in_word(const char *read_line, int *i, int *words)
-{
-	int	quote_type;
-
-	quote_type = 0;
-	if (is_quote(read_line[*i]))
-	{
-		quote_type = read_line[*i];
-		skip_to_next_quote(read_line, i, quote_type);
-		if (is_delimeter(read_line[*i]))
-		{
-			(*words)++;
-			skip_white_spaces(read_line, i);
-		}
-		return (1);
-	}
-	return (0);
-}
 
 int	check_for_special_character(const char *read_line, int *i, int *words)
 {
@@ -43,27 +24,10 @@ int	check_for_special_character(const char *read_line, int *i, int *words)
 	else if (is_heredoc_or_append(read_line[*i], read_line[(*i) + 1]))
 		return ((*words)++, (*i) += 2, 1);
 	else if (*i > 0 && is_redir(read_line[*i]) && !is_delimeter(read_line[(*i)
-			- 1]))
+				- 1]))
 		return ((*words) += 2, (*i)++, 1);
 	else if (is_redir(read_line[*i]))
 		return ((*words)++, (*i)++, 1);
 	else
 		return (0);
-}
-
-int	is_word(const char *read_line, int *i, int *words)
-{
-	while (!is_white_space(read_line[*i]) && read_line[*i])
-	{
-		if (solo_standing_special_character(read_line, i))
-			return (1);
-		else if (dollar_sign_exception(read_line, i, words))
-			return (0);
-		else if (quote_in_word(read_line, i, words))
-			return (0);
-		else if (check_for_special_character(read_line, i, words))
-			return (0);
-		(*i)++;
-	}
-	return (1);
 }

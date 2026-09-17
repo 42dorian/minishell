@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 17:42:49 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/17 18:09:47 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 22:52:18 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ char	*get_rid_of_them_quotes(t_token *tokens, int i)
 	quote_type = 0;
 	j = 0;
 	local_index = 0;
-	if (!malloc_for_new_word(&new_word, count_valid_char(tokens[i].value)))
+	if (!malloc_for_new_word(&new_word, count_chars_without_quotes(tokens[i].value)))
 		return (free((void *)tokens[i].value), NULL);
 	while (tokens[i].value[j])
 	{
-		if (check_for_quote(tokens[i].value[j], &quote_type))
+		if (check_if_and_set_quote(tokens[i].value[j], &quote_type))
 		{
 			j++;
 			while (tokens[i].value[j] != quote_type && tokens[i].value[j])
@@ -48,13 +48,6 @@ char	*get_rid_of_them_quotes(t_token *tokens, int i)
 	new_word[local_index] = 0;
 	free((void *)tokens[i].value);
 	return (new_word);
-}
-
-int	eligible_for_quote_removal(const char letter, int export_flag)
-{
-	if (is_quote(letter) && !export_flag)
-		return (1);
-	return (0);
 }
 
 int	remove_quotes(t_token *tokens)

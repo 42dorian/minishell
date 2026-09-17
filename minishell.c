@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/17 18:14:28 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 22:56:09 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ int	main(int ac, char **av, const char **envp)
 	t_shell	shell;
 	t_token	*tokens;
 
+	tokens = NULL;
 	(void)av;
 	tokens = NULL;
 	if (ac != 1)

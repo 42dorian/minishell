@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 17:14:52 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/16 18:17:02 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 21:49:20 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	eligible_for_expansion(const char *read_line, int i, int quote_flag)
 {
-	if (is_dollar_sign(read_line[i]) && !is_end(read_line[i + 1]
-			&& quote_flag != 1) && (is_valid_after_dollar_sign(read_line[i + 1])
-			|| double_dollar_or_question_mark_check(read_line[i + 1])))
+	if (is_dollar_sign(read_line[i]) && !is_end(read_line[i + 1])
+		&& quote_flag != 1 && (is_valid_after_dollar_sign(read_line[i + 1])
+			|| is_question_mark(read_line[i + 1])))
 		return (1);
 	else
 		return (0);

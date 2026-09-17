@@ -6,42 +6,11 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:56:14 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/16 18:24:59 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 21:51:11 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	get_pid_len(void)
-{
-	pid_t	pid;
-	int		len;
-
-	pid = getpid();
-	len = how_many_digits(&pid);
-	return (len);
-}
-
-char	*convert_pid_to_string(void)
-{
-	pid_t	pid;
-	int		digits;
-	char	*pid_string;
-
-	pid = getpid();
-	pid = (int)pid;
-	digits = how_many_digits(&pid);
-	pid_string = malloc(sizeof(char) * (digits + 1));
-	if (!pid_string)
-		return (NULL);
-	pid_string[digits] = 0;
-	while (pid > 0)
-	{
-		pid_string[--digits] = pid % 10 + '0';
-		pid /= 10;
-	}
-	return (pid_string);
-}
 
 int	how_many_digits(int *number)
 {

@@ -6,20 +6,11 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:40:55 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/16 16:41:27 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 22:53:16 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	copy_after_dollar_sign(const char *read_line, int *i, char *new_word,
-		int *local_index)
-{
-	(*i)++;
-	(*local_index)++;
-	while (is_valid_after_dollar_sign(read_line[*i]))
-		new_word[(*local_index)++] = read_line[(*i)++];
-}
 
 char	*copy_till_next_word(const char *read_line, int *i)
 {

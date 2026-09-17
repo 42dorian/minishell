@@ -52,17 +52,14 @@ int	handle_out(t_cmds *curr, t_token *token, int *i)
 	return (0);
 }
 
-int	handle_pipe(t_cmds **head, t_cmds **curr)
+int	handle_pipe(t_cmds **curr)
 {
 	t_cmds	*next;
 
-	next = NULL;
 	next = new_cmd();
 	if (!next)
-		return (0);
-	*head = add_cmd(*head, next);
-	if (!*head)
 		return (1);
+	(*curr)->next = next;
 	*curr = next;
 	return (0);
 }

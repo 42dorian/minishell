@@ -12,12 +12,12 @@
 
 #include "minishell.h"
 
-void	print_heredoc_warning(char *eof)
+void	print_heredoc_warning(const char *eof)
 {
 	ft_putstr_fd("minishell: warning: ", STDOUT_FILENO);
 	ft_putstr_fd("here-document delimited by end-of-file (wanted '",
 		STDOUT_FILENO);
-	ft_putstr_fd(eof, STDOUT_FILENO);
+	ft_putstr_fd((char *)eof, STDOUT_FILENO);
 	ft_putstr_fd("')\n", STDOUT_FILENO);
 }
 

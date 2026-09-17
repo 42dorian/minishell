@@ -163,18 +163,17 @@ int						is_dir(char *cmd, struct stat *path_stat);
 int						pwd(void);
 void free_cmd(t_cmds *cmds);
 t_cmds	*new_cmd(void);
-t_cmds	*add_cmd(t_cmds *head, t_cmds *new_list);
 int		add_arg_to_cmd(t_cmds *node, const char *arg);
 
-int	process_token(t_cmds **head, t_cmds **cur, t_token *t, int *i, t_envs *env);
+int	process_token(t_cmds **cur, t_token *t, int *i, t_envs *env);
 
 int		handle_in(t_cmds *curr, t_token *tokens, int *i);
 int		handle_out(t_cmds *curr, t_token *tokens, int *i);
-int		handle_pipe(t_cmds **head, t_cmds **curr);
+int		handle_pipe(t_cmds **curr);
 
 int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env);
 
-t_cmds	*build_cmds(t_token *tokens, t_envs *env, t_shell *shell);
+t_cmds	*build_cmds(t_token *t, t_envs *env, t_shell *shell);
 int find_path(char **envp);
 
 int	execute_cmds(t_shell *shell);
@@ -211,7 +210,8 @@ void init_interactive_signals(void);
 void init_execution_signals(void);
 void pause_interactive_signals(void);
 void init_heredoc_signals(void);
-void	print_heredoc_warning(char *eof);
+void heredoc_sigint(int sig);
+void	print_heredoc_warning(const char *eof);
 char	*expanded_line(char *line, t_envs *env);
 char **create_envp(t_envs *env_list);
 int env(t_envs *env_list);

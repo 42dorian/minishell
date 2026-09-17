@@ -1,0 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signal_helpers.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dabdulla <dabdulla@student.42vienna.c      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/09/17 12:57:21 by dabdulla          #+#    #+#             */
+/*   Updated: 2026/09/17 12:57:22 by dabdulla         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+void	heredoc_sigint(int sig)
+{
+	(void)sig;
+	g_signal = 130;
+	write(STDOUT_FILENO, "\n", 1);
+	close(STDIN_FILENO);
+}

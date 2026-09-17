@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 17:42:49 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/17 15:19:56 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 18:09:47 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	malloc_for_new_word(char **new_word, int len)
 	else
 		return (1);
 }
-
 
 char	*get_rid_of_them_quotes(t_token *tokens, int i)
 {
@@ -57,7 +56,6 @@ int	eligible_for_quote_removal(const char letter, int export_flag)
 		return (1);
 	return (0);
 }
-
 
 int	remove_quotes(t_token *tokens)
 {

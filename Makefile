@@ -39,6 +39,7 @@ SOURCE =	split.c \
 			letter_checkers_2.c \
 			letter_checkers_3.c \
 			preliminary_checkers.c \
+			empty_string_and_quote_checker.c \
 			signals.c \
 			signal_helpers.c \
 			pwd.c \

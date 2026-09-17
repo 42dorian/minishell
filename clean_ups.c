@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 17:46:21 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/17 15:16:26 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 18:09:59 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int	clean_up_env_list(t_envs **env_list)
 	ft_lstclear(env_list, free);
 	return (0);
 }
-
 
 void	clean_up_tokens_and_split_line(t_token *tokens, char **split_line)
 {

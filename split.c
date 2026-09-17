@@ -6,11 +6,23 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 14:02:51 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/16 16:41:06 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 18:14:36 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	len_of_split_line(char **read_line)
+{
+	int	len;
+
+	len = 0;
+	if (!read_line)
+		return (len);
+	while (read_line[len])
+		len++;
+	return (len);
+}
 
 char	**allocating_double_pointer(const char *read_line)
 {
@@ -35,21 +47,21 @@ int	fill_up_double_pointer(char **split_line, const char *read_line)
 		if (!is_white_space(read_line[i]) && read_line[i])
 			split_line[w++] = copy_till_next_word(read_line, &i);
 		if (split_line[w - 1] == NULL)
-			return (split_clean_up(split_line, w), 0);
+			return (split_clean_up(split_line), 0);
 	}
 	split_line[w] = NULL;
 	return (1);
 }
 
-char	**split_read_line(const char *read_line)
+char	**split_read_line(char *read_line)
 {
 	char	**split_line;
 
 	split_line = allocating_double_pointer(read_line);
 	if (!split_line)
-		return (NULL);
+		return (free(read_line), NULL);
 	if (!fill_up_double_pointer(split_line, read_line))
-		return (NULL);
+		return (free(read_line), NULL);
 	else
-		return (split_line);
+		return (free(read_line), split_line);
 }

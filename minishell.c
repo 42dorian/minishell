@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/17 15:48:26 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 18:14:28 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,42 +14,20 @@
 
 volatile sig_atomic_t	g_signal = 0;
 
-int	determine_quote_type(char letter, int quote_type)
+int	create_token_struct_and_remove_quotes(t_token *tokens, char **split_line)
 {
-	if (quote_type == SINGLE_QUOTE && letter == SINGLE_QUOTE)
-		quote_type = 0;
-	else if (quote_type == DOUBLE_QUOTE && letter == DOUBLE_QUOTE)
-		quote_type = 0;
-	else if (quote_type == 0 && letter == SINGLE_QUOTE)
-		quote_type = SINGLE_QUOTE;
-	else if (quote_type == 0 && letter == DOUBLE_QUOTE)
-		quote_type = DOUBLE_QUOTE;
-	return (quote_type);
-}
-
-int	set_quote_type(int *quote_type, const char letter)
-{
-	if (is_single_quote(letter) && *quote_type == 0)
+	if (!create_token_struct(tokens, split_line))
 	{
-		*quote_type = SINGLE_QUOTE;
-		return (1);
+		clean_up_tokens_and_split_line(tokens, split_line);
+		return (0);
 	}
-	if (is_double_quote(letter) && *quote_type == 0)
+	if (!remove_quotes(tokens))
 	{
-		*quote_type = DOUBLE_QUOTE;
-		return (1);
+		clean_up_tokens_and_split_line(tokens, split_line);
+		return (0);
 	}
-	if (is_single_quote(letter) && *quote_type == SINGLE_QUOTE)
-	{
-		*quote_type = 0;
-		return (1);
-	}
-	if (is_double_quote(letter) && *quote_type == DOUBLE_QUOTE)
-	{
-		*quote_type = 0;
-		return (1);
-	}
-	return (0);
+	split_clean_up(split_line);
+	return (1);
 }
 
 t_token	*minishell(const char *read_line, t_envs *env_list, int *status)
@@ -67,19 +45,13 @@ t_token	*minishell(const char *read_line, t_envs *env_list, int *status)
 		return (NULL);
 	split_line = split_read_line(expanded_line);
 	if (!split_line)
-		return (free(expanded_line), NULL);
-	tokens = malloc(sizeof(t_token) * (word_counter(expanded_line) + 1));
+		return (NULL);
+	tokens = ft_calloc(sizeof(t_token), (len_of_split_line(split_line) + 1));
 	if (!tokens)
-		return (split_clean_up(split_line, word_counter(expanded_line)),
-			free(expanded_line), NULL);
-	if (!create_token_struct(tokens, split_line))
-		return (clean_up_tokens_and_split_line(tokens, split_line),
-			free(expanded_line), NULL);
-	split_clean_up(split_line, word_counter(expanded_line));
-	free(expanded_line);
-	if (!remove_quotes(tokens))
-		return (free_tokens(tokens), NULL);
-	if ((syntax_check(tokens, status)) == 1 && *status == 2)
+		return (split_clean_up(split_line), NULL);
+	if (!create_token_struct_and_remove_quotes(tokens, split_line))
+		return (NULL);
+	if (syntax_check(tokens, status) && *status == 2)
 		return (free_tokens(tokens), NULL);
 	return (tokens);
 }

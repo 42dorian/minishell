@@ -5,7 +5,6 @@ SOURCE =	split.c \
 			split_helpers.c \
 			rest_helpers.c \
 			stepping_in_input.c \
-			env_assign_helpers.c \
 			syntax_error_check.c \
 			environment_creation.c \
 			dollar_sign_handler.c \
@@ -38,6 +37,7 @@ SOURCE =	split.c \
 			letter_checkers_1.c \
 			letter_checkers_2.c \
 			letter_checkers_3.c \
+			letter_checkers_4.c \
 			preliminary_checkers.c \
 			empty_string_and_quote_checker.c \
 			signals.c \
@@ -56,9 +56,8 @@ SOURCE =	split.c \
 			general_helpers.c
 
 
-# CFLAGS = -Wall -Wextra -Werror -g
-CFLAGS = -I/opt/homebrew/opt/readline/include -g
-READLINE_FLAG = -L/opt/homebrew/opt/readline/lib -lreadline
+CFLAGS = -Wall -Wextra -Werror
+READLINE_FLAG = -lreadline
 
 
 CC = cc

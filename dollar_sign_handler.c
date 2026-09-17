@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 17:33:26 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/16 18:16:21 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 22:50:35 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,6 @@ int	is_dollar_sign(const char letter)
 int	dollar_is_standing_alone(const char letter)
 {
 	if (is_white_space(letter) || is_terminator(letter))
-		return (1);
-	return (0);
-}
-
-int	is_question_mark_after_dollar(const char letter)
-{
-	if (letter == QUESTION_MARK)
 		return (1);
 	return (0);
 }

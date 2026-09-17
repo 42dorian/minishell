@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 13:20:37 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/17 22:01:52 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 22:52:29 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,17 +107,11 @@ char							**split_read_line(char *read_line);
 char							**allocating_double_pointer(const char *read_line);
 int								add_envp_to_list(t_envs **my_list,
 									const char **envp);
-int								is_word(const char *read_line, int *i,
-									int *words);
-int								check_for_quote(const char letter,
+int								check_if_and_set_quote(const char letter,
 									int *quote_type);
 void							skip_white_spaces(const char *read_line,
 									int *i);
 int								is_white_space(const char letter);
-void							skip_to_next_quote(const char *read_line,
-									int *i, char quote_type);
-void							skip_non_white_spaces(const char *read_line,
-									int *i);
 void							split_clean_up(char **split_line);
 char							*normal_copy(const char *get_copied);
 int								dollar_sign_exception(const char *read_line,
@@ -126,11 +120,7 @@ int								is_heredoc_or_append(const char letter1,
 									const char letter2);
 int								count_letters_on_special_character(const char *read_line,
 									int i, int *letters);
-int								is_special_character(const char letter1,
-									const char letter2);
 int								is_redir_or_pipe(const char letter);
-int								quote_in_word(const char *read_line, int *i,
-									int *words);
 int								syntax_error_message_display(const char *token_value);
 int								is_dollar_sign(const char letter);
 int								is_pipe(const char letter);
@@ -308,7 +298,7 @@ int								remove_quotes(t_token *tokens);
 int								solo_standing_special_character(const char *read_line,
 									int *i);
 int								preliminary_check(t_token *tokens);
-int								count_valid_char(const char *quoted_word);
+int								count_chars_without_quotes(const char *quoted_word);
 int								count_letters_till_next_word(const char *read_line,
 									int i);
 void							increment_total_len_and_index_by_one(int *total_len,

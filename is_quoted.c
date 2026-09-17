@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:36:03 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/17 18:14:15 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 22:48:16 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	is_quote(const char letter)
 	return (0);
 }
 
-int	check_for_quote(const char letter, int *quote_type)
+int	check_if_and_set_quote(const char letter, int *quote_type)
 {
 	if (letter == SINGLE_QUOTE)
 		return (*quote_type = SINGLE_QUOTE, 1);

@@ -6,21 +6,11 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 17:35:58 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/17 15:16:32 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 22:45:19 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	is_special_character(const char letter1, const char letter2)
-{
-	if (is_heredoc_or_append(letter1, letter2))
-		return (1);
-	else if (is_redir_or_pipe(letter1))
-		return (1);
-	else
-		return (0);
-}
 
 int	is_white_space(const char letter)
 {

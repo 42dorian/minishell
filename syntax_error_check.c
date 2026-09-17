@@ -105,38 +105,7 @@ int	special_character_syntax_checker(t_token *tokens, int i)
 		return (0);
 }
 
-
-int	special_character_syntax_checker_linked_list(t_new_token *tokens,int i)
-{
-	if (pipe_check_linked_list(tokens, i) || redir_check_linked_list(tokens, i))
-		return (1);
-	else
-		return (0);
-}
-
-void	syntax_check_linked_list(t_new_token *tokens, int *status)
-{
-	int	i;
-
-	i = 0;
-	if (preliminary_check_linked_list(tokens))
-	{
-		*status = 2;
-		return ;
-	}
-	while (tokens)
-	{
-		if (special_character_syntax_checker_linked_list(tokens, i))
-		{
-			*status = 2;
-			break ;
-		}
-		tokens = tokens->next;
-		i++;
-	}
-}
-
-void	syntax_check(t_token *tokens, int *status)
+int	syntax_check(t_token *tokens, int *status)
 {
 	int	i;
 
@@ -144,15 +113,16 @@ void	syntax_check(t_token *tokens, int *status)
 	if (preliminary_check(tokens))
 	{
 		*status = 2;
-		return ;
+		return (1);
 	}
 	while (tokens[i].value)
 	{
 		if (special_character_syntax_checker(tokens, i))
 		{
 			*status = 2;
-			break ;
+			return (1);
 		}
 		i++;
 	}
+	return (0);
 }

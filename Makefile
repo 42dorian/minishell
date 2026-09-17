@@ -39,6 +39,7 @@ SOURCE =	split.c \
 			letter_checkers_3.c \
 			preliminary_checkers.c \
 			signals.c \
+			signal_helpers.c \
 			pwd.c \
 			echo.c \
 			envp.c \

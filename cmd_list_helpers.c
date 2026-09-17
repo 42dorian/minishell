@@ -42,24 +42,6 @@ t_cmds	*new_cmd(void)
 	return (new);
 }
 
-t_cmds	*add_cmd(t_cmds *head, t_cmds *new_list)
-{
-	t_cmds	*tmp;
-
-	if (!new_list)
-		return (NULL);
-	if (!head)
-	{
-		head = new_list;
-		return (head);
-	}
-	tmp = head;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new_list;
-	return (head);
-}
-
 int	add_arg_to_cmd(t_cmds *node, const char *arg)
 {
 	char	**tmp;

@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 17:35:58 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/16 18:33:13 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 14:20:27 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,20 @@ int	token_list_size(t_token *tokens)
 	size = 0;
 	while (tokens[size].type != -1)
 		size++;
+	return (size);
+}
+
+int	token_list_size_linked_list(t_new_token *tokens)
+{
+	t_new_token *tmp;
+	int	size;
+
+	size = 0;
+	tmp = tokens;
+	while (tmp)
+	{
+		size++;
+		tmp = tmp->next;
+	}
 	return (size);
 }

@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/13 20:32:29 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/16 18:16:42 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 11:38:53 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,7 @@ char	*get_full_expandable_word(const char *read_line,
 	return (fully_expanded);
 }
 
-char	*handle_expansions(t_envs *env_list,
-		const char *read_line, int *exit_code)
+char	*handle_expansions(const char *read_line, t_envs *env_list, int *exit_code)
 {
 	int		i;
 	int		len;

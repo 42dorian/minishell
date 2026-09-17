@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 17:50:02 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/16 18:32:54 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 14:10:48 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,35 @@ int	empty_string_and_unclosed_quote_check(const char *read_line, int *status)
 	return (0);
 }
 
+int	is_redir_token(int token_type)
+{
+	if (token_type == token_append || token_type == token_heredoc)
+		return (1);
+	else if (token_type == token_redirect_in || token_type == token_redirect_out)
+		return (1);
+	else
+		return (0);
+}
+
 int	preliminary_check(t_token *tokens)
 {
 	int	size;
 
 	size = token_list_size(tokens);
-	if (size == 1 && is_redir(tokens[0].value[0]))
+	if (size == 1 && is_redir_token(tokens[0].type))
+	{
+		syntax_error_message_display(NULL);
+		return (1);
+	}
+	return (0);
+}
+
+int	preliminary_check_linked_list(t_new_token *tokens)
+{
+	int	size;
+
+	size = token_list_size_linked_list(tokens);
+	if (size == 1 && is_redir_token(tokens->type))
 	{
 		syntax_error_message_display(NULL);
 		return (1);

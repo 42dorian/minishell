@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 13:20:37 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/16 18:13:31 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 13:51:26 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,39 +31,39 @@
 
 # include "./libft/libft.h"
 # include <errno.h>
+# include <fcntl.h>
 # include <limits.h>
-# include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <fcntl.h>
+# include <signal.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
-# include <sys/wait.h>
 # include <sys/stat.h>
 # include <sys/types.h>
+# include <sys/wait.h>
 # include <unistd.h>
-# include <signal.h>
 
-extern volatile sig_atomic_t g_signal;
-typedef struct s_cmds	t_cmds;
-typedef struct s_envs	t_envs;
+extern volatile sig_atomic_t	g_signal;
+typedef struct s_cmds			t_cmds;
+typedef struct s_envs			t_envs;
 
 typedef struct s_shell
 {
-	t_cmds *cmds;
-	t_envs *env_list;
-	char **envp;
-	int status;
-	int saved_stdin;
-	int saved_stdout;
-}t_shell;
+	t_cmds						*cmds;
+	t_envs						*env_list;
+	char						**envp;
+	int							status;
+	int							saved_stdin;
+	int							saved_stdout;
+}								t_shell;
 
 typedef struct s_cd
 {
-	char	*target_path;
-	char	old_path[PATH_MAX];
-	char	new_path[PATH_MAX];
-}			t_cd;
+	char						*target_path;
+	char						old_path[PATH_MAX];
+	char						new_path[PATH_MAX];
+}								t_cd;
 
 typedef enum e_token_type
 {
@@ -74,19 +74,19 @@ typedef enum e_token_type
 	token_append,
 	token_heredoc,
 	token_env_assign
-}						t_token_type;
+}								t_token_type;
 
 typedef struct s_cmds
 {
-	char				**cmd;
-	int 				fd_in;
-	int					fd_out;
-	int					exit_status;
-	t_cmds				*next;
-	pid_t				pid;
-}						t_cmds;
+	char						**cmd;
+	int							fd_in;
+	int							fd_out;
+	int							exit_status;
+	t_cmds						*next;
+	pid_t						pid;
+}								t_cmds;
 
-typedef struct s_token
+typedef struct s_new_token
 {
     const char		*value;
 	int				quoted;
@@ -94,6 +94,13 @@ typedef struct s_token
     t_token_type    type;
 }                   t_token;
 
+typedef struct s_token
+{
+	const char					*value;
+	int							quoted;
+	int							export_flag;
+	t_token_type				type;
+}								t_token;
 
 void					*ft_calloc(size_t nmemb, size_t size);
 int						string_compare(const char *string1,
@@ -171,36 +178,41 @@ int		handle_in(t_cmds *curr, t_token *tokens, int *i);
 int		handle_out(t_cmds *curr, t_token *tokens, int *i);
 int		handle_pipe(t_cmds **curr);
 
-int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env);
+int								handle_heredoc(t_cmds *curr, t_token *token,
+									int *i, t_envs *env);
 
 t_cmds	*build_cmds(t_token *t, t_envs *env, t_shell *shell);
 int find_path(char **envp);
 
-int	execute_cmds(t_shell *shell);
-int run_cmd(t_cmds *cmd, char **envp, int *status, t_shell *shell);
-int is_built_in(char *cmd);
-int	restore_io(int saved_stdin, int saved_stdout);
+int								execute_cmds(t_shell *shell);
+int								run_cmd(t_cmds *cmd, char **envp, int *status,
+									t_shell *shell);
+int								is_built_in(char *cmd);
+int								restore_io(int saved_stdin, int saved_stdout);
 
-int	execute_single_cmd(t_shell *shell);
-int change_io(t_cmds *cmds);
-void	child_redirections(t_cmds *cmds, int *fd, int stored_input);
-void close_inherited_fds(t_cmds *cmds);
-void safe_dup2(int oldfd, int newfd);
+int								execute_single_cmd(t_shell *shell);
+int								change_io(t_cmds *cmds);
+void							child_redirections(t_cmds *cmds, int *fd,
+									int stored_input);
+void							close_inherited_fds(t_cmds *cmds);
+void							safe_dup2(int oldfd, int newfd);
 // void run_child(t_cmds *cmds, int *fd, int stored_input, char **envp);
-void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell);
+void							run_child(t_cmds *cmds, int *fd,
+									int stored_input, t_shell *shell);
 
-void clean_parent(t_cmds *cmds, int *fd, int *stored_input);
-void wait_pids(t_cmds *cmds, int *status);
+void							clean_parent(t_cmds *cmds, int *fd,
+									int *stored_input);
+void							wait_pids(t_cmds *cmds, int *status);
 // int	run_built_in(t_cmds *cmd, t_envs *env_list);
-int	run_built_in(t_cmds *cmd, t_envs *env_list, t_shell *shell);
-int echo(t_cmds *cmd);
-void wait_single_pid(pid_t pid, int *status, int last_pid);
+int								run_built_in(t_cmds *cmd, t_envs *env_list,
+									t_shell *shell);
+int								echo(t_cmds *cmd);
+void							wait_single_pid(pid_t pid, int *status,
+									int last_pid);
 
-int     is_question_mark(const char letter);
-int     value_counter(const char *envp);
-int     is_quote(const char letter);
-
-t_envs     *copy_from_envp_to_own_env_list(const char **envp, int i);
+int								is_question_mark(const char letter);
+int								value_counter(const char *envp);
+int								is_quote(const char letter);
 
 //added these
 int     is_valid_after_dollar_sign(const char letter);
@@ -225,45 +237,95 @@ void free_tokens(t_token *token);
 void free_cmds(t_cmds **cmd);
 void free_all_and_exit(t_shell *shell, int status);
 
+// added these
+int								is_valid_after_dollar_sign(const char letter);
+void							copy_till_next_quote(const char *read_line,
+									int *i, char *new_word, int *new_index);
+int								is_end(const char letter);
+void							init_interactive_signals(void);
+void							init_execution_signals(void);
+void							pause_interactive_signals(void);
+void							init_heredoc_signals(void);
+void							print_heredoc_warning(char *eof);
+char							*expanded_line(char *line, t_envs *env);
+char							**create_envp(t_envs *env_list);
+int								env(t_envs *env_list);
+int								export_bi(t_cmds *cmd, t_envs **env_list);
+int								unset(t_cmds *cmd, t_envs **env_list);
+int								exit_bi(t_cmds *cmd, t_shell *shell);
+int								valid_identifier(char *key);
+int								cd_bi(t_cmds *cmd, t_envs **env_list);
+int								update_or_add(t_envs **env_list, char *value,
+									char *key);
+void							free_tokens(t_token *token);
+void							free_cmds(t_cmds **cmd);
+void							free_all_and_exit(t_shell *shell, int status);
 
-int     get_full_len_of_expandable(const char *read_line, t_envs *env_list, int *exit_code);
-char    *get_full_expandable_word(const char *read_line, t_envs *env_list, int len, int *exit_code);
-char    *handle_expansions(t_envs *env_list, const char *read_line, int *exit_code);
-int     dollar_in_word(const char *word);
-//void    decide_quote(int *quote_flag, int *single_quote_counter, const char letter);
-int     count_valid_characters_after_dollar_sign(const char *curr_expandable);
-void    set_quote_flag(int *quote_flag, const char letter);
-char    *get_valid_expandable(const char *expandable);
-void    make_expansion(char *fully_expnaded, const char *mock_expand, t_envs *env_list, int *exit_code);
-void    cat_to_fully_expanded(char *fully_expanded, const char new_letter);
-int     clean_up_env_list(t_envs **env_list);
-int     is_delimeter(const char letter);
-int     word_counter(const char *read_line);
-int     check_for_special_character(const char *read_line, int *i, int *words);
-void    move_index_and_set_curr_len_to_zero(const char *read_line, int *i, int *curr_len);
-void    set_quote_flag_and_index_to_zero(int *quote_flag, int *i);
-int		double_dollar_or_question_mark_check(const char letter);
-int		get_len_of_real_env(const char *test_env, t_envs *env_list);
-int		get_len_of_valid_expandable(const char *expandable);
-char	*get_value(const char *envp);
-char	*get_key(const char *envp);
-void	set_curr_and_total_len_to_zero(int *curr_len, int *total_len);
-int		eligible_for_expansion(const char *read_line, int i, int quote_flag);
-int		check_res_of_curr_len_and_increment_accordingly(int *curr_len, int *total_len, int *i, const char *read_line);
-char	*get_from_my_env_list(const char *expandable, t_envs env_list);
-char	*convert_pid_to_string(void);
-int    	set_quote_type(int *quote_type, const char letter);
-char	*copy_till_next_word(const char *read_line, int *i);
-int		empty_string_and_unclosed_quote_check(const char *read_line, int *status);
-void	clean_up_tokens_and_split_line(t_token *tokens, char **split_line);
-int		remove_quotes(t_token *tokens);
-int		solo_standing_special_character(const char *read_line, int *i);
-int		preliminary_check(t_token *tokens);
-int		count_valid_char(const char *quoted_word);
-int		count_letters_till_next_word(const char *read_line, int i);
-void	increment_total_len_and_index_by_one(int *total_len, int *i);
-int		get_pid_len(void);
-int		how_many_digits(int *number);
-int create_env(char *key, char *value, t_envs **env_list);
+int								get_full_len_of_expandable(const char *read_line,
+									t_envs *env_list, int *exit_code);
+char							*get_full_expandable_word(const char *read_line,
+									t_envs *env_list, int len, int *exit_code);
+char							*handle_expansions(const char *read_line, t_envs *env_list, int *exit_code);
+int								dollar_in_word(const char *word);
+int								count_valid_characters_after_dollar_sign(const char *curr_expandable);
+void							set_quote_flag(int *quote_flag,
+									const char letter);
+char							*get_valid_expandable(const char *expandable);
+void							make_expansion(char *fully_expnaded,
+									const char *mock_expand, t_envs *env_list,
+									int *exit_code);
+void							cat_to_fully_expanded(char *fully_expanded,
+									const char new_letter);
+int								clean_up_env_list(t_envs **env_list);
+int								is_delimeter(const char letter);
+int								word_counter(const char *read_line);
+int								check_for_special_character(const char *read_line,
+									int *i, int *words);
+void							move_index_and_set_curr_len_to_zero(const char *read_line,
+									int *i, int *curr_len);
+void							set_quote_flag_and_index_to_zero(int *quote_flag,
+									int *i);
+int								double_dollar_or_question_mark_check(const char letter);
+int								get_len_of_real_env(const char *test_env,
+									t_envs *env_list);
+int								get_len_of_valid_expandable(const char *expandable);
+char							*get_value(const char *envp);
+char							*get_key(const char *envp);
+void							set_curr_and_total_len_to_zero(int *curr_len,
+									int *total_len);
+int								eligible_for_expansion(const char *read_line,
+									int i, int quote_flag);
+int								check_res_of_curr_len_and_increment_accordingly(int *curr_len,
+									int *total_len, int *i,
+									const char *read_line);
+char							*get_from_my_env_list(const char *expandable,
+									t_envs env_list);
+char							*convert_pid_to_string(void);
+int								set_quote_type(int *quote_type,
+									const char letter);
+char							*copy_till_next_word(const char *read_line,
+									int *i);
+int								empty_string_and_unclosed_quote_check(const char *read_line,
+									int *status);
+void							clean_up_tokens_and_split_line(t_token *tokens,
+									char **split_line);
+int								remove_quotes(t_token *tokens);
+int								solo_standing_special_character(const char *read_line,
+									int *i);
+int								preliminary_check(t_token *tokens);
+int								count_valid_char(const char *quoted_word);
+int								count_letters_till_next_word(const char *read_line,
+									int i);
+void							increment_total_len_and_index_by_one(int *total_len,
+									int *i);
+int								get_pid_len(void);
+int								how_many_digits(int *number);
+int								create_env(char *key, char *value,
+									t_envs **env_list);
+int								token_list_size(t_token *tokens);
+int	create_linked_token_struct(t_new_token **tokens, const char **line, t_envs *env_list);
+t_new_token	*get_new_node(const char *word, t_envs *env_list);
+int	len_of_double_pointer(const char **split_line);
+void	ft_lstadd_back_token(t_new_token **lst, t_new_token *new_list);
 
 #endif

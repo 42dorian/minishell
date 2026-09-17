@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 16:08:24 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/16 16:32:24 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 15:02:15 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,42 @@ int	pipe_check(t_token *tokens, int i)
 	else if (tokens[i].type == token_pipe && tokens[i - 1].type != token_word)
 		return (syntax_error_message_display(tokens[i + 1].value));
 	return (0);
+}
+
+
+int	pipe_check_linked_list(t_new_token *tokens, int i)
+{
+	t_new_token *next;
+
+	next = tokens->next;
+	if (i == 0 && tokens->type == token_pipe)
+		return (syntax_error_message_display(tokens->value));
+	// else if (i > 0 && tokens->type == token_pipe && tokens->type != token_word)
+	// 	return (syntax_error_message_display(tokens->value));
+	else if (tokens->type == token_pipe && (next->type == token_pipe
+			|| next->value == NULL))
+		return (syntax_error_message_display(next->value));
+	else if (tokens->type == token_pipe && next->type != token_word)
+		return (syntax_error_message_display(next->value));
+	return (0);
+}
+
+
+int	redir_check_linked_list(t_new_token *tokens, int i)
+{
+	t_new_token *next;
+
+	next = tokens->next;
+	if (tokens->type == token_append && next->type != token_word)
+		return (syntax_error_message_display(next->value));
+	else if (tokens->type == token_redirect_in && next->type != token_word)
+		return (syntax_error_message_display(next->value));
+	else if (tokens->type == token_redirect_out && next->type != token_word)
+		return (syntax_error_message_display(next->value));
+	else if (tokens->type == token_heredoc && next->type != token_word)
+		return (syntax_error_message_display(next->value));
+	else
+		return (0);
 }
 
 int	redir_check(t_token *tokens, int i)

@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 16:08:24 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/16 16:32:24 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 15:46:56 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	pipe_check(t_token *tokens, int i)
 		return (syntax_error_message_display(tokens[i + 1].value));
 	return (0);
 }
+
 
 int	redir_check(t_token *tokens, int i)
 {

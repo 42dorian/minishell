@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_helpers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guthybarnakoppany <guthybarnakoppany@st    +#+  +:+       +#+        */
+/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 13:08:42 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/03 11:11:57 by guthybarnak      ###   ########.fr       */
+/*   Updated: 2026/09/17 15:19:37 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	ft_lstadd_back(t_envs **lst, t_envs *new_list)
 	tmp = ft_lstlast(*lst);
 	tmp->next = new_list;
 }
+
 
 void	ft_lstdelone(t_envs *lst, void (*del)(void *))
 {

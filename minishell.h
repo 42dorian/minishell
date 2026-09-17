@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 13:20:37 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/17 13:51:26 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 15:19:20 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,20 +86,10 @@ typedef struct s_cmds
 	pid_t						pid;
 }								t_cmds;
 
-typedef struct s_new_token
-{
-	char					*value;
-	int						quoted;
-	t_token_type			type;
-	struct s_envs			*env_list;
-	struct s_new_token		*next;
-}							t_new_token;
-
 typedef struct s_token
 {
 	const char					*value;
 	int							quoted;
-	int							export_flag;
 	t_token_type				type;
 }								t_token;
 
@@ -319,9 +309,6 @@ int								how_many_digits(int *number);
 int								create_env(char *key, char *value,
 									t_envs **env_list);
 int								token_list_size(t_token *tokens);
-int	create_linked_token_struct(t_new_token **tokens, const char **line, t_envs *env_list);
-t_new_token	*get_new_node(const char *word, t_envs *env_list);
-int	len_of_double_pointer(const char **split_line);
-void	ft_lstadd_back_token(t_new_token **lst, t_new_token *new_list);
+
 
 #endif

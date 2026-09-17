@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 13:08:42 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/17 12:52:26 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 15:19:37 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,6 @@ void	ft_lstadd_back(t_envs **lst, t_envs *new_list)
 	tmp->next = new_list;
 }
 
-void	ft_lstadd_back_token(t_new_token **lst, t_new_token *new_list)
-{
-	t_new_token	*tmp;
-
-	if (!new_list || !lst)
-		return ;
-	if (!*lst)
-	{
-		*lst = new_list;
-		return ;
-	}
-	tmp = ft_lstlast_token(*lst);
-	tmp->next = new_list;
-}
 
 void	ft_lstdelone(t_envs *lst, void (*del)(void *))
 {

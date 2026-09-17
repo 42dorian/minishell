@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 17:50:02 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/17 14:10:48 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 15:16:57 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,15 +89,3 @@ int	preliminary_check(t_token *tokens)
 	return (0);
 }
 
-int	preliminary_check_linked_list(t_new_token *tokens)
-{
-	int	size;
-
-	size = token_list_size_linked_list(tokens);
-	if (size == 1 && is_redir_token(tokens->type))
-	{
-		syntax_error_message_display(NULL);
-		return (1);
-	}
-	return (0);
-}

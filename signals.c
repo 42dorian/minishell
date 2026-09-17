@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-static void	sh_new_line(void);
 static void	handle_sigint(int sig);
 static void	handle_sigquit(int sig);
 
@@ -65,9 +64,8 @@ void	init_heredoc_signals(void)
 
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;
-	sa.sa_handler = SIG_DFL;
+	sa.sa_handler = heredoc_sigint;
 	sigaction(SIGINT, &sa, NULL);
 	sa.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
 }

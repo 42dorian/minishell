@@ -58,6 +58,9 @@ void	free_all_and_exit(t_shell *shell, int status)
 		close(shell->saved_stdout);
 	free_cmds(&shell->cmds);
 	ft_lstclear(&tmp_env, free);
+	close(0);
+	close(1);
+	close(2);
 	exit(status);
 }
 
@@ -75,4 +78,38 @@ void	free_split(char **strs)
 	}
 	free(strs);
 	strs = NULL;
+}
+
+void free_tokens(t_token *token)
+{
+	int i;
+
+	i = -1;
+	if (!token)
+		return ;
+	while (token[++i].value)
+		free((void*)token[i].value);
+	free(token);
+}
+
+void free_cmds(t_cmds **cmd)
+{
+	t_cmds *tmp;
+	t_cmds *next_cmd;
+	if (!cmd || !*cmd)
+		return ;
+	tmp = *cmd;
+	while (tmp)
+	{
+		next_cmd = tmp->next;
+		free_split(tmp->cmd);
+		tmp->cmd = NULL;
+		if (tmp->fd_in > 0)
+			close(tmp->fd_in);
+		if (tmp->fd_out > 1)
+			close(tmp->fd_out);
+		free(tmp);
+		tmp = next_cmd;
+	}
+	*cmd = NULL;
 }

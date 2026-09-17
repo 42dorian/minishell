@@ -109,13 +109,14 @@ int	count_valid_char(const char *quoted_word)
 	i = 0;
 	while (quoted_word[i])
 	{
-		set_quote_type(&quote_type, quoted_word[i]);
-		if (quote_type != quoted_word[i])
+		if (set_quote_type(&quote_type, quoted_word[i]))
+			i++;
+		if (quoted_word[i] != quote_type)
 		{
 			counter++;
 			i++;
 		}
-		else
+		if (set_quote_type(&quote_type, quoted_word[i]))
 			i++;
 	}
 	return (counter);

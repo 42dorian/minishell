@@ -12,11 +12,12 @@
 
 #include "minishell.h"
 
-static void	fill_quoted_heredoc(int write_fd, char *eof, t_envs *env);
+static void	fill_quoted_heredoc(int write_fd, const char *eof);
+static void	fill_unqoted_heredoc(int write_fd, const char *eof, t_envs *env);
 static int	contains_quotes(char *str);
 static int	handle_heredoc_parent(int fd[2], t_cmds *curr, pid_t pid);
 
-static void	fill_quoted_heredoc(int write_fd, char *eof, t_envs *env)
+static void	fill_quoted_heredoc(int write_fd, const char *eof)
 {
 	char	*line;
 
@@ -26,6 +27,8 @@ static void	fill_quoted_heredoc(int write_fd, char *eof, t_envs *env)
 		line = readline("> ");
 		if (!line)
 		{
+			if (g_signal == 130)
+				return ;
 			print_heredoc_warning(eof);
 			return ;
 		}
@@ -34,13 +37,12 @@ static void	fill_quoted_heredoc(int write_fd, char *eof, t_envs *env)
 			free(line);
 			return ;
 		}
-		ft_putstr_fd(line, write_fd);
-		ft_putchar_fd('\n', write_fd);
+		ft_putendl_fd(line, write_fd);
 		free(line);
 	}
 }
 
-static void	fill_unqoted_heredoc(int write_fd, char *eof, t_envs *env)
+static void	fill_unqoted_heredoc(int write_fd, const char *eof, t_envs *env)
 {
 	char	*line;
 	char	*line_expanded;
@@ -52,17 +54,19 @@ static void	fill_unqoted_heredoc(int write_fd, char *eof, t_envs *env)
 		line = readline("> ");
 		if (!line)
 		{
+			if (g_signal == 130)
+				return ;
 			print_heredoc_warning(eof);
 			return ;
 		}
 		line_expanded = expanded_line(line, env);
+		free(line);
 		if (ft_strncmp(line_expanded, eof, ft_strlen(eof) + 1) == 0)
 		{
 			free(line_expanded);
 			break ;
 		}
-		ft_putstr_fd(line_expanded, write_fd);
-		ft_putchar_fd('\n', write_fd);
+		ft_putendl_fd(line_expanded, write_fd);
 		free(line_expanded);
 	}
 }
@@ -71,9 +75,7 @@ int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env)
 {
 	int		fd[2];
 	pid_t	pid;
-	int		status;
 
-	status = 0;
 	if (pipe(fd) == -1)
 		return (print_error(strerror(errno), "pipe", NULL, STDERR_FILENO), 1);
 	pause_interactive_signals();
@@ -82,14 +84,16 @@ int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_envs *env)
 		return (handle_heredoc_parent(fd, curr, pid));
 	close(fd[0]);
 	init_heredoc_signals();
-	free_cmd(curr);
 	if (token[*i + 1].quoted)
-		fill_quoted_heredoc(fd[1], token[*i + 1].value, env);
+		fill_quoted_heredoc(fd[1], token[*i + 1].value);
 	else
 		fill_unqoted_heredoc(fd[1], token[*i + 1].value, env);
+	free_cmd(curr);
 	free_tokens(token);
 	ft_lstclear(&env, free);
 	close(fd[1]);
+	if (g_signal == 130)
+		exit(130);
 	exit(0);
 }
 
@@ -104,8 +108,6 @@ static int	handle_heredoc_parent(int fd[2], t_cmds *curr, pid_t pid)
 		close(fd[1]);
 		return (print_error(strerror(errno), "fork", NULL, STDERR_FILENO), 1);
 	}
-	if (status != 0)
-		return (close(fd[0]), status);
 	close(fd[1]);
 	wait_single_pid(pid, &status, 1);
 	init_interactive_signals();

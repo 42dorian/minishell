@@ -39,6 +39,7 @@ Problems, tests and TO-DOs
 - [ ] fd leaks
 - [ ] need to handle SHLVL
 - [ ] need to handle env -i, if ran by this just run getcwd and add SHLVL=1
+- [ ] on error stop at first error
 - [x] handle heredoc separately and create expansions there
 
 ---

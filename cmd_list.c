@@ -12,41 +12,51 @@
 
 #include "minishell.h"
 
-t_cmds	*build_cmds(t_token *tokens, t_envs *env, t_shell *shell)
+static int	err_check(int value, t_shell *shell, int *ignore);
+
+t_cmds	*build_cmds(t_token *t, t_envs *env, t_shell *shell)
 {
 	t_cmds	*head;
 	t_cmds	*curr;
 	int		i;
 	int		process_token_val;
+	int		ign;
 
-	process_token_val = 0;
-	i = 0;
-	curr = new_cmd();
-	if (!curr)
+	ign = 0;
+	i = -1;
+	head = new_cmd();
+	if (!head)
 		return (NULL);
-	head = curr;
-	while (tokens[i].value != NULL)
+	curr = head;
+	while (t[++i].value != NULL)
 	{
-		if (tokens[i].type == token_word)
+		if (!ign || t[i].type == token_pipe)
 		{
-			if (!add_arg_to_cmd(curr, tokens[i].value))
-				return (free_cmd(head), NULL);
+			ign = 0;
+			if (t[i].type == token_word && !add_arg_to_cmd(curr, t[i].value))
+				return (free_cmd(curr), NULL);
+			if (err_check(process_token(&curr, t, &i, env), shell, &ign))
+				return (free_cmds(&head), NULL);
 		}
-		process_token_val = process_token(&head, &curr, tokens, &i, env);
-		if (process_token_val != 0)
-		{
-			shell->status = process_token_val;
-			if (process_token_val == 130)
-				break;
-			i++;
-			continue ;
-		}
-		i++;
 	}
 	return (head);
 }
 
-int	process_token(t_cmds **head, t_cmds **curr, t_token *t, int *i, t_envs *env)
+static int	err_check(int value, t_shell *shell, int *ignore)
+{
+	if (!value)
+		return (0);
+	if (value != 0)
+	{
+		shell->status = value;
+		if (value == 130)
+			return (1);
+	}
+	*ignore = 1;
+	return (0);
+}
+
+int	process_token(t_cmds **curr, t_token *t, int *i, t_envs *env)
 {
 	int	status;
 
@@ -67,6 +77,6 @@ int	process_token(t_cmds **head, t_cmds **curr, t_token *t, int *i, t_envs *env)
 		(*i)++;
 	}
 	else if (t[*i].type == token_pipe)
-		status = handle_pipe(head, curr);
+		status = handle_pipe(curr);
 	return (status);
 }

@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 16:08:24 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/17 15:17:27 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/17 15:46:56 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	special_character_syntax_checker(t_token *tokens, int i)
 		return (0);
 }
 
-void	syntax_check(t_token *tokens, int *status)
+int	syntax_check(t_token *tokens, int *status)
 {
 	int	i;
 
@@ -78,15 +78,16 @@ void	syntax_check(t_token *tokens, int *status)
 	if (preliminary_check(tokens))
 	{
 		*status = 2;
-		return ;
+		return (1);
 	}
 	while (tokens[i].value)
 	{
 		if (special_character_syntax_checker(tokens, i))
 		{
 			*status = 2;
-			break ;
+			return (1);
 		}
 		i++;
 	}
+	return (0);
 }

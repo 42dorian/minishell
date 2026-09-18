@@ -128,6 +128,7 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 		free_all_and_exit(shell, exit_status);
 	signal(SIGPIPE, SIG_DFL);
 	execve(path, cmds->cmd, shell->envp);
+	free(path);
 	print_error(strerror(errno), cmds->cmd[0], NULL, 2);
 	free_all_and_exit(shell, 1);
 }

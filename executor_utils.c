@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 16:45:57 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/17 16:45:59 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/18 12:29:55 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	exec_child_process(t_cmds *cmd, char *path, char **envp, t_shell *shell)
 		close(cmd->fd_out);
 	}
 	execve(path, cmd->cmd, envp);
+	free(path);
 	print_error(strerror(errno), cmd->cmd[0], NULL, 2);
 	free_all_and_exit(shell, 1);
 }

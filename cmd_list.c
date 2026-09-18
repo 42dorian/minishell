@@ -12,16 +12,14 @@
 
 #include "minishell.h"
 
-static int	err_check(int value, t_shell *shell, int *ignore);
+static int	err_check(int value, t_shell *shell);
 
 t_cmds	*build_cmds(t_token *t, t_envs *env, t_shell *shell)
 {
 	t_cmds	*head;
 	t_cmds	*curr;
 	int		i;
-	int		ign;
 
-	ign = 0;
 	i = -1;
 	curr = new_cmd();
 	if (!curr)
@@ -29,19 +27,15 @@ t_cmds	*build_cmds(t_token *t, t_envs *env, t_shell *shell)
 	head = curr;
 	while (t[++i].value != NULL)
 	{
-		if (!ign || t[i].type == token_pipe)
-		{
-			ign = 0;
-			if (t[i].type == token_word && !add_arg_to_cmd(curr, t[i].value))
-				return (free_cmds(&head), NULL);
-			if (err_check(process_token(&curr, t, &i, env), shell, &ign))
-				return (free_cmds(&head), NULL);
-		}
+		if (t[i].type == token_word && !add_arg_to_cmd(curr, t[i].value))
+			return (free_cmds(&head), NULL);
+		if (err_check(process_token(&curr, t, &i, env), shell))
+			return (free_cmds(&head), NULL);
 	}
 	return (head);
 }
 
-static int	err_check(int value, t_shell *shell, int *ignore)
+static int	err_check(int value, t_shell *shell)
 {
 	if (!value)
 		return (0);
@@ -51,7 +45,6 @@ static int	err_check(int value, t_shell *shell, int *ignore)
 		if (value == 130)
 			return (1);
 	}
-	*ignore = 1;
 	return (0);
 }
 

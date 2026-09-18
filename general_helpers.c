@@ -105,6 +105,7 @@ void	free_cmds(t_cmds **cmd)
 	while (tmp)
 	{
 		next_cmd = tmp->next;
+		free_redirs(&tmp->redirs);
 		free_split(tmp->cmd);
 		tmp->cmd = NULL;
 		if (tmp->fd_in > 0)

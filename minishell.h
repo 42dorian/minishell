@@ -38,8 +38,10 @@
 # include <signal.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
+# include <sys/ioctl.h>
 
 extern volatile sig_atomic_t	g_signal;
+typedef struct s_redirs			t_redirs;
 typedef struct s_cmds			t_cmds;
 typedef struct s_envs			t_envs;
 
@@ -72,9 +74,18 @@ typedef enum e_token_type
 	token_invalid = -1
 }								t_token_type;
 
+typedef struct s_redirs
+{
+	char						*filename;
+	int							flags;
+	int							is_out;
+	t_redirs					*next;
+}								t_redirs;
+
 typedef struct s_cmds
 {
 	char						**cmd;
+	t_redirs					*redirs;
 	int							fd_in;
 	int							fd_out;
 	int							exit_status;
@@ -330,4 +341,7 @@ char							*extract_value_from_env_list(t_envs **my_list,
 int								in_env_list(t_envs **my_list,
 									char *missing_key);
 
+void							add_redir_to_back(t_redirs **list,
+									t_redirs *new_redir);
+void							free_redirs(t_redirs **redirs);
 #endif

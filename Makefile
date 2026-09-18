@@ -56,7 +56,7 @@ SOURCE =	split.c \
 			general_helpers.c
 
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 READLINE_FLAG = -lreadline
 
 CC = cc

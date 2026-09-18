@@ -12,43 +12,75 @@
 
 #include "minishell.h"
 
+void add_redir_to_back(t_redirs **list, t_redirs *new_redir)
+{
+	t_redirs *tmp;
+	if (!new_redir || !list)
+		return ;
+	if (!*list)
+	{
+		*list = new_redir;
+		return ;
+	}
+	tmp = *list;
+	while(tmp->next)
+		tmp = tmp->next;
+	tmp->next = new_redir;
+}
+
+void free_redirs(t_redirs **redirs)
+{
+	t_redirs *tmp;
+	t_redirs *next_redir;
+
+	if (!redirs || !*redirs)
+		return ;
+	tmp = *redirs;
+	while (tmp)
+	{
+		next_redir = tmp->next;
+		if (tmp->filename)
+			free(tmp->filename);
+		free(tmp);
+		tmp = next_redir;
+	}
+	*redirs = NULL;
+}
+
 int	handle_in(t_cmds *curr, t_token *tokens, int *i)
 {
-	if (curr->fd_in != 0)
-		close(curr->fd_in);
-	curr->fd_in = open(tokens[*i + 1].value, O_RDONLY);
-	if (curr->fd_in == -1)
-	{
-		print_error(strerror(errno), tokens[*i + 1].value, NULL, 2);
+	t_redirs *new_redir;
+
+	new_redir = ft_calloc(1, sizeof(t_redirs));
+	if (!new_redir)
 		return (1);
-	}
+	new_redir->filename = ft_strdup(tokens[*i +1].value);
+	if (!new_redir->filename)
+		return (free_redirs(&curr->redirs), free(new_redir), 1);
+	new_redir->flags = O_RDONLY;
+	new_redir->is_out = 0;
+	new_redir->next = NULL;
+	add_redir_to_back(&curr->redirs, new_redir);
 	return (0);
 }
 
 int	handle_out(t_cmds *curr, t_token *token, int *i)
 {
-	if (curr->fd_out != 1)
-		close(curr->fd_out);
+	t_redirs *new_redir;
+
+	new_redir = ft_calloc(1, sizeof(t_redirs));
+	if (!new_redir)
+		return (1);
+	new_redir->filename = ft_strdup(token[*i + 1].value);
+	if (!new_redir->filename)
+		return (free_redirs(&curr->redirs), free(new_redir), 1);
+	new_redir->is_out = 1;
+	new_redir->next = NULL;
 	if (token[*i].type == token_redirect_out)
-	{
-		curr->fd_out = open(token[*i + 1].value, O_WRONLY | O_CREAT | O_TRUNC,
-				0644);
-		if (curr->fd_out == -1)
-		{
-			print_error(strerror(errno), token[*i + 1].value, NULL, 2);
-			return (1);
-		}
-	}
+		new_redir->flags = O_WRONLY | O_CREAT | O_TRUNC;
 	else if (token[*i].type == token_append)
-	{
-		curr->fd_out = open(token[*i + 1].value, O_WRONLY | O_CREAT | O_APPEND,
-				0644);
-		if (curr->fd_out == -1)
-		{
-			print_error(strerror(errno), token[*i + 1].value, NULL, 2);
-			return (1);
-		}
-	}
+		new_redir->flags = O_WRONLY | O_CREAT | O_APPEND;
+	add_redir_to_back(&curr->redirs, new_redir);
 	return (0);
 }
 

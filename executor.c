@@ -14,6 +14,34 @@
 
 static int	execute_single_built_in(t_shell *shell);
 
+int open_redirections(t_cmds *cmds)
+{
+	t_redirs *curr;
+
+	curr = cmds->redirs;
+	while (curr)
+	{
+		if (curr->is_out == 0)
+		{
+			if (cmds->fd_in != 0)
+				close(cmds->fd_in);
+			cmds->fd_in = open(curr->filename, curr->flags);
+			if (cmds->fd_in == -1)
+				return (print_error(strerror(errno), curr->filename, NULL, STDERR_FILENO), 1);
+		}
+		else
+		{
+			if (cmds->fd_out != 1)
+				close(cmds->fd_out);
+			cmds->fd_out = open(curr->filename, curr->flags, 0644);
+			if (cmds->fd_out == -1)
+				return (print_error(strerror(errno), curr->filename, NULL, STDERR_FILENO), 1);
+		}
+		curr = curr->next;
+	}
+	return (0);
+}
+
 int	execute_cmds(t_shell *shell)
 {
 	t_cmds	*curr_cmd;
@@ -48,6 +76,11 @@ int	execute_single_cmd(t_shell *shell)
 	if (!shell->cmds->cmd)
 	{
 		shell->status = 0;
+		return (1);
+	}
+	if (open_redirections(shell->cmds))
+	{
+		shell->status = 1;
 		return (1);
 	}
 	if (shell->cmds->fd_in == -1 || shell->cmds->fd_out == -1)
@@ -110,6 +143,8 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 	int		exit_status;
 
 	exit_status = 0;
+	if (open_redirections(cmds))
+		free_all_and_exit(shell, 1);
 	check_child_fds(cmds, fd, stored_input, shell);
 	child_redirections(cmds, fd, stored_input);
 	close_inherited_fds(cmds);

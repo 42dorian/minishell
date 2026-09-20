@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 14:02:51 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/17 18:14:36 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/20 21:36:01 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ char	**split_read_line(char *read_line)
 
 	split_line = allocating_double_pointer(read_line);
 	if (!split_line)
-		return (free(read_line), NULL);
+		return (NULL);
 	if (!fill_up_double_pointer(split_line, read_line))
-		return (free(read_line), NULL);
+		return (NULL);
 	else
-		return (free(read_line), split_line);
+		return (split_line);
 }

@@ -41,6 +41,7 @@ SOURCE =	split.c \
 			letter_checkers_4.c \
 			preliminary_checkers.c \
 			empty_string_and_quote_checker.c \
+			final_token_construct.c \
 			signals.c \
 			shlvl.c \
 			signal_helpers.c \
@@ -57,7 +58,7 @@ SOURCE =	split.c \
 			general_helpers.c
 
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 READLINE_FLAG = -lreadline
 
 CC = cc

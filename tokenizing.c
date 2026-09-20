@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 17:13:55 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/17 15:19:26 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/20 22:16:46 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	create_token_struct(t_token *tokens, char **line)
 	i = 0;
 	while (line[i])
 	{
-		tokens[i].value = normal_copy(line[i]);
+		tokens[i].value = ft_strdup(line[i]);
 		if (!tokens[i].value)
 		{
 			tokens[i].type = -1;

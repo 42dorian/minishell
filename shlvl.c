@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 19:48:57 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/17 22:28:39 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/20 22:16:40 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*extract_value_from_env_list(t_envs **my_list, const char *missing_key)
 	while (curr)
 	{
 		if (string_compare(curr->key, missing_key))
-			return (normal_copy(curr->value));
+			return (ft_strdup(curr->value));
 		curr = curr->next;
 	}
 	return (ft_strdup(""));
@@ -76,7 +76,7 @@ int	put_shlvl_in_env_list(t_envs **my_list)
 	one = allocate_one();
 	if (!one)
 		return (0);
-	literal_shlvl = normal_copy("SHLVL");
+	literal_shlvl = ft_strdup("SHLVL");
 	if (!literal_shlvl)
 		return (free(one), 0);
 	if (in_env_list(my_list, literal_shlvl))

@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/17 22:56:09 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/20 22:12:25 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,29 +30,57 @@ int	create_token_struct_and_remove_quotes(t_token *tokens, char **split_line)
 	return (1);
 }
 
-t_token	*minishell(const char *read_line, t_envs *env_list, int *status)
+t_token	*minishell(char *read_line, t_envs *env_list, int *status)
 {
 	int		i;
 	t_token	*tokens;
+	t_token *final_token_list;
 	char	**split_line;
-	char	*expanded_line;
 
 	i = 0;
 	if (empty_string_and_unclosed_quote_check(read_line, status))
 		return (NULL);
-	expanded_line = handle_expansions(env_list, read_line, status);
-	if (!expanded_line)
-		return (NULL);
-	split_line = split_read_line(expanded_line);
+	split_line = split_read_line(read_line);
 	if (!split_line)
 		return (NULL);
 	tokens = ft_calloc(sizeof(t_token), (len_of_split_line(split_line) + 1));
 	if (!tokens)
 		return (split_clean_up(split_line), NULL);
-	if (!create_token_struct_and_remove_quotes(tokens, split_line))
-		return (NULL);
-	return (tokens);
+	if (!create_token_struct(tokens, split_line))
+		return (split_clean_up(split_line), NULL);
+	split_clean_up(split_line);
+	final_token_list = create_final_token_struct(tokens, env_list, status);
+	if (!final_token_list)
+		return (free_tokens(tokens), NULL);
+	free_tokens(tokens);
+	if (!remove_quotes(final_token_list))
+		return (free_tokens(final_token_list), NULL);
+	return (final_token_list);
 }
+
+// t_token	*minishell(const char *read_line, t_envs *env_list, int *status)
+// {
+// 	int		i;
+// 	t_token	*tokens;
+// 	char	**split_line;
+// 	char	*expanded_line;
+
+// 	i = 0;
+// 	if (empty_string_and_unclosed_quote_check(read_line, status))
+// 		return (NULL);
+// 	expanded_line = handle_expansions(env_list, read_line, status);
+// 	if (!expanded_line)
+// 		return (NULL);
+// 	split_line = split_read_line(expanded_line);
+// 	if (!split_line)
+// 		return (NULL);
+// 	tokens = ft_calloc(sizeof(t_token), (len_of_split_line(split_line) + 1));
+// 	if (!tokens)
+// 		return (split_clean_up(split_line), NULL);
+// 	if (!create_token_struct_and_remove_quotes(tokens, split_line))
+// 		return (NULL);
+// 	return (tokens);
+// }
 
 void	run_commands(t_shell *shell, t_token *tokens)
 {

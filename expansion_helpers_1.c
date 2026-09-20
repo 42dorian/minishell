@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 12:53:31 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/17 21:49:45 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/20 22:16:20 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*get_from_my_env_list(const char *expandable, t_envs env_list)
 	while (env_list.key)
 	{
 		if (string_compare(expandable, env_list.key))
-			return (normal_copy(env_list.value));
+			return (ft_strdup(env_list.value));
 		if (!env_list.next)
 			break ;
 		next_one = env_list.next;

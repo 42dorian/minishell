@@ -56,19 +56,19 @@ t_token	*minishell(const char *read_line, t_envs *env_list, int *status)
 
 void	run_commands(t_shell *shell, t_token *tokens)
 {
-	int should_exec;
+	int syntax_error;
 
-	should_exec = 1;
-	if (syntax_check(tokens, &shell->status) == 1)
+	syntax_error = syntax_check(tokens, &shell->status);
+	if (syntax_error == 2)
 	{
-		should_exec = 0;
-		printf("here?");//error fix here
+		free_tokens(tokens);
+		return ;
 	}
 	shell->cmds = build_cmds(tokens, shell->env_list, shell);
 	free_tokens(tokens);
 	if (!shell->cmds)
 		return ;
-	if (should_exec == 1)
+	if (syntax_error == 0)
 		shell->status = execute_cmds(shell);
 	free_cmds(&shell->cmds);
 }

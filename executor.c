@@ -98,12 +98,12 @@ int	execute_single_cmd(t_shell *shell)
 int	execute_single_built_in(t_shell *shell)
 {
 	shell->saved_stdin = dup(STDIN_FILENO);
-	shell->saved_stdout = dup(STDOUT_FILENO);
 	if (shell->saved_stdin == -1)
 		return (print_error(strerror(errno), "dup", NULL, 2), 1);
-	else if (shell->saved_stdout == -1)
+	shell->saved_stdout = dup(STDOUT_FILENO);
+	if (shell->saved_stdout == -1)
 		return (close(shell->saved_stdin), print_error(strerror(errno), "dup",
-				NULL, 2), 1);
+			NULL, 2), 1);
 	if (change_io(shell->cmds))
 	{
 		restore_io(shell->saved_stdin, shell->saved_stdout);
@@ -143,8 +143,7 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 	int		exit_status;
 
 	exit_status = 0;
-	if (open_redirections(cmds))
-		free_all_and_exit(shell, 1);
+	open_redirections(cmds);
 	check_child_fds(cmds, fd, stored_input, shell);
 	child_redirections(cmds, fd, stored_input);
 	close_inherited_fds(cmds);

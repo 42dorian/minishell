@@ -85,7 +85,7 @@ int	syntax_check(t_token *tokens, int *status)
 	if (preliminary_check(tokens))
 	{
 		*status = 2;
-		return (1);
+		return (2);
 	}
 	while (tokens[i].value)
 	{

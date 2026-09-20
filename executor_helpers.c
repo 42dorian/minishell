@@ -94,9 +94,13 @@ void	close_inherited_fds(t_cmds *cmds)
 	tmp = cmds;
 	while (tmp->prev)
 		tmp = tmp->prev;
-	tmp = tmp->next;
 	while (tmp)
 	{
+		if (tmp == cmds)
+		{
+			tmp = tmp->next;
+			continue;
+		}
 		if (tmp->fd_in != 0 && tmp->fd_in != -1)
 			close(tmp->fd_in);
 		if (tmp->fd_out != 1 && tmp->fd_out != -1)

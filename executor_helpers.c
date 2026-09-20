@@ -99,7 +99,7 @@ void	close_inherited_fds(t_cmds *cmds)
 		if (tmp == cmds)
 		{
 			tmp = tmp->next;
-			continue;
+			continue ;
 		}
 		if (tmp->fd_in != 0 && tmp->fd_in != -1)
 			close(tmp->fd_in);

@@ -56,7 +56,7 @@ t_token	*minishell(const char *read_line, t_envs *env_list, int *status)
 
 void	run_commands(t_shell *shell, t_token *tokens)
 {
-	int syntax_error;
+	int	syntax_error;
 
 	syntax_error = syntax_check(tokens, &shell->status);
 	if (syntax_error == 2)

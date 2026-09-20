@@ -12,49 +12,42 @@
 
 #include "minishell.h"
 
-void add_redir_to_back(t_redirs **list, t_redirs *new_redir)
+int	open_redirections(t_cmds *cmds)
 {
-	t_redirs *tmp;
-	if (!new_redir || !list)
-		return ;
-	if (!*list)
-	{
-		*list = new_redir;
-		return ;
-	}
-	tmp = *list;
-	while(tmp->next)
-		tmp = tmp->next;
-	tmp->next = new_redir;
-}
+	t_redirs	*t;
 
-void free_redirs(t_redirs **redirs)
-{
-	t_redirs *tmp;
-	t_redirs *next_redir;
-
-	if (!redirs || !*redirs)
-		return ;
-	tmp = *redirs;
-	while (tmp)
+	t = cmds->redirs;
+	while (t)
 	{
-		next_redir = tmp->next;
-		if (tmp->filename)
-			free(tmp->filename);
-		free(tmp);
-		tmp = next_redir;
+		if (t->is_out == 0)
+		{
+			if (cmds->fd_in != 0)
+				close(cmds->fd_in);
+			cmds->fd_in = open(t->filename, t->flags);
+			if (cmds->fd_in == -1)
+				return (print_error(strerror(errno), t->filename, NULL, 2), 1);
+		}
+		else
+		{
+			if (cmds->fd_out != 1)
+				close(cmds->fd_out);
+			cmds->fd_out = open(t->filename, t->flags, 0644);
+			if (cmds->fd_out == -1)
+				return (print_error(strerror(errno), t->filename, NULL, 2), 1);
+		}
+		t = t->next;
 	}
-	*redirs = NULL;
+	return (0);
 }
 
 int	handle_in(t_cmds *curr, t_token *tokens, int *i)
 {
-	t_redirs *new_redir;
+	t_redirs	*new_redir;
 
 	new_redir = ft_calloc(1, sizeof(t_redirs));
 	if (!new_redir)
 		return (1);
-	new_redir->filename = ft_strdup(tokens[*i +1].value);
+	new_redir->filename = ft_strdup(tokens[*i + 1].value);
 	if (!new_redir->filename)
 		return (free_redirs(&curr->redirs), free(new_redir), 1);
 	new_redir->flags = O_RDONLY;
@@ -66,7 +59,7 @@ int	handle_in(t_cmds *curr, t_token *tokens, int *i)
 
 int	handle_out(t_cmds *curr, t_token *token, int *i)
 {
-	t_redirs *new_redir;
+	t_redirs	*new_redir;
 
 	new_redir = ft_calloc(1, sizeof(t_redirs));
 	if (!new_redir)

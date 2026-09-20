@@ -14,34 +14,6 @@
 
 static int	execute_single_built_in(t_shell *shell);
 
-int open_redirections(t_cmds *cmds)
-{
-	t_redirs *curr;
-
-	curr = cmds->redirs;
-	while (curr)
-	{
-		if (curr->is_out == 0)
-		{
-			if (cmds->fd_in != 0)
-				close(cmds->fd_in);
-			cmds->fd_in = open(curr->filename, curr->flags);
-			if (cmds->fd_in == -1)
-				return (print_error(strerror(errno), curr->filename, NULL, STDERR_FILENO), 1);
-		}
-		else
-		{
-			if (cmds->fd_out != 1)
-				close(cmds->fd_out);
-			cmds->fd_out = open(curr->filename, curr->flags, 0644);
-			if (cmds->fd_out == -1)
-				return (print_error(strerror(errno), curr->filename, NULL, STDERR_FILENO), 1);
-		}
-		curr = curr->next;
-	}
-	return (0);
-}
-
 int	execute_cmds(t_shell *shell)
 {
 	t_cmds	*curr_cmd;
@@ -103,7 +75,7 @@ int	execute_single_built_in(t_shell *shell)
 	shell->saved_stdout = dup(STDOUT_FILENO);
 	if (shell->saved_stdout == -1)
 		return (close(shell->saved_stdin), print_error(strerror(errno), "dup",
-			NULL, 2), 1);
+				NULL, 2), 1);
 	if (change_io(shell->cmds))
 	{
 		restore_io(shell->saved_stdin, shell->saved_stdout);
@@ -160,7 +132,6 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 			&exit_status);
 	if (!path)
 		free_all_and_exit(shell, exit_status);
-	signal(SIGPIPE, SIG_DFL);
 	execve(path, cmds->cmd, shell->envp);
 	free(path);
 	print_error(strerror(errno), cmds->cmd[0], NULL, 2);

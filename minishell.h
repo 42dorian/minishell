@@ -195,6 +195,8 @@ t_cmds							*build_cmds(t_token *t, t_envs *env,
 int								find_path(char **envp);
 
 int								execute_cmds(t_shell *shell);
+
+int								open_redirections(t_cmds *cmds);
 int								run_cmd(t_cmds *cmd, char **envp, int *status,
 									t_shell *shell);
 void							execute_pipeline(t_shell *shell,

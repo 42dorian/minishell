@@ -21,6 +21,7 @@ SOURCE =	split.c \
 			cmd_list.c \
 			cmd_list_helpers.c \
 			redirections.c \
+			redirections_helpers.c \
 			heredoc.c \
 			heredoc_helpers.c\
 			executor.c \
@@ -56,7 +57,7 @@ SOURCE =	split.c \
 			general_helpers.c
 
 
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 READLINE_FLAG = -lreadline
 
 CC = cc

@@ -50,6 +50,11 @@ int	execute_single_cmd(t_shell *shell)
 		shell->status = 0;
 		return (1);
 	}
+	if (open_redirections(shell->cmds))
+	{
+		shell->status = 1;
+		return (1);
+	}
 	if (shell->cmds->fd_in == -1 || shell->cmds->fd_out == -1)
 	{
 		shell->status = 1;
@@ -65,10 +70,10 @@ int	execute_single_cmd(t_shell *shell)
 int	execute_single_built_in(t_shell *shell)
 {
 	shell->saved_stdin = dup(STDIN_FILENO);
-	shell->saved_stdout = dup(STDOUT_FILENO);
 	if (shell->saved_stdin == -1)
 		return (print_error(strerror(errno), "dup", NULL, 2), 1);
-	else if (shell->saved_stdout == -1)
+	shell->saved_stdout = dup(STDOUT_FILENO);
+	if (shell->saved_stdout == -1)
 		return (close(shell->saved_stdin), print_error(strerror(errno), "dup",
 				NULL, 2), 1);
 	if (change_io(shell->cmds))
@@ -110,6 +115,7 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 	int		exit_status;
 
 	exit_status = 0;
+	open_redirections(cmds);
 	check_child_fds(cmds, fd, stored_input, shell);
 	child_redirections(cmds, fd, stored_input);
 	close_inherited_fds(cmds);
@@ -126,8 +132,8 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 			&exit_status);
 	if (!path)
 		free_all_and_exit(shell, exit_status);
-	signal(SIGPIPE, SIG_DFL);
 	execve(path, cmds->cmd, shell->envp);
+	free(path);
 	print_error(strerror(errno), cmds->cmd[0], NULL, 2);
 	free_all_and_exit(shell, 1);
 }

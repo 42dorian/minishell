@@ -42,11 +42,9 @@ void	print_error(char *msg, char *cmd, char *arg, int fd)
 
 void	free_all_and_exit(t_shell *shell, int status)
 {
-	t_cmds	*tmp_cmd;
 	t_envs	*tmp_env;
 
 	tmp_env = shell->env_list;
-	tmp_cmd = shell->cmds;
 	if (shell->envp)
 	{
 		free_split(shell->envp);

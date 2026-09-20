@@ -32,12 +32,10 @@ int	create_token_struct_and_remove_quotes(t_token *tokens, char **split_line)
 
 t_token	*minishell(char *read_line, t_envs *env_list, int *status)
 {
-	int		i;
 	t_token	*tokens;
 	t_token *final_token_list;
 	char	**split_line;
 
-	i = 0;
 	if (empty_string_and_unclosed_quote_check(read_line, status))
 		return (NULL);
 	split_line = split_read_line(read_line);

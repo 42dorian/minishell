@@ -53,7 +53,7 @@ char    **split_token(char *line, t_envs *env_list, int *exit_code)
 {
     char *expanded_line;
     char **split_expanded;
-    
+
     expanded_line = handle_expansions(env_list, line, exit_code);
     if (!expanded_line)
         return (NULL);
@@ -99,9 +99,7 @@ t_token *create_final_token_struct(t_token *tokens, t_envs *env_list, int *exit_
     int     local_index;
     char    **expanded_split;
     t_token *final_token_list;
-    int i;
 
-    i = 0;
     prev_index = 0;
     local_index = 0;
     final_token_list = ft_calloc(sizeof(t_token), get_len_of_total_token_struct(tokens, env_list, exit_code) + 1);

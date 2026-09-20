@@ -117,12 +117,12 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 	exit_status = 0;
 	open_redirections(cmds);
 	check_child_fds(cmds, fd, stored_input, shell);
-	child_redirections(cmds, fd, stored_input);
+	child_redirections(cmds, fd, stored_input, shell);
 	close_inherited_fds(cmds);
 	if (cmds->fd_in == -1 || cmds->fd_out == -1)
 		free_all_and_exit(shell, 1);
 	if (!cmds->cmd || !cmds->cmd[0])
-		free_all_and_exit(shell, shell->status);
+		free_all_and_exit(shell, 0);
 	if (is_built_in(cmds->cmd[0]))
 	{
 		exit_status = run_built_in(cmds, shell->env_list, shell);

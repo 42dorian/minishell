@@ -36,9 +36,7 @@ void	make_expansion(char *fully_expnaded, const char *mock_expand,
 		t_envs *env_list, int *exit_code)
 {
 	char	*test_env;
-	int		env_index;
 
-	env_index = 0;
 	test_env = NULL;
 	test_env = get_from_my_env_list(mock_expand, *env_list);
 	if (string_compare(mock_expand, "?"))

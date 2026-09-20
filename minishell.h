@@ -205,9 +205,9 @@ int								fork_pipe(t_cmds *cmds, int *fd,
 int								execute_single_cmd(t_shell *shell);
 int								change_io(t_cmds *cmds);
 void							child_redirections(t_cmds *cmds, int *fd,
-									int stored_input);
+									int stored_input, t_shell *sh);
 void							close_inherited_fds(t_cmds *cmds);
-void							safe_dup2(t_cmds *cmd, int oldfd, int newfd);
+void							safe_dup2(t_cmds *cmd, int oldfd, int newfd, t_shell *shell);
 void							run_child(t_cmds *cmds, int *fd,
 									int stored_input, t_shell *shell);
 

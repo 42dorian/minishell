@@ -72,11 +72,9 @@ char	*get_full_expandable_word(const char *read_line, t_envs *env_list,
 char	*handle_expansions(t_envs *env_list, const char *read_line,
 		int *exit_code)
 {
-	int		i;
 	int		len;
 	char	*new_word;
 
-	i = 0;
 	if (!dollar_in_word(read_line))
 		return (ft_strdup(read_line));
 	len = get_full_len_of_expandable(read_line, env_list, exit_code);

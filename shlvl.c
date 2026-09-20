@@ -89,5 +89,5 @@ int	put_shlvl_in_env_list(t_envs **my_list)
 	}
 	else if (!update_or_add(my_list, one, literal_shlvl))
 		return (1);
-	return (0);
+	return (free(one), 0);
 }

@@ -45,14 +45,14 @@ int	execute_cmds(t_shell *shell)
 
 int	execute_single_cmd(t_shell *shell)
 {
-	if (!shell->cmds->cmd)
-	{
-		shell->status = 0;
-		return (1);
-	}
 	if (open_redirections(shell->cmds))
 	{
 		shell->status = 1;
+		return (1);
+	}
+	if (!shell->cmds->cmd)
+	{
+		shell->status = 0;
 		return (1);
 	}
 	if (shell->cmds->fd_in == -1 || shell->cmds->fd_out == -1)
@@ -114,7 +114,6 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 	char	*path;
 	int		exit_status;
 
-	exit_status = 0;
 	open_redirections(cmds);
 	check_child_fds(cmds, fd, stored_input, shell);
 	child_redirections(cmds, fd, stored_input, shell);
@@ -132,6 +131,7 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 			&exit_status);
 	if (!path)
 		free_all_and_exit(shell, exit_status);
+	signal(SIGPIPE, SIG_DFL);
 	execve(path, cmds->cmd, shell->envp);
 	free(path);
 	print_error(strerror(errno), cmds->cmd[0], NULL, 2);

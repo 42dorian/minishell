@@ -25,6 +25,8 @@ static void	fill_quoted_heredoc(int write_fd, const char *eof)
 		rl_event_hook = event_hook;
 		line = readline("> ");
 		rl_event_hook = NULL;
+		if (g_signal == 42)
+			return;
 		if (!line)
 		{
 			print_heredoc_warning(eof);
@@ -50,6 +52,8 @@ static void	fill_unqoted_heredoc(int write_fd, const char *eof, t_envs *env)
 		rl_event_hook = event_hook;
 		line = readline("> ");
 		rl_event_hook = NULL;
+		if (g_signal == 42)
+			return;
 		if (!line)
 		{
 			print_heredoc_warning(eof);
@@ -61,10 +65,9 @@ static void	fill_unqoted_heredoc(int write_fd, const char *eof, t_envs *env)
 			break ;
 		}
 		line_expanded = expanded_line(line, env);
-		if (!line_expanded)
-			return (free(line));
 		ft_putendl_fd(line_expanded, write_fd);
-		return (free(line), free(line_expanded));
+		free(line);
+		free(line_expanded);
 	}
 }
 
@@ -81,8 +84,11 @@ int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_shell *shell)
 		fill_unqoted_heredoc(fd[1], token[*i + 1].value, shell->env_list);
 	close(fd[1]);
 	init_interactive_signals();
-	if (g_signal == 130)
+	if (g_signal == 42)
+	{
+		g_signal = SIGINT;
 		return (close(fd[0]), 130);
+	}
 	if (curr->fd_in != 0)
 		close(curr->fd_in);
 	curr->fd_in = fd[0];

@@ -37,11 +37,12 @@ char	*expanded_line(char *line, t_envs *env)
 
 int	event_hook(void)
 {
-	if (g_signal == 130)
+	if (g_signal == SIGINT)
 	{
 		rl_replace_line("", 0);
 		rl_redisplay();
 		rl_done = 1;
+		g_signal = 42;
 		return (1);
 	}
 	return (0);

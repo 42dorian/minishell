@@ -15,5 +15,5 @@
 void	heredoc_sigint(int sig)
 {
 	(void)sig;
-	g_signal = 130;
+	g_signal = sig;
 }

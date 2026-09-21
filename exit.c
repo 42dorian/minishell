@@ -37,7 +37,8 @@ int	exit_bi(t_cmds *cmd, t_shell *shell)
 		return (1);
 	}
 	exit_code = ft_atoll(cmd->cmd[1]);
-	return (free_all_and_exit(shell, (unsigned char)exit_code), (unsigned char)exit_code);
+	free_all_and_exit(shell, (unsigned char)exit_code);
+	return ((unsigned char)exit_code);
 }
 
 static long long	ft_atoll(char *nptr)

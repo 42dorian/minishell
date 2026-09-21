@@ -39,13 +39,13 @@ SRC = ft_atoi.c \
 		list_helpers.c \
 		list_general.c
 
+HEADER = libft.h
 OBJ = $(SRC:.c=.o)
 CFLAGS = -Wall -Wextra -Werror
 CREATION = ar -rc
 
 all: $(NAME)
-
-$(NAME): $(OBJ)
+$(NAME): $(OBJ) libft.h
 	@$(CREATION) $(NAME) $(OBJ)
 
 fclean: clean

@@ -36,7 +36,6 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
-# include <sys/ioctl.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
 
@@ -362,4 +361,5 @@ int								add_to_final_struct(t_token *full_token, int *i,
 int								cp_t_node(t_token *new_token, t_token old_token,
 									int *local_i);
 
+char	*create_set(void);
 #endif

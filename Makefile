@@ -58,7 +58,7 @@ SOURCE =	split.c \
 			change_dir.c \
 			general_helpers.c
 
-
+HEADER = minishell.h
 CFLAGS = -Wall -Wextra -Werror -g
 READLINE_FLAG = -lreadline
 
@@ -66,12 +66,13 @@ CC = cc
 
 LIBFT_DIR = libft
 LIBFT = ${LIBFT_DIR}/libft.a
+LIBFT_HEADER = ${LIBFT_DIR}/libft.h
 
 OBJECTS = $(SOURCE:%.c=$(OBJDIR)/%.o)
 
 all: $(NAME)
 
-$(OBJDIR)/%.o: %.c
+$(OBJDIR)/%.o: %.c $(HEADER) $(LIBFT_HEADER)
 	@mkdir -p $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 

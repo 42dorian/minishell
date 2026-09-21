@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 14:02:51 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/21 15:40:19 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 17:27:45 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	fill_up_double_pointer(char **split_line, const char *read_line)
 	{
 		split_line[w++] = ft_strdup("");
 		if (!split_line[w - 1])
-			return (0);
+			return (split_clean_up(split_line), 0);
 	}
 	while (read_line[i])
 	{
@@ -67,6 +67,8 @@ char	**split_read_line(char *read_line)
 {
 	char	**split_line;
 
+	if (!read_line)
+		return (NULL);
 	split_line = allocating_double_pointer(read_line);
 	if (!split_line)
 		return (NULL);

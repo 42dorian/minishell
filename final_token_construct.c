@@ -6,82 +6,11 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 20:10:30 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/21 14:15:55 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 18:49:31 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	get_len_of_total_token_struct(t_token *initial_tokens, t_envs *env_list,
-		int *exit_code)
-{
-	int		i;
-	int		len;
-	int		struct_size;
-	char	*expanded_token;
-	char	**split_token;
-
-	i = 0;
-	len = 0;
-	struct_size = token_list_size(initial_tokens);
-	while (i < struct_size)
-	{
-		if (dollar_in_word(initial_tokens[i].value))
-		{
-			expanded_token = handle_expansions(env_list,
-					initial_tokens[i].value, exit_code);
-			if (!expanded_token)
-				return (-1);
-			split_token = split_read_line(expanded_token);
-			if (!split_token)
-				return (free(expanded_token), -1);
-			len += len_of_split_line(split_token);
-			free(expanded_token);
-			split_clean_up(split_token);
-		}
-		else
-			len++;
-		i++;
-	}
-	return (len);
-}
-
-char	**split_token(char *line, t_envs *env_list, int *exit_code)
-{
-	char	*expanded_line;
-	char	**split_expanded;
-
-	expanded_line = handle_expansions(env_list, line, exit_code);
-	if (!expanded_line)
-		return (NULL);
-	split_expanded = split_read_line(expanded_line);
-	if (!split_expanded)
-		return (free(expanded_line), NULL);
-	return (free(expanded_line), split_expanded);
-}
-
-int	add_to_final_struct(t_token *full_token, int *i, char **expanded_split)
-{
-	int	split_len;
-	int	split_index;
-	int	counter;
-
-	split_index = 0;
-	counter = 0;
-	split_len = len_of_split_line(expanded_split);
-	while (counter < split_len)
-	{
-		full_token[*i].value = ft_strdup(expanded_split[split_index]);
-		if (!full_token[*i].value)
-			return (0);
-		full_token[*i].type = token_word;
-		full_token[*i].quoted = 0;
-		(*i)++;
-		split_index++;
-		counter++;
-	}
-	return (1);
-}
 
 void	add_last_node_to_final_token_list(t_token *final_token)
 {
@@ -91,44 +20,63 @@ void	add_last_node_to_final_token_list(t_token *final_token)
 	final_token->type = token_invalid;
 }
 
+t_token	*alloc_for_final_token_struct(t_token *initial_token_list,
+		t_envs *env_list, int *exit_code)
+{
+	t_token	*final_token_list;
+	int		struct_len;
+	int		total_len;
+
+	struct_len = token_list_size(initial_token_list);
+	total_len = get_len_of_total_token_struct(initial_token_list, env_list,
+			exit_code, struct_len);
+	if (total_len == -1)
+		return (NULL);
+	final_token_list = ft_calloc(sizeof(t_token), total_len + 1);
+	if (!final_token_list)
+		return (NULL);
+	return (final_token_list);
+}
+
+void	set_prev_and_local_index_to_zero(int *prev_index, int *local_index)
+{
+	*prev_index = 0;
+	*local_index = 0;
+}
+
+int	can_expand(char *word, int expandable)
+{
+	if (dollar_in_word(word) && expandable)
+		return (1);
+	return (0);
+}
+
 t_token	*create_final_token_struct(t_token *tokens, t_envs *env_list,
 		int *exit_code)
 {
-	int		prev_index;
-	int		local_index;
-	char	**expanded_split;
-	t_token	*final_token_list;
-	int		len;
+	int		prev_i;
+	int		local_i;
+	char	**exp_split;
+	t_token	*new_token;
 
-	prev_index = 0;
-	local_index = 0;
-	len = get_len_of_total_token_struct(tokens, env_list, exit_code);
-	if (len == -1)
+	set_prev_and_local_index_to_zero(&prev_i, &local_i);
+	new_token = alloc_for_final_token_struct(tokens, env_list, exit_code);
+	if (!new_token)
 		return (NULL);
-	final_token_list = ft_calloc(sizeof(t_token), len + 1);
-	if (!final_token_list)
-		return (0);
-	while (tokens[prev_index].type != token_invalid)
+	while (tokens[prev_i].type != token_invalid)
 	{
-		if (dollar_in_word(tokens[prev_index].value)
-			&& tokens[prev_index].expandable)
+		if (can_expand(tokens[prev_i].value, tokens[prev_i].expandable))
 		{
-			expanded_split = split_token(tokens[prev_index].value, env_list,
-					exit_code);
-			if (!expanded_split)
+			exp_split = split_token(tokens[prev_i].value, env_list, exit_code);
+			if (!exp_split)
 				return (NULL);
-			if (!add_to_final_struct(final_token_list, &local_index,
-					expanded_split))
-				return (split_clean_up(expanded_split), NULL);
-			split_clean_up(expanded_split);
+			if (!add_to_final_struct(new_token, &local_i, exp_split))
+				return (split_clean_up(exp_split), NULL);
+			split_clean_up(exp_split);
 		}
-		else if (!copy_token_node(&final_token_list[local_index],
-				tokens[prev_index]))
+		else if (!cp_t_node(&new_token[local_i], tokens[prev_i], &local_i))
 			return (NULL);
-		else
-			local_index++;
-		prev_index++;
+		prev_i++;
 	}
-	add_last_node_to_final_token_list(&final_token_list[local_index]);
-	return (final_token_list);
+	return (add_last_node_to_final_token_list(&new_token[local_i]), new_token);
 }

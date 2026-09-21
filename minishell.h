@@ -173,8 +173,7 @@ t_cmds							*new_cmd(void);
 int								add_arg_to_cmd(t_cmds *node, const char *arg);
 
 int								process_token(t_cmds **cur, t_token *t, int *i,
-									t_envs *env);
-
+									t_shell *shell);
 int								handle_in(t_cmds *curr, t_token *tokens,
 									int *i);
 int								handle_out(t_cmds *curr, t_token *tokens,
@@ -182,10 +181,9 @@ int								handle_out(t_cmds *curr, t_token *tokens,
 int								handle_pipe(t_cmds **curr);
 
 int								handle_heredoc(t_cmds *curr, t_token *token,
-									int *i, t_envs *env);
+									int *i, t_shell *shell);
 
-t_cmds							*build_cmds(t_token *t, t_envs *env,
-									t_shell *shell);
+t_cmds							*build_cmds(t_token *t, t_shell *shell);
 int								find_path(char **envp);
 
 int								execute_cmds(t_shell *shell);
@@ -206,9 +204,9 @@ int								fork_pipe(t_cmds *cmds, int *fd,
 int								execute_single_cmd(t_shell *shell);
 int								change_io(t_cmds *cmds);
 void							child_redirections(t_cmds *cmds, int *fd,
-									int stored_input);
+									int stored_input, t_shell *sh);
 void							close_inherited_fds(t_cmds *cmds);
-void							safe_dup2(t_cmds *cmd, int oldfd, int newfd);
+void							safe_dup2(t_cmds *cmd, int oldfd, int newfd, t_shell *shell);
 void							run_child(t_cmds *cmds, int *fd,
 									int stored_input, t_shell *shell);
 
@@ -326,7 +324,7 @@ void							add_redir_to_back(t_redirs **list,
 void							free_redirs(t_redirs **redirs);
 int								get_len_of_total_token_struct(t_token *initial_tokens,
 									t_envs *env_list, int *exit_code);
-int								copy_token_node(t_token *new, t_token old);
+int								copy_token_node(t_token *new_token, t_token old);
 char							**split_token(char *line, t_envs *env_list,
 									int *exit_code);
 int								add_to_final_struct(t_token *full_token, int *i,

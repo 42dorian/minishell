@@ -21,7 +21,7 @@ int	how_many_digits(int *number)
 	local_num = *number;
 	if (*number == 0)
 		return (1);
-	if (number < 0)
+	if (*number < 0)
 		digits++;
 	while (local_num > 0)
 	{

@@ -89,7 +89,7 @@ void	run_commands(t_shell *shell, t_token *tokens)
 		free_tokens(tokens);
 		return ;
 	}
-	shell->cmds = build_cmds(tokens, shell->env_list, shell);
+	shell->cmds = build_cmds(tokens, shell);
 	free_tokens(tokens);
 	if (!shell->cmds)
 		return ;

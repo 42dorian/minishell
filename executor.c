@@ -123,7 +123,7 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 		free_all_and_exit(shell, 1);
 	if (!cmds->cmd || !cmds->cmd[0])
 		free_all_and_exit(shell, 0);
-	if (is_built_in(cmds->cmd[0]))
+	if (cmds->cmd && is_built_in(cmds->cmd[0]))
 	{
 		exit_status = run_built_in(cmds, shell->env_list, shell);
 		free_all_and_exit(shell, exit_status);

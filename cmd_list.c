@@ -14,7 +14,7 @@
 
 static int	err_check(int value, t_shell *shell);
 
-t_cmds	*build_cmds(t_token *t, t_envs *env, t_shell *shell)
+t_cmds	*build_cmds(t_token *t, t_shell *shell)
 {
 	t_cmds	*head;
 	t_cmds	*curr;
@@ -29,7 +29,7 @@ t_cmds	*build_cmds(t_token *t, t_envs *env, t_shell *shell)
 	{
 		if (t[i].type == token_word && !add_arg_to_cmd(curr, t[i].value))
 			return (free_cmds(&head), NULL);
-		if (err_check(process_token(&curr, t, &i, env), shell))
+		if (err_check(process_token(&curr, t, &i, shell), shell))
 			return (free_cmds(&head), NULL);
 	}
 	return (head);
@@ -48,14 +48,14 @@ static int	err_check(int value, t_shell *shell)
 	return (0);
 }
 
-int	process_token(t_cmds **curr, t_token *t, int *i, t_envs *env)
+int	process_token(t_cmds **curr, t_token *t, int *i, t_shell *shell)
 {
 	int	status;
 
 	status = 0;
 	if (t[*i].type == token_heredoc)
 	{
-		status = handle_heredoc(*curr, t, i, env);
+		status = handle_heredoc(*curr, t, i, shell);
 		(*i)++;
 	}
 	else if (t[*i].type == token_redirect_in)

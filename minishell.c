@@ -33,7 +33,7 @@ int	create_token_struct_and_remove_quotes(t_token *tokens, char **split_line)
 t_token	*minishell(char *read_line, t_envs *env_list, int *status)
 {
 	t_token	*tokens;
-	t_token *final_token_list;
+	t_token	*final_token_list;
 	char	**split_line;
 
 	if (empty_string_and_unclosed_quote_check(read_line, status))
@@ -90,7 +90,7 @@ void	run_commands(t_shell *shell, t_token *tokens)
 		free_tokens(tokens);
 		return ;
 	}
-	shell->cmds = build_cmds(tokens, shell->env_list, shell);
+	shell->cmds = build_cmds(tokens, shell);
 	free_tokens(tokens);
 	if (!shell->cmds)
 		return ;

@@ -29,6 +29,8 @@ char	*expanded_line(char *line, t_envs *env)
 
 	exit_code = 0;
 	len = get_full_len_of_expandable(line, env, &exit_code);
+	if (len == -1)
+		return (NULL);
 	expanded = get_full_expandable_word(line, env, len, &exit_code);
 	return (expanded);
 }

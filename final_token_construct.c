@@ -39,13 +39,13 @@ int get_len_of_total_token_struct(t_token *initial_tokens, t_envs *env_list, int
     return (len);
 }
 
-int copy_token_node(t_token *new, t_token old)
+int copy_token_node(t_token *new_token, t_token old)
 {
-    new->value = ft_strdup(old.value);
-    if (!new->value)
+    new_token->value = ft_strdup(old.value);
+    if (!new_token->value)
         return (0);
-    new->type = old.type;
-    new->quoted = 0;
+    new_token->type = old.type;
+    new_token->quoted = 0;
     return (1);
 }
 

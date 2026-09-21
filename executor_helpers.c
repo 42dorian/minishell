@@ -16,7 +16,10 @@ void	safe_dup2(t_cmds *cmd, int oldfd, int newfd, t_shell *shell)
 {
 	if (dup2(oldfd, newfd) == -1)
 	{
-		print_error(strerror(errno), cmd->cmd[0], NULL, STDERR_FILENO);
+		if (!cmd ||!cmd->cmd || !cmd->cmd[0])
+			print_error(strerror(errno), "dup2", NULL, STDERR_FILENO);
+		else
+			print_error(strerror(errno), cmd->cmd[0], NULL, STDERR_FILENO);
 		free_all_and_exit(shell, 1);
 	}
 }

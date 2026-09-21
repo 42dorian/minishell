@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 20:10:30 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/21 13:27:15 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 14:15:55 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ int	get_len_of_total_token_struct(t_token *initial_tokens, t_envs *env_list,
 		{
 			expanded_token = handle_expansions(env_list,
 					initial_tokens[i].value, exit_code);
+			if (!expanded_token)
+				return (-1);
 			split_token = split_read_line(expanded_token);
 			if (!split_token)
 				return (free(expanded_token), -1);
@@ -114,16 +116,15 @@ t_token	*create_final_token_struct(t_token *tokens, t_envs *env_list,
 			expanded_split = split_token(tokens[prev_index].value, env_list,
 					exit_code);
 			if (!expanded_split)
-				return (free_tokens(final_token_list), NULL);
+				return (NULL);
 			if (!add_to_final_struct(final_token_list, &local_index,
 					expanded_split))
-				return (split_clean_up(expanded_split),
-					free_tokens(final_token_list), NULL);
+				return (split_clean_up(expanded_split), NULL);
 			split_clean_up(expanded_split);
 		}
 		else if (!copy_token_node(&final_token_list[local_index],
 				tokens[prev_index]))
-			return (free_tokens(final_token_list), NULL);
+			return (NULL);
 		else
 			local_index++;
 		prev_index++;

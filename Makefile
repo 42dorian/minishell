@@ -41,6 +41,7 @@ SOURCE =	split.c \
 			letter_checkers_4.c \
 			preliminary_checkers.c \
 			empty_string_and_quote_checker.c \
+			final_token_construct_helpers.c \
 			final_token_construct.c \
 			signals.c \
 			shlvl.c \

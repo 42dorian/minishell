@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:40:55 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/21 13:16:39 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 18:49:59 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,14 @@ int	copy_token_node(t_token *new_token, t_token old)
 		return (0);
 	new_token->type = old.type;
 	new_token->quoted = 0;
+	return (1);
+}
+
+int	cp_t_node(t_token *new_token, t_token old_token, int *local_i)
+{
+	if (!copy_token_node(new_token, old_token))
+		return (0);
+	else
+		(*local_i)++;
 	return (1);
 }

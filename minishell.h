@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 13:20:37 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/21 13:25:34 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 18:51:37 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,8 @@ int								change_io(t_cmds *cmds);
 void							child_redirections(t_cmds *cmds, int *fd,
 									int stored_input, t_shell *sh);
 void							close_inherited_fds(t_cmds *cmds);
-void							safe_dup2(t_cmds *cmd, int oldfd, int newfd, t_shell *shell);
+void							safe_dup2(t_cmds *cmd, int oldfd, int newfd,
+									t_shell *shell);
 void							run_child(t_cmds *cmds, int *fd,
 									int stored_input, t_shell *shell);
 
@@ -323,8 +324,10 @@ void							add_redir_to_back(t_redirs **list,
 									t_redirs *new_redir);
 void							free_redirs(t_redirs **redirs);
 int								get_len_of_total_token_struct(t_token *initial_tokens,
-									t_envs *env_list, int *exit_code);
-int								copy_token_node(t_token *new_token, t_token old);
+									t_envs *env_list, int *exit_code,
+									int struct_len);
+int								copy_token_node(t_token *new_token,
+									t_token old);
 char							**split_token(char *line, t_envs *env_list,
 									int *exit_code);
 int								add_to_final_struct(t_token *full_token, int *i,
@@ -333,4 +336,15 @@ void							add_last_node_to_final_token_list(t_token *final_token);
 t_token							*create_final_token_struct(t_token *tokens,
 									t_envs *env_list, int *exit_code);
 int								event_hook(void);
+int								check_if_need_free(char *exp_token);
+int								get_len_of_total_token_struct(t_token *tokens,
+									t_envs *env_list, int *exit_code,
+									int struct_len);
+char							**split_token(char *line, t_envs *env_list,
+									int *exit_code);
+int								add_to_final_struct(t_token *full_token, int *i,
+									char **expanded_split);
+int								cp_t_node(t_token *new_token, t_token old_token,
+									int *local_i);
+
 #endif

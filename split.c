@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 14:02:51 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/21 14:15:36 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 15:25:44 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ char	**allocating_double_pointer(const char *read_line)
 	char	**split_line;
 
 	words = word_counter(read_line);
-	if (words == 0)
-		return (NULL);
 	split_line = malloc(sizeof(char *) * (words + 1));
 	return (split_line);
 }

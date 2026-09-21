@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 17:13:55 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/21 12:54:51 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 19:32:10 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,10 @@ int	add_first_node_to_initial_token_struct(t_token *tokens, char **line)
 int	create_token_struct(t_token *tokens, char **line)
 {
 	int	i;
+	int	len;
 
 	i = 1;
+	len = len_of_split_line(line);
 	if (add_first_node_to_initial_token_struct(tokens, line))
 		return (0);
 	while (line[i])

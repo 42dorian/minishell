@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 17:02:03 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/21 17:15:41 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 19:31:22 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,11 @@ int	is_empty_string(const char *read_line)
 		return (0);
 }
 
-int	empty_string_and_unclosed_quote_check(const char *read_line, int *status)
+int	empty_string_and_unclosed_quote_check(char *read_line, int *status)
 {
 	if (is_empty_string(read_line))
-		return (1);
+		return (free(read_line), 1);
 	if (loop_for_unclosed_quotes(read_line))
-		return (display_unclosed_quote_error_message(status));
+		return (free(read_line), display_unclosed_quote_error_message(status));
 	return (0);
 }

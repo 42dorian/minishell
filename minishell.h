@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 13:20:37 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/21 18:51:37 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 19:31:30 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,7 +294,7 @@ void							set_quote_type(int *quote_type,
 									const char letter);
 char							*copy_till_next_word(const char *read_line,
 									int *i);
-int								empty_string_and_unclosed_quote_check(const char *read_line,
+int								empty_string_and_unclosed_quote_check(char *read_line,
 									int *status);
 void							clean_up_tokens_and_split_line(t_token *tokens,
 									char **split_line);

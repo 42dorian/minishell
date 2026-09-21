@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/21 18:39:41 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 19:32:50 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,24 +30,6 @@ int	create_token_struct_and_remove_quotes(t_token *tokens, char **split_line)
 	return (1);
 }
 
-char	*create_set(void)
-{
-	char	*set;
-	int		i;
-	int		chars;
-
-	chars = 8;
-	i = 0;
-	set = malloc(8);
-	if (!set)
-		return (NULL);
-	while (chars < 14)
-		set[i++] = chars++;
-	set[i++] = 32;
-	set[i] = 0;
-	return (set);
-}
-
 t_token	*minishell(char *read_line, t_envs *env_list, int *status)
 {
 	t_token	*tokens;
@@ -55,8 +37,7 @@ t_token	*minishell(char *read_line, t_envs *env_list, int *status)
 	char	**split_line;
 	char	*trimmed_read_line;
 
-	if (empty_string_and_unclosed_quote_check(read_line, status))
-		return (NULL);
+	tokens = NULL;
 	trimmed_read_line = ft_strtrim(read_line, create_set());
 	if (!trimmed_read_line)
 		return (NULL);
@@ -73,10 +54,9 @@ t_token	*minishell(char *read_line, t_envs *env_list, int *status)
 	final_token_list = create_final_token_struct(tokens, env_list, status);
 	if (!final_token_list)
 		return (free_tokens(tokens), NULL);
-	free_tokens(tokens);
 	if (!remove_quotes(final_token_list))
 		return (free_tokens(final_token_list), NULL);
-	return (final_token_list);
+	return (free_tokens(tokens), final_token_list);
 }
 
 void	run_commands(t_shell *shell, t_token *tokens)
@@ -114,6 +94,8 @@ void	main_loop(t_shell *shell, t_token *tokens)
 			shell->status = 128 + WTERMSIG(g_signal);
 			g_signal = 0;
 		}
+		if (empty_string_and_unclosed_quote_check(line, &shell->status))
+			continue ;
 		tokens = minishell(line, shell->env_list, &shell->status);
 		free(line);
 		if (tokens)

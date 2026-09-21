@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:40:55 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/21 18:49:59 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 19:33:03 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,22 @@ int	cp_t_node(t_token *new_token, t_token old_token, int *local_i)
 	else
 		(*local_i)++;
 	return (1);
+}
+
+char	*create_set(void)
+{
+	char	*set;
+	int		i;
+	int		chars;
+
+	chars = 8;
+	i = 0;
+	set = malloc(8);
+	if (!set)
+		return (NULL);
+	while (chars < 14)
+		set[i++] = chars++;
+	set[i++] = 32;
+	set[i] = 0;
+	return (set);
 }

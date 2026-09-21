@@ -26,7 +26,7 @@ static void	fill_quoted_heredoc(int write_fd, const char *eof)
 		line = readline("> ");
 		rl_event_hook = NULL;
 		if (g_signal == 42)
-			return;
+			return ;
 		if (!line)
 		{
 			print_heredoc_warning(eof);
@@ -53,7 +53,7 @@ static void	fill_unqoted_heredoc(int write_fd, const char *eof, t_envs *env)
 		line = readline("> ");
 		rl_event_hook = NULL;
 		if (g_signal == 42)
-			return;
+			return ;
 		if (!line)
 		{
 			print_heredoc_warning(eof);

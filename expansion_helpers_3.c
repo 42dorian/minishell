@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 17:14:52 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/17 21:49:20 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 15:23:14 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,10 @@ int	check_res_of_curr_len_and_increment_accordingly(int *curr_len,
 	if (*curr_len == -1)
 		return (1);
 	else if (*curr_len == 0)
-	{
 		(*total_len)++;
-		(*i)++;
-	}
 	else
-	{
 		*total_len += *curr_len;
-		move_index_and_set_curr_len_to_zero(read_line, i, curr_len);
-	}
+	move_index_and_set_curr_len_to_zero(read_line, i, curr_len);
 	return (0);
 }
 

@@ -12,12 +12,15 @@
 
 #include "minishell.h"
 
-void	safe_dup2(t_cmds *cmd, int oldfd, int newfd)
+void	safe_dup2(t_cmds *cmd, int oldfd, int newfd, t_shell *shell)
 {
 	if (dup2(oldfd, newfd) == -1)
 	{
-		print_error(strerror(errno), cmd->cmd[0], NULL, STDERR_FILENO);
-		exit(1);
+		if (!cmd ||!cmd->cmd || !cmd->cmd[0])
+			print_error(strerror(errno), "dup2", NULL, STDERR_FILENO);
+		else
+			print_error(strerror(errno), cmd->cmd[0], NULL, STDERR_FILENO);
+		free_all_and_exit(shell, 1);
 	}
 }
 
@@ -60,27 +63,27 @@ void	wait_pids(t_cmds *cmds, int *status)
 	}
 }
 
-void	child_redirections(t_cmds *cmds, int *fd, int stored_input)
+void	child_redirections(t_cmds *cmds, int *fd, int stored_input, t_shell *sh)
 {
 	if (stored_input != -1)
 	{
-		safe_dup2(cmds, stored_input, STDIN_FILENO);
+		safe_dup2(cmds, stored_input, STDIN_FILENO, sh);
 		close(stored_input);
 	}
 	if (cmds->next)
 	{
-		safe_dup2(cmds, fd[1], STDOUT_FILENO);
+		safe_dup2(cmds, fd[1], STDOUT_FILENO, sh);
 		close(fd[0]);
 		close(fd[1]);
 	}
 	if (cmds->fd_in > 0)
 	{
-		safe_dup2(cmds, cmds->fd_in, STDIN_FILENO);
+		safe_dup2(cmds, cmds->fd_in, STDIN_FILENO, sh);
 		close(cmds->fd_in);
 	}
 	if (cmds->fd_out > 1)
 	{
-		safe_dup2(cmds, cmds->fd_out, STDOUT_FILENO);
+		safe_dup2(cmds, cmds->fd_out, STDOUT_FILENO, sh);
 		close(cmds->fd_out);
 	}
 }

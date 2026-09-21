@@ -16,7 +16,7 @@ void	heredoc_sigint(int sig)
 {
 	(void)sig;
 	g_signal = 130;
-	ioctl(STDIN_FILENO, TIOCSTI, "\n");
-	rl_replace_line("", 0);
+	write(1, "\n", 1);
 	rl_on_new_line();
+	close(STDIN_FILENO);
 }

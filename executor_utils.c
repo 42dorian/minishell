@@ -41,12 +41,12 @@ void	exec_child_process(t_cmds *cmd, char *path, char **envp, t_shell *shell)
 	init_execution_signals();
 	if (cmd->fd_in != 0)
 	{
-		safe_dup2(cmd, cmd->fd_in, STDIN_FILENO);
+		safe_dup2(cmd, cmd->fd_in, STDIN_FILENO, shell);
 		close(cmd->fd_in);
 	}
 	if (cmd->fd_out != 1)
 	{
-		safe_dup2(cmd, cmd->fd_out, STDOUT_FILENO);
+		safe_dup2(cmd, cmd->fd_out, STDOUT_FILENO, shell);
 		close(cmd->fd_out);
 	}
 	execve(path, cmd->cmd, envp);
@@ -74,7 +74,7 @@ void	check_child_fds(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 		close(fd[1]);
 	}
 	close_inherited_fds(cmds);
-	free_all_and_exit(shell, shell->status);
+	free_all_and_exit(shell, exit_code);
 }
 
 int	fork_pipe(t_cmds *cmds, int *fd, int *stored_input, t_shell *shell)

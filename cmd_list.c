@@ -27,6 +27,8 @@ t_cmds	*build_cmds(t_token *t, t_shell *shell)
 	head = curr;
 	while (t[++i].value != NULL)
 	{
+		if (*t[i].value == '\0' && !t[i].quoted)
+			continue ;
 		if (t[i].type == token_word && !add_arg_to_cmd(curr, t[i].value))
 			return (free_cmds(&head), NULL);
 		if (err_check(process_token(&curr, t, &i, shell), shell))

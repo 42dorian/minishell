@@ -114,7 +114,7 @@ static void	print_status(int status, char *cmd)
 			print_error("command not found", cmd, NULL, 2);
 	}
 	else if (status == 1)
-		print_error("is a directory", cmd, NULL, 2);
+		print_error("Is a directory", cmd, NULL, 2);
 	else if (status == 2)
 		print_error("Permission denied", cmd, NULL, 2);
 }

@@ -72,7 +72,7 @@ void	run_commands(t_shell *shell, t_token *tokens)
 	shell->cmds = build_cmds(tokens, shell);
 	free_tokens(tokens);
 	if (!shell->cmds)
-		return ;
+		return  ;
 	if (syntax_error == 0)
 		shell->status = execute_cmds(shell);
 	free_cmds(&shell->cmds);

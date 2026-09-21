@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/05 17:36:01 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/17 20:07:04 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 19:05:27 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ int	exit_bi(t_cmds *cmd, t_shell *shell)
 		return (1);
 	}
 	exit_code = ft_atoll(cmd->cmd[1]);
-	return (free_all_and_exit(shell, (unsigned char)exit_code), (unsigned char)exit_code);
+	return (free_all_and_exit(shell, (unsigned char)exit_code),
+		(unsigned char)exit_code);
 }
 
 static long long	ft_atoll(char *nptr)

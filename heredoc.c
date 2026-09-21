@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/09 22:59:23 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/16 18:12:04 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 13:13:54 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,13 @@ static void	fill_unqoted_heredoc(int write_fd, const char *eof, t_envs *env)
 			print_heredoc_warning(eof);
 			return ;
 		}
-		line_expanded = expanded_line(line, env);
-		free(line);
-		if (ft_strncmp(line_expanded, eof, ft_strlen(eof) + 1) == 0)
+		if (ft_strncmp(line, eof, ft_strlen(eof) + 1) == 0)
 		{
-			free(line_expanded);
+			free(line);
 			break ;
 		}
+		line_expanded = expanded_line(line, env);
+		free(line);
 		ft_putendl_fd(line_expanded, write_fd);
 		free(line_expanded);
 	}

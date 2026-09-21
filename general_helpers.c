@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/07 22:57:48 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/20 22:03:05 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 13:25:59 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,16 +80,16 @@ void	free_split(char **strs)
 	strs = NULL;
 }
 
-void	free_tokens(t_token *token)
+void	free_tokens(t_token *tokens)
 {
 	int	i;
 
-	i = -1;
-	if (!token)
+	i = 0;
+	if (!tokens)
 		return ;
-	while (token[++i].value)
-		free((void *)token[i].value);
-	free(token);
+	while (tokens[i].value)
+		free((void *)tokens[i++].value);
+	free(tokens);
 }
 
 void	free_cmds(t_cmds **cmd)

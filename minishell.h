@@ -332,5 +332,5 @@ int								add_to_final_struct(t_token *full_token, int *i,
 void							add_last_node_to_final_token_list(t_token *final_token);
 t_token							*create_final_token_struct(t_token *tokens,
 									t_envs *env_list, int *exit_code);
-
+int								event_hook(void);
 #endif

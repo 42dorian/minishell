@@ -34,3 +34,15 @@ char	*expanded_line(char *line, t_envs *env)
 	expanded = get_full_expandable_word(line, env, len, &exit_code);
 	return (expanded);
 }
+
+int	event_hook(void)
+{
+	if (g_signal == 130)
+	{
+		rl_replace_line("", 0);
+		rl_redisplay();
+		rl_done = 1;
+		return (1);
+	}
+	return (0);
+}

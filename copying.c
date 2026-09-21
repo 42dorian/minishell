@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:40:55 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/20 22:16:54 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 13:16:39 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,14 @@ void	copy_till_next_quote(const char *read_line, int *i, char *new_word,
 		(*i)++;
 	}
 	return ;
+}
+
+int	copy_token_node(t_token *new_token, t_token old)
+{
+	new_token->value = ft_strdup(old.value);
+	if (!new_token->value)
+		return (0);
+	new_token->type = old.type;
+	new_token->quoted = 0;
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 13:20:37 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/20 22:16:58 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 13:25:34 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ typedef struct s_token
 {
 	char						*value;
 	int							quoted;
+	int							expandable;
 	t_token_type				type;
 }								t_token;
 

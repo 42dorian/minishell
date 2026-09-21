@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 14:02:51 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/20 21:36:01 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 14:15:36 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,9 @@ char	**allocating_double_pointer(const char *read_line)
 	char	**split_line;
 
 	words = word_counter(read_line);
-	split_line = malloc(sizeof(char *) * (words + 2));
+	if (words == 0)
+		return (NULL);
+	split_line = malloc(sizeof(char *) * (words + 1));
 	return (split_line);
 }
 
@@ -44,9 +46,9 @@ int	fill_up_double_pointer(char **split_line, const char *read_line)
 	while (read_line[i])
 	{
 		skip_white_spaces(read_line, &i);
-		if (!is_white_space(read_line[i]) && read_line[i])
+		if (read_line[i])
 			split_line[w++] = copy_till_next_word(read_line, &i);
-		if (split_line[w - 1] == NULL)
+		if (w > 0 && split_line[w - 1] == NULL)
 			return (split_clean_up(split_line), 0);
 	}
 	split_line[w] = NULL;

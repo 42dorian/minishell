@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/13 20:32:29 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/20 22:16:29 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/21 13:36:17 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,7 @@ char	*handle_expansions(t_envs *env_list, const char *read_line,
 		return (ft_strdup(read_line));
 	len = get_full_len_of_expandable(read_line, env_list, exit_code);
 	if (len == -1)
-	{
-		clean_up_env_list(&env_list);
 		return (NULL);
-	}
 	new_word = get_full_expandable_word(read_line, env_list, len, exit_code);
-	if (!new_word)
-		return (NULL);
-	else
-		return (new_word);
+	return (new_word);
 }

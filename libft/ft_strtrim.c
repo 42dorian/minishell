@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dabdulla <dabdulla@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 14:55:00 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/03/26 12:30:42 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/21 14:13:27 by bguthy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,23 +61,26 @@ static int	find_end(char const *s1, char const *set)
 	return (count);
 }
 
-char	*ft_strtrim(char const *s1, char const *set)
+char	*ft_strtrim(char const *s1, char *set)
 {
 	int		size;
 	int		start;
 	char	*str;
 
 	if (!s1)
+		return (free(set), NULL);
+	if (!set)
 		return (NULL);
 	start = find_start(s1, set);
 	size = ft_strlen(s1) - start - find_end(s1, set);
 	if (size <= 0)
-		return (ft_strdup(""));
+		return (free(set), ft_strdup(""));
 	str = malloc(sizeof(char) * (size + 1));
 	if (!str)
-		return (NULL);
+		return (free(set), NULL);
 	ft_memcpy(str, s1 + start, size);
 	str[size] = '\0';
+	free(set);
 	return (str);
 }
 

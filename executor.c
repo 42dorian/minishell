@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 09:57:52 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/12 14:38:10 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/22 02:13:03 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	run_cmd(t_cmds *cmd, char **envp, int *status, t_shell *shell)
 
 	if (!cmd->cmd || !cmd->cmd[0])
 		return (0);
-	path = handling_path(cmd->cmd[0], envp[find_path(envp)], status);
+	path = handling_path(cmd->cmd[0], get_path_env(envp), status);
 	if (!path)
 		return (0);
 	cmd->pid = fork();
@@ -127,8 +127,7 @@ void	run_child(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 		exit_status = run_built_in(cmds, shell->env_list, shell);
 		free_all_and_exit(shell, exit_status);
 	}
-	path = handling_path(cmds->cmd[0], shell->envp[find_path(shell->envp)],
-			&exit_status);
+	path = handling_path(cmds->cmd[0], get_path_env(shell->envp), &exit_status);
 	if (!path)
 		free_all_and_exit(shell, exit_status);
 	signal(SIGPIPE, SIG_DFL);

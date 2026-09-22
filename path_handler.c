@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/26 18:53:03 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/12 12:44:52 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/22 02:13:35 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ char	*handling_path(char *cmd_name, char *path, int *exit_status)
 		assign_exit_status(status, exit_status);
 		return (print_status(status, cmd_name), free(cmd_path), NULL);
 	}
+	if (!path)
+		return (ft_strdup(cmd_name));
 	cmd_path = search_in_path(&status, cmd_name, path, exit_status);
 	if (!cmd_path)
 		return (NULL);
@@ -50,7 +52,7 @@ static char	*search_in_path(int *s, char *cmd_name, char *path, int *e_status)
 	char	**split_path;
 	char	*cmd_path;
 
-	split_path = ft_split(path, ':');
+	split_path = custom_split_path(path);
 	if (!split_path)
 		return (NULL);
 	cmd_path = find_cmd_path(cmd_name, split_path, s);

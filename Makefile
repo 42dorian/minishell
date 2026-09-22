@@ -23,7 +23,7 @@ SOURCE =	split.c \
 			redirections.c \
 			redirections_helpers.c \
 			heredoc.c \
-			heredoc_helpers.c\
+			heredoc_helpers.c \
 			executor.c \
 			executor_helpers.c \
 			executor_utils.c \
@@ -56,11 +56,12 @@ SOURCE =	split.c \
 			exit.c \
 			clean_ups.c \
 			change_dir.c \
-			general_helpers.c
+			general_helpers.c \
+			split_path.c
 
 HEADER = minishell.h
-CFLAGS = -Wall -Wextra -Werror -g
-READLINE_FLAG = -lreadline
+CFLAGS = -Wall -Wextra -Werror -g -I/opt/homebrew/opt/readline/include -fsanitize=address
+READLINE_FLAG = -L/opt/homebrew/opt/readline/lib -lreadline
 
 CC = cc
 

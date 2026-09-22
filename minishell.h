@@ -33,11 +33,15 @@
 # include <errno.h>
 # include <fcntl.h>
 # include <limits.h>
+# include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
+//headers added after header check
+# include <string.h>
+
 
 extern volatile sig_atomic_t	g_signal;
 typedef struct s_redirs			t_redirs;
@@ -362,4 +366,7 @@ int								cp_t_node(t_token *new_token, t_token old_token,
 									int *local_i);
 
 char	*create_set(void);
+
+char **custom_split_path(char *s);
+char *get_path_env(char **envp);
 #endif

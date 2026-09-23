@@ -21,15 +21,11 @@ int	loop_for_unclosed_quotes(const char *read_line)
 	quote_type = 0;
 	while (read_line[i])
 	{
-		if (is_quote(read_line[i]) && quote_type == 0)
-			quote_type = read_line[i++];
-		if (quote_type == read_line[i])
-		{
+		if (quote_type == 0 && is_quote(read_line[i]))
+			quote_type = read_line[i];
+		else if (quote_type == read_line[i])
 			quote_type = 0;
-			i++;
-		}
-		else
-			i++;
+		i++;
 	}
 	if (quote_type != 0)
 		return (1);

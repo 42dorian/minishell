@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/26 18:53:03 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/22 02:13:35 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/23 09:39:52 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,7 @@ char	*handling_path(char *cmd_name, char *path, int *exit_status)
 	}
 	if (!path)
 		return (ft_strdup(cmd_name));
-	cmd_path = search_in_path(&status, cmd_name, path, exit_status);
-	if (!cmd_path)
-		return (NULL);
-	return (cmd_path);
+	return (search_in_path(&status, cmd_name, path, exit_status));
 }
 
 static char	*search_in_path(int *s, char *cmd_name, char *path, int *e_status)

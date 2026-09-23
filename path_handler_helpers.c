@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 11:26:00 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/22 02:07:23 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/23 09:25:09 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,11 @@ void	assign_exit_status(int status, int *exit_status)
 		*exit_status = 127;
 }
 
-char *get_path_env(char **envp)
+char	*get_path_env(char **envp)
 {
-	int i;
+	int	i;
 
-	i  = 0;
+	i = 0;
 	if (!envp)
 		return (NULL);
 	while (envp[i])

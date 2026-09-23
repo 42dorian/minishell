@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/23 09:01:10 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/23 09:23:43 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	create_token_struct_and_remove_quotes(t_token *tokens, char **split_line)
 t_token	*minishell(char *read_line, t_envs *env_list, int *status)
 {
 	t_token	*tokens;
-	t_token	*final_token_list;
+	t_token	*final_t_list;
 	char	**split_line;
 	char	*trimmed_read_line;
 
@@ -51,13 +51,12 @@ t_token	*minishell(char *read_line, t_envs *env_list, int *status)
 	if (!create_token_struct(tokens, split_line))
 		return (split_clean_up(split_line), NULL);
 	split_clean_up(split_line);
-	final_token_list = create_final_token_struct(tokens, env_list, status);
-	if (!final_token_list)
+	final_t_list = create_final_token_struct(tokens, env_list, status);
+	if (!final_t_list)
 		return (free_tokens(tokens), NULL);
-	if (!remove_quotes(final_token_list))
-		return (free_tokens(final_token_list), NULL);
-	restore_to_normal_chars(final_token_list);
-	return (free_tokens(tokens), final_token_list);
+	if (!remove_quotes(final_t_list))
+		return (free_tokens(final_t_list), NULL);
+	return (restore_chars(final_t_list), free_tokens(tokens), final_t_list);
 }
 
 void	run_commands(t_shell *shell, t_token *tokens)
@@ -73,7 +72,7 @@ void	run_commands(t_shell *shell, t_token *tokens)
 	shell->cmds = build_cmds(tokens, shell);
 	free_tokens(tokens);
 	if (!shell->cmds)
-		return  ;
+		return ;
 	if (syntax_error == 0)
 		shell->status = execute_cmds(shell);
 	free_cmds(&shell->cmds);

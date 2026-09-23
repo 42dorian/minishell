@@ -6,13 +6,13 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/13 20:32:29 by guthybarnak       #+#    #+#             */
-/*   Updated: 2026/09/23 08:54:58 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/23 09:24:25 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char swap_to_nonprint(char c)
+char	swap_to_nonprint(char c)
 {
 	if (c == '\'')
 		return (1);
@@ -27,7 +27,7 @@ char swap_to_nonprint(char c)
 	return (c);
 }
 
-char swap_to_normal(char c)
+char	swap_to_normal(char c)
 {
 	if (c == 1)
 		return ('\'');
@@ -41,7 +41,6 @@ char swap_to_normal(char c)
 		return ('>');
 	return (c);
 }
-
 
 int	get_full_len_of_expandable(const char *read_line, t_envs *env_list,
 		int *exit_code)

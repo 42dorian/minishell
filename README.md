@@ -3,7 +3,7 @@
 # Minishell
 
 ## Description
-Minishell is a comprehensive 42 school project tasked with creating a functional mini shell. The objective is to dive deep into systems programming, focusing heavily on process creation (`fork`, `execve`, `waitpid`), file descriptor routing, signal handling, and environment variable manipulation.
+Minishell is a comprehensive 42 school project tasked with creating a functional mini shell. The objective is to dive deep into systems programming, focusing heavily on process creation, file descriptor routing, signal handling, and environment variable manipulation.
 This project does not aim to be fully Bash-compatible. Behavior that is not explicitly listed below should be considered out of scope.
 
 ## Features

@@ -114,7 +114,7 @@ void	wait_single_pid(pid_t pid, int *status, int last_pid)
 	else if (WIFSIGNALED(raw_status))
 	{
 		if (WTERMSIG(raw_status) == SIGQUIT && last_pid)
-			write(STDERR_FILENO, "Quit: (core dumped)\n", 20);
+			write(STDERR_FILENO, "Quit (core dumped)\n", 20);
 		else if (WTERMSIG(raw_status) == SIGINT && last_pid)
 			write(STDERR_FILENO, "\n", 1);
 		code = 128 + WTERMSIG(raw_status);

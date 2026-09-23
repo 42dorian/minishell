@@ -22,20 +22,21 @@ static void	fill_quoted_heredoc(int write_fd, const char *eof)
 	line = NULL;
 	while (1)
 	{
-		rl_event_hook = event_hook;
+		if (isatty(STDIN_FILENO))
+			rl_event_hook = event_hook;
 		line = readline("> ");
 		rl_event_hook = NULL;
 		if (g_signal == 42)
-			return ;
+			break ;
 		if (!line)
 		{
 			print_heredoc_warning(eof);
-			return ;
+			break ;
 		}
 		if (ft_strncmp(line, eof, ft_strlen(eof) + 1) == 0)
 		{
 			free(line);
-			return ;
+			break ;
 		}
 		ft_putendl_fd(line, write_fd);
 		free(line);
@@ -49,16 +50,14 @@ static void	fill_unqoted_heredoc(int write_fd, const char *eof, t_envs *env)
 
 	while (1)
 	{
-		rl_event_hook = event_hook;
+		if (isatty(STDIN_FILENO))
+			rl_event_hook = event_hook;
 		line = readline("> ");
 		rl_event_hook = NULL;
 		if (g_signal == 42)
-			return ;
+			break ;
 		if (!line)
-		{
-			print_heredoc_warning(eof);
-			return ;
-		}
+			return (print_heredoc_warning(eof));
 		if (ft_strncmp(line, eof, ft_strlen(eof) + 1) == 0)
 		{
 			free(line);

@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 19:02:10 by bguhty            #+#    #+#             */
-/*   Updated: 2026/09/21 19:32:50 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/23 09:01:10 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ t_token	*minishell(char *read_line, t_envs *env_list, int *status)
 		return (free_tokens(tokens), NULL);
 	if (!remove_quotes(final_token_list))
 		return (free_tokens(final_token_list), NULL);
+	restore_to_normal_chars(final_token_list);
 	return (free_tokens(tokens), final_token_list);
 }
 

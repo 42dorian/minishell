@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:31:11 by bguthy            #+#    #+#             */
-/*   Updated: 2026/09/17 21:50:32 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/23 08:58:46 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ void	cat_test_env_to_fully_expanded(char *test_env, char *fully_expanded)
 	env_index = 0;
 	expand_index = ft_strlen(fully_expanded);
 	while (test_env[env_index])
-		fully_expanded[expand_index++] = test_env[env_index++];
+	{
+		fully_expanded[expand_index++] = swap_to_nonprint(test_env[env_index]);
+		env_index++;
+	}
 	free(test_env);
 }
 
@@ -52,4 +55,22 @@ void	set_quote_flag_and_index_to_zero(int *quote_flag, int *i)
 {
 	*quote_flag = 0;
 	*i = 0;
+}
+
+void restore_to_normal_chars(t_token *tokens)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (tokens[i].value)
+	{
+		j = 0;
+		while (tokens[i].value[j])
+		{
+			tokens[i].value[j] = swap_to_normal(tokens[i].value[j]);
+			j++;
+		}
+		i++;
+	}
 }

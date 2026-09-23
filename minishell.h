@@ -369,4 +369,7 @@ char	*create_set(void);
 
 char **custom_split_path(char *s);
 char *get_path_env(char **envp);
+char swap_to_nonprint(char c);
+char swap_to_normal(char c);
+void restore_to_normal_chars(t_token *tokens);
 #endif

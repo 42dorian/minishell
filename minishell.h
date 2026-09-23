@@ -172,7 +172,6 @@ void							print_error(char *msg, char *cmd, char *arg,
 									int fd);
 int								is_dir(char *cmd, struct stat *path_stat);
 int								pwd(void);
-void							free_cmd(t_cmds *cmds);
 t_cmds							*new_cmd(void);
 int								add_arg_to_cmd(t_cmds *node, const char *arg);
 
@@ -188,8 +187,6 @@ int								handle_heredoc(t_cmds *curr, t_token *token,
 									int *i, t_shell *shell);
 
 t_cmds							*build_cmds(t_token *t, t_shell *shell);
-int								find_path(char **envp);
-
 int								execute_cmds(t_shell *shell);
 
 int								open_redirections(t_cmds *cmds);

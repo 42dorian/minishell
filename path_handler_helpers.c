@@ -6,25 +6,11 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 11:26:00 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/23 09:25:09 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/24 00:03:23 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	find_path(char **envp)
-{
-	int	i;
-
-	i = 0;
-	while (envp[i])
-	{
-		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
-			return (i);
-		i++;
-	}
-	return (0);
-}
 
 int	check_access(char *cmd)
 {

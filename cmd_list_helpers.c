@@ -6,30 +6,11 @@
 /*   By: dabdulla <dabdulla@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/20 15:55:37 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/12 12:43:25 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/24 00:03:03 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	free_cmd(t_cmds *cmds)
-{
-	t_cmds	*curr;
-	t_cmds	*next;
-
-	if (!cmds)
-		return ;
-	curr = cmds;
-	while (curr)
-	{
-		next = curr->next;
-		free_split(curr->cmd);
-		curr->cmd = NULL;
-		free(curr);
-		curr = next;
-	}
-	curr = NULL;
-}
 
 t_cmds	*new_cmd(void)
 {

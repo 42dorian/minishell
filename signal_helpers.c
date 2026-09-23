@@ -6,7 +6,7 @@
 /*   By: dabdulla <dabdulla@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 12:57:21 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/17 12:57:22 by dabdulla         ###   ########.fr       */
+/*   Updated: 2026/09/23 23:51:34 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	event_hook_main(void)
 	return (0);
 }
 
-void update_g_signal(t_shell *shell)
+void	update_g_signal(t_shell *shell)
 {
 	if (g_signal == 42)
 	{

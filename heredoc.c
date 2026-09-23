@@ -6,7 +6,7 @@
 /*   By: bguthy <bguthy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/09 22:59:23 by dabdulla          #+#    #+#             */
-/*   Updated: 2026/09/21 13:13:54 by bguthy           ###   ########.fr       */
+/*   Updated: 2026/09/23 23:56:19 by dabdulla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	fill_quoted_heredoc(int write_fd, const char *eof)
 		if (isatty(STDIN_FILENO))
 			rl_event_hook = event_hook;
 		line = readline("> ");
-		rl_event_hook = event_hook_main;
+		rl_event_hook = NULL;
 		if (g_signal == 42)
 			break ;
 		if (!line)
@@ -53,7 +53,7 @@ static void	fill_unqoted_heredoc(int write_fd, const char *eof, t_envs *env)
 		if (isatty(STDIN_FILENO))
 			rl_event_hook = event_hook;
 		line = readline("> ");
-		rl_event_hook = event_hook_main;
+		rl_event_hook = NULL;
 		if (g_signal == 42)
 			break ;
 		if (!line)

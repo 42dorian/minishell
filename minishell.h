@@ -360,7 +360,6 @@ int								add_to_final_struct(t_token *full_token, int *i,
 									char **expanded_split);
 int								cp_t_node(t_token *new_token, t_token old_token,
 									int *local_i);
-
 char							*create_set(void);
 char							**custom_split_path(char *s);
 char							*get_path_env(char **envp);

@@ -42,9 +42,6 @@ Run the compiled binary to enter the shell:
 
     ./minishell
 
-**EXECUTION NOTE:** 
-If the `PATH` environment variable is unset, our minishell will **not** execute commands from the current directory. You must specify an absolute or relative path (e.g., `./executable`) if `PATH` is cleared.
-
 ## Resources
 
 * https://www.youtube.com/watch?v=kDxjcyHu_Qs

@@ -59,7 +59,6 @@ void	check_child_fds(t_cmds *cmds, int *fd, int stored_input, t_shell *shell)
 {
 	int	exit_code;
 
-	exit_code = 0;
 	if (!cmds->cmd || !cmds->cmd[0])
 		exit_code = 0;
 	else if (cmds->fd_in == -1 || cmds->fd_out == -1)
@@ -108,7 +107,6 @@ void	wait_single_pid(pid_t pid, int *status, int last_pid)
 	int	raw_status;
 	int	code;
 
-	code = 0;
 	if (pid <= 0 || waitpid(pid, &raw_status, 0) == -1)
 		return ;
 	if (WIFEXITED(raw_status))

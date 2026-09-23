@@ -75,7 +75,6 @@ int	syntax_check(t_token *tokens, int *status)
 	int	j;
 
 	i = -1;
-	j = 0;
 	if (preliminary_check(tokens))
 	{
 		*status = 2;

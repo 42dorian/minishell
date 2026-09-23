@@ -28,7 +28,7 @@ char	*handling_path(char *cmd_name, char *path, int *exit_status)
 		*exit_status = 127;
 		return (NULL);
 	}
-	if (ft_strchr(cmd_name, '/'))
+	if (ft_strchr(cmd_name, '/') || !path)
 	{
 		status = check_access(cmd_name);
 		cmd_path = ft_strdup(cmd_name);
@@ -39,8 +39,6 @@ char	*handling_path(char *cmd_name, char *path, int *exit_status)
 		assign_exit_status(status, exit_status);
 		return (print_status(status, cmd_name), free(cmd_path), NULL);
 	}
-	if (!path)
-		return (ft_strdup(cmd_name));
 	return (search_in_path(&status, cmd_name, path, exit_status));
 }
 
@@ -84,7 +82,6 @@ char	*find_cmd_path(char *cmd_name, char **split_path, int *status)
 	int		i;
 	int		curr_status;
 
-	curr_status = 0;
 	i = 0;
 	cmd_path = NULL;
 	while (split_path[i])

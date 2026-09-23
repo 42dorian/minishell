@@ -20,7 +20,6 @@ int	exit_bi(t_cmds *cmd, t_shell *shell)
 {
 	long long	exit_code;
 
-	exit_code = 0;
 	ft_putstr_fd("exit\n", STDOUT_FILENO);
 	if (!cmd->cmd[1])
 		free_all_and_exit(shell, shell->status);

@@ -82,7 +82,8 @@ char	**custom_split_path(char *s)
 	i = -1;
 	while (++i < words)
 	{
-		strs[i] = copy_word(s, path_word_len(s));
+		len = path_word_len(s);
+		strs[i] = copy_word(s, len);
 		if (!strs[i])
 			return (free_strs(strs, i - 1), NULL);
 		s += len;

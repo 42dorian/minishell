@@ -60,8 +60,8 @@ SOURCE =	split.c \
 			split_path.c
 
 HEADER = minishell.h
-CFLAGS = -Wall -Wextra -Werror -g -I/opt/homebrew/opt/readline/include -fsanitize=address
-READLINE_FLAG = -L/opt/homebrew/opt/readline/lib -lreadline
+CFLAGS = -Wall -Wextra -Werror -g
+READLINE_FLAG = -lreadline
 
 CC = cc
 

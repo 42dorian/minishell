@@ -84,16 +84,17 @@ void	main_loop(t_shell *shell, t_token *tokens)
 
 	while (1)
 	{
+		if (isatty(STDIN_FILENO))
+		{
+			rl_catch_signals = 0;
+			rl_event_hook = event_hook_main;
+		}
 		line = readline("minishell$ ");
 		if (!line)
 			break ;
 		if (line[0] != '\0')
 			add_history(line);
-		if (WTERMSIG(g_signal) != 0)
-		{
-			shell->status = 128 + WTERMSIG(g_signal);
-			g_signal = 0;
-		}
+		update_g_signal(shell);
 		if (empty_string_and_unclosed_quote_check(line, &shell->status))
 			continue ;
 		tokens = minishell(line, shell->env_list, &shell->status);

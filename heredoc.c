@@ -25,7 +25,7 @@ static void	fill_quoted_heredoc(int write_fd, const char *eof)
 		if (isatty(STDIN_FILENO))
 			rl_event_hook = event_hook;
 		line = readline("> ");
-		rl_event_hook = NULL;
+		rl_event_hook = event_hook_main;
 		if (g_signal == 42)
 			break ;
 		if (!line)
@@ -53,7 +53,7 @@ static void	fill_unqoted_heredoc(int write_fd, const char *eof, t_envs *env)
 		if (isatty(STDIN_FILENO))
 			rl_event_hook = event_hook;
 		line = readline("> ");
-		rl_event_hook = NULL;
+		rl_event_hook = event_hook_main;
 		if (g_signal == 42)
 			break ;
 		if (!line)
@@ -76,7 +76,6 @@ int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_shell *shell)
 
 	if (pipe(fd))
 		return (print_error(strerror(errno), "pipe", NULL, STDERR_FILENO), 1);
-	init_heredoc_signals();
 	if (token[*i + 1].quoted)
 		fill_quoted_heredoc(fd[1], token[*i + 1].value);
 	else
@@ -85,7 +84,7 @@ int	handle_heredoc(t_cmds *curr, t_token *token, int *i, t_shell *shell)
 	init_interactive_signals();
 	if (g_signal == 42)
 	{
-		g_signal = SIGINT;
+		g_signal = 0;
 		return (close(fd[0]), 130);
 	}
 	if (curr->fd_in != 0)

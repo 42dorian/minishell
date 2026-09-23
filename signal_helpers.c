@@ -12,8 +12,36 @@
 
 #include "minishell.h"
 
-void	heredoc_sigint(int sig)
+int	event_hook(void)
 {
-	(void)sig;
-	g_signal = sig;
+	if (g_signal == SIGINT)
+	{
+		rl_done = 1;
+		g_signal = 42;
+		return (1);
+	}
+	return (0);
+}
+
+int	event_hook_main(void)
+{
+	if (g_signal == SIGINT)
+	{
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		write(STDOUT_FILENO, "\n", 1);
+		rl_redisplay();
+		g_signal = 42;
+		return (1);
+	}
+	return (0);
+}
+
+void update_g_signal(t_shell *shell)
+{
+	if (g_signal == 42)
+	{
+		shell->status = 130;
+		g_signal = 0;
+	}
 }

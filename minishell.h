@@ -236,8 +236,6 @@ int								is_end(const char letter);
 void							init_interactive_signals(void);
 void							init_execution_signals(void);
 void							pause_interactive_signals(void);
-void							init_heredoc_signals(void);
-void							heredoc_sigint(int sig);
 void							print_heredoc_warning(const char *eof);
 char							*expanded_line(char *line, t_envs *env);
 char							**create_envp(t_envs *env_list);
@@ -366,5 +364,6 @@ char							*get_path_env(char **envp);
 char							swap_to_nonprint(char c);
 char							swap_to_normal(char c);
 void							restore_chars(t_token *tokens);
-
+int								event_hook_main(void);
+void							update_g_signal(t_shell *shell);
 #endif
